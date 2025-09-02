@@ -1,0 +1,157 @@
+[
+  {
+    "model": "post.category",
+    "pk": 1,
+    "fields": {
+      "title": "Technology",
+      "slug": "technology",
+      "created_at": "2025-09-03T00:00:00Z",
+      "updated_at": "2025-09-03T00:00:00Z"
+    }
+  },
+  {
+    "model": "post.category",
+    "pk": 2,
+    "fields": {
+      "title": "Science",
+      "slug": "science",
+      "created_at": "2025-09-03T00:00:00Z",
+      "updated_at": "2025-09-03T00:00:00Z"
+    }
+  },
+  {
+    "model": "post.category",
+    "pk": 3,
+    "fields": {
+      "title": "Health",
+      "slug": "health",
+      "created_at": "2025-09-03T00:00:00Z",
+      "updated_at": "2025-09-03T00:00:00Z"
+    }
+  },
+  {
+    "model": "post.category",
+    "pk": 4,
+    "fields": {
+      "title": "Travel",
+      "slug": "travel",
+      "created_at": "2025-09-03T00:00:00Z",
+      "updated_at": "2025-09-03T00:00:00Z"
+    }
+  },
+  {
+    "model": "post.tag",
+    "pk": 1,
+    "fields": {
+      "title": "Python",
+      "slug": "python",
+      "created_at": "2025-09-03T00:00:00Z",
+      "updated_at": "2025-09-03T00:00:00Z"
+    }
+  },
+  {
+    "model": "post.tag",
+    "pk": 2,
+    "fields": {
+      "title": "Django",
+      "slug": "django",
+      "created_at": "2025-09-03T00:00:00Z",
+      "updated_at": "2025-09-03T00:00:00Z"
+    }
+  },
+  {
+    "model": "post.tag",
+    "pk": 3,
+    "fields": {
+      "title": "AI",
+      "slug": "ai",
+      "created_at": "2025-09-03T00:00:00Z",
+      "updated_at": "2025-09-03T00:00:00Z"
+    }
+  },
+  {
+    "model": "post.tag",
+    "pk": 4,
+    "fields": {
+      "title": "HealthTips",
+      "slug": "healthtips",
+      "created_at": "2025-09-03T00:00:00Z",
+      "updated_at": "2025-09-03T00:00:00Z"
+    }
+  },
+  {
+    "model": "post.tag",
+    "pk": 5,
+    "fields": {
+      "title": "TravelGuide",
+      "slug": "travelguide",
+      "created_at": "2025-09-03T00:00:00Z",
+      "updated_at": "2025-09-03T00:00:00Z"
+    }
+  },
+  {
+    "model": "post.post",
+    "pk": 1,
+    "fields": {
+      "title": "Getting Started with Python",
+      "content": "Learn the basics of Python programming.",
+      "category": 1,
+      "tags": [1,2],
+      "slug": "getting-started-with-python",
+      "created_at": "2025-09-03T00:00:00Z",
+      "updated_at": "2025-09-03T00:00:00Z"
+    }
+  },
+  {
+    "model": "post.post",
+    "pk": 2,
+    "fields": {
+      "title": "Latest in AI",
+      "content": "AI trends in 2025.",
+      "category": 1,
+      "tags": [3],
+      "slug": "latest-in-ai",
+      "created_at": "2025-09-03T00:00:00Z",
+      "updated_at": "2025-09-03T00:00:00Z"
+    }
+  },
+  {
+    "model": "post.post",
+    "pk": 3,
+    "fields": {
+      "title": "Health Tips for Everyone",
+      "content": "Daily habits to stay healthy.",
+      "category": 3,
+      "tags": [4],
+      "slug": "health-tips-for-everyone",
+      "created_at": "2025-09-03T00:00:00Z",
+      "updated_at": "2025-09-03T00:00:00Z"
+    }
+  },
+  {
+    "model": "post.post",
+    "pk": 4,
+    "fields": {
+      "title": "Exploring the World",
+      "content": "Best travel destinations in 2025.",
+      "category": 4,
+      "tags": [5],
+      "slug": "exploring-the-world",
+      "created_at": "2025-09-03T00:00:00Z",
+      "updated_at": "2025-09-03T00:00:00Z"
+    }
+  },
+  {
+    "model": "post.post",
+    "pk": 5,
+    "fields": {
+      "title": "Science Discoveries",
+      "content": "Top science news this month.",
+      "category": 2,
+      "tags": [3],
+      "slug": "science-discoveries",
+      "created_at": "2025-09-03T00:00:00Z",
+      "updated_at": "2025-09-03T00:00:00Z"
+    }
+  }
+]
