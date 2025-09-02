@@ -1,5 +1,5 @@
 
-# Blogging Platform API
+# Blogging Platform API - https://roadmap.sh/projects/blogging-platform-api
 
 RESTful API для персональной блог-платформы на Django и Django REST Framework.  
 
