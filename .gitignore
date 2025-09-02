@@ -1,0 +1,35 @@
+# Операционная система
+*.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.swp
+.DS_Store
+.idea
+
+# venv и зависимости
+.venv/
+*.egg-info/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# IDE и редакторы
+.vscode/
+.idea/
+*.iml
+*.sublime-workspace
+
+
+
+# Статические и медиа файлы
+staticfiles/
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# Docker
+*.db
+docker-compose.override.yml
