@@ -1,0 +1,42 @@
+[
+  {
+    "model": "catalog.albumsong",
+    "fields": {
+      "album": "aaaaaaaa-1111-1111-1111-aaaaaaaaaaaa",
+      "song": "bbbbbbbb-1111-1111-1111-bbbbbbbbbbbb",
+      "track_number": 2
+    }
+  },
+  {
+    "model": "catalog.albumsong",
+    "fields": {
+      "album": "aaaaaaaa-1111-1111-1111-aaaaaaaaaaaa",
+      "song": "bbbbbbbb-2222-2222-2222-bbbbbbbbbbbb",
+      "track_number": 3
+    }
+  },
+  {
+    "model": "catalog.albumsong",
+    "fields": {
+      "album": "aaaaaaaa-3333-3333-3333-aaaaaaaaaaaa",
+      "song": "bbbbbbbb-3333-3333-3333-bbbbbbbbbbbb",
+      "track_number": 11
+    }
+  },
+  {
+    "model": "catalog.albumsong",
+    "fields": {
+      "album": "aaaaaaaa-4444-4444-4444-aaaaaaaaaaaa",
+      "song": "bbbbbbbb-4444-4444-4444-bbbbbbbbbbbb",
+      "track_number": 1
+    }
+  },
+  {
+    "model": "catalog.albumsong",
+    "fields": {
+      "album": "aaaaaaaa-5555-5555-5555-aaaaaaaaaaaa",
+      "song": "bbbbbbbb-5555-5555-5555-bbbbbbbbbbbb",
+      "track_number": 8
+    }
+  }
+]

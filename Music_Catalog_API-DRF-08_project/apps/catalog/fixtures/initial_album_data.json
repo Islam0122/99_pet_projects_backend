@@ -1,0 +1,62 @@
+[
+  {
+    "model": "catalog.album",
+    "pk": "aaaaaaaa-1111-1111-1111-aaaaaaaaaaaa",
+    "fields": {
+      "title": "Thriller",
+      "artist": "11111111-1111-1111-1111-111111111111",
+      "release_year": 1982,
+      "description": "Best-selling album of all time",
+      "created_at": "2025-09-07T00:00:00Z",
+      "updated_at": "2025-09-07T00:00:00Z"
+    }
+  },
+  {
+    "model": "catalog.album",
+    "pk": "aaaaaaaa-2222-2222-2222-aaaaaaaaaaaa",
+    "fields": {
+      "title": "Bad",
+      "artist": "11111111-1111-1111-1111-111111111111",
+      "release_year": 1987,
+      "description": "Famous pop album",
+      "created_at": "2025-09-07T00:00:00Z",
+      "updated_at": "2025-09-07T00:00:00Z"
+    }
+  },
+  {
+    "model": "catalog.album",
+    "pk": "aaaaaaaa-3333-3333-3333-aaaaaaaaaaaa",
+    "fields": {
+      "title": "A Night at the Opera",
+      "artist": "22222222-2222-2222-2222-222222222222",
+      "release_year": 1975,
+      "description": "Includes Bohemian Rhapsody",
+      "created_at": "2025-09-07T00:00:00Z",
+      "updated_at": "2025-09-07T00:00:00Z"
+    }
+  },
+  {
+    "model": "catalog.album",
+    "pk": "aaaaaaaa-4444-4444-4444-aaaaaaaaaaaa",
+    "fields": {
+      "title": "Abbey Road",
+      "artist": "33333333-3333-3333-3333-333333333333",
+      "release_year": 1969,
+      "description": "One of the most iconic Beatles albums",
+      "created_at": "2025-09-07T00:00:00Z",
+      "updated_at": "2025-09-07T00:00:00Z"
+    }
+  },
+  {
+    "model": "catalog.album",
+    "pk": "aaaaaaaa-5555-5555-5555-aaaaaaaaaaaa",
+    "fields": {
+      "title": "Meteora",
+      "artist": "55555555-5555-5555-5555-555555555555",
+      "release_year": 2003,
+      "description": "Famous nu-metal album",
+      "created_at": "2025-09-07T00:00:00Z",
+      "updated_at": "2025-09-07T00:00:00Z"
+    }
+  }
+]
