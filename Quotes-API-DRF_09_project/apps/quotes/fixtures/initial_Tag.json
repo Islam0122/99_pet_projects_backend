@@ -1,0 +1,20 @@
+[
+  {
+    "model": "quotes.tag",
+    "pk": 1,
+    "fields": {
+      "name": "жизнь",
+      "created_at": "2025-09-08T00:00:00Z",
+      "updated_at": "2025-09-08T00:00:00Z"
+    }
+  },
+  {
+    "model": "quotes.tag",
+    "pk": 2,
+    "fields": {
+      "name": "мудрость",
+      "created_at": "2025-09-08T00:00:00Z",
+      "updated_at": "2025-09-08T00:00:00Z"
+    }
+  }
+]
