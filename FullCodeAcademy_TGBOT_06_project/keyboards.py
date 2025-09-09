@@ -33,9 +33,6 @@ return_keyboard = InlineKeyboardMarkup(
 about_us_keyboard = InlineKeyboardMarkup(
     inline_keyboard=[
         [
-            InlineKeyboardButton(text="👨‍🏫 Наши преподаватели", callback_data="teachers"),
-        ],
-        [
             InlineKeyboardButton(text="🎓 Курсы", callback_data="courses"),
         ],
         [
@@ -57,5 +54,38 @@ courses_keyboard = InlineKeyboardMarkup(
         [
             InlineKeyboardButton(text="⬅️ В меню", callback_data="main_menu"),
         ],
+    ]
+)
+
+
+admin_main_keyboard = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [
+            InlineKeyboardButton(text="📊 Статистика", callback_data="admin_stats"),
+        ],
+    ]
+)
+
+admin_back_keyboard = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [
+            InlineKeyboardButton(text="⬅️ Назад в меню", callback_data="admin_menu"),
+        ]
+    ]
+)
+
+contact_keyboards = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [
+            InlineKeyboardButton(text="📱 WhatsApp", url="http://wa.me/996501001112"),
+            InlineKeyboardButton(text="📷 Instagram", url="https://www.instagram.com/fullcode.kg?igsh=Yno5aXNvam9oMHpi"),
+        ],
+        [
+            InlineKeyboardButton(text="🚀 Записаться на курс", callback_data="manager"),
+        ],
+
+        [
+            InlineKeyboardButton(text="️ В меню", callback_data="main_menu"),
+        ]
     ]
 )
