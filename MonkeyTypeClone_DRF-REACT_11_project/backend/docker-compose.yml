@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings.development
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py loaddata initial_tasks.json &&
+             gunicorn config.wsgi:application --bind 0.0.0.0:8000"

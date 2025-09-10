@@ -1,0 +1,790 @@
+[
+    {
+        "model": "words.Text",
+        "pk": 1,
+        "fields": {
+            "category": 1,
+            "text_content": "<!DOCTYPE html>\n<html>\n<head>\n    <title>Sample Page</title>\n</head>\n<body>\n    <h1>Hello, world!</h1>\n    <p>This is a sample HTML page.</p>\n</body>\n</html>"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 2,
+        "fields": {
+            "category": 1,
+            "text_content": "<div class='container'>\n    <h2>Welcome to HTML!</h2>\n    <p>HTML is the standard markup language.</p>\n</div>"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 3,
+        "fields": {
+            "category": 1,
+            "text_content": "<a href='https://www.example.com'>Click here to visit the website</a>"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 4,
+        "fields": {
+            "category": 1,
+            "text_content": "<div class='card'>\n    <h3>HTML Card</h3>\n    <p>This is a simple card component in HTML.</p>\n</div>"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 5,
+        "fields": {
+            "category": 1,
+            "text_content": "<p><strong>Strong text</strong> in HTML is used to make text bold.</p>"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 6,
+        "fields": {
+            "category": 1,
+            "text_content": "<ul>\n    <li>Item 1</li>\n    <li>Item 2</li>\n    <li>Item 3</li>\n</ul>"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 7,
+        "fields": {
+            "category": 1,
+            "text_content": "<ol>\n    <li>First item</li>\n    <li>Second item</li>\n    <li>Third item</li>\n</ol>"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 8,
+        "fields": {
+            "category": 1,
+            "text_content": "<form action='/submit' method='POST'>\n    <label for='name'>Name:</label>\n    <input type='text' id='name' name='name'>\n    <input type='submit' value='Submit'>\n</form>"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 9,
+        "fields": {
+            "category": 1,
+            "text_content": "<img src='image.jpg' alt='Example image'>"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 10,
+        "fields": {
+            "category": 1,
+            "text_content": "<button onclick='alert(\"Hello!\")'>Click Me</button>"
+        }
+    },
+
+    {
+        "model": "words.Text",
+        "pk": 11,
+        "fields": {
+            "category": 2,
+            "text_content": "body {\n    font-family: Arial, sans-serif;\n    background-color: #f0f0f0;\n}\n\nh1 {\n    color: #333;\n}"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 12,
+        "fields": {
+            "category": 2,
+            "text_content": ".container {\n    width: 80%;\n    margin: 0 auto;\n    padding: 20px;\n    background-color: white;\n    border-radius: 8px;\n    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);\n}"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 13,
+        "fields": {
+            "category": 2,
+            "text_content": "h2 {\n    font-size: 1.5em;\n    margin-top: 20px;\n}\n\np {\n    line-height: 1.5;\n}"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 14,
+        "fields": {
+            "category": 2,
+            "text_content": ".button {\n    background-color: blue;\n    color: white;\n    padding: 10px 20px;\n    border-radius: 5px;\n    cursor: pointer;\n}"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 15,
+        "fields": {
+            "category": 2,
+            "text_content": "/* CSS for the header */\nheader {\n    background-color: #333;\n    color: white;\n    padding: 20px;\n}"
+        }
+    },
+
+    {
+        "model": "words.Text",
+        "pk": 16,
+        "fields": {
+            "category": 3,
+            "text_content": "// JavaScript function to greet a user\nfunction greet() {\n    console.log('Hello, world!');\n}\n\ngreet();"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 17,
+        "fields": {
+            "category": 3,
+            "text_content": "// JavaScript array and loop example\nlet fruits = ['apple', 'banana', 'cherry'];\nfor (let i = 0; i < fruits.length; i++) {\n    console.log(fruits[i]);\n}"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 18,
+        "fields": {
+            "category": 3,
+            "text_content": "// JavaScript DOM manipulation example\nlet button = document.getElementById('myButton');\nbutton.addEventListener('click', function() {\n    alert('Button clicked!');\n});"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 19,
+        "fields": {
+            "category": 3,
+            "text_content": "// JavaScript function to change HTML content\nfunction changeContent() {\n    document.getElementById('myParagraph').innerHTML = 'New content here!';\n}"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 20,
+        "fields": {
+            "category": 3,
+            "text_content": "// JavaScript promise example\nlet promise = new Promise(function(resolve, reject) {\n    let success = true;\n    if(success) {\n        resolve('Promise resolved');\n    } else {\n        reject('Promise rejected');\n    }\n});\npromise.then(function(message) {\n    console.log(message);\n}).catch(function(error) {\n    console.log(error);\n});"
+        }
+    },
+
+    {
+        "model": "words.Text",
+        "pk": 21,
+        "fields": {
+            "category": 4,
+            "text_content": "# Python function to greet the user\ndef greet():\n    print('Hello, world!')\n\ngreet()"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 22,
+        "fields": {
+            "category": 4,
+            "text_content": "# Python list and loop example\nfruits = ['apple', 'banana', 'cherry']\nfor fruit in fruits:\n    print(fruit)"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 23,
+        "fields": {
+            "category": 4,
+            "text_content": "# Python dictionary example\nperson = {'name': 'John', 'age': 30}\nprint(person['name'])"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 24,
+        "fields": {
+            "category": 4,
+            "text_content": "# Python function to calculate factorial\n\ndef factorial(n):\n    if n == 0:\n        return 1\n    return n * factorial(n - 1)"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 25,
+        "fields": {
+            "category": 4,
+            "text_content": "# Python while loop example\nx = 1\nwhile x <= 5:\n    print(x)\n    x += 1"
+        }
+    },
+   {
+        "model": "words.Text",
+        "pk": 26,
+        "fields": {
+            "category": 5,
+            "text_content": "#include <iostream>\nusing namespace std;\n\nint main() {\n    cout << 'Hello, world!';\n    return 0;\n}"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 27,
+        "fields": {
+            "category": 5,
+            "text_content": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int a = 10;\n    int b = 20;\n    cout << 'Sum: ' << a + b;\n    return 0;\n}"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 28,
+        "fields": {
+            "category": 5,
+            "text_content": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int x = 5;\n    int y = 10;\n    if(x < y) {\n        cout << 'x is smaller';\n    }\n    return 0;\n}"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 29,
+        "fields": {
+            "category": 5,
+            "text_content": "#include <iostream>\nusing namespace std;\n\nint main() {\n    for(int i = 0; i < 5; i++) {\n        cout << i << ' ';\n    }\n    return 0;\n}"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 30,
+        "fields": {
+            "category": 5,
+            "text_content": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int arr[] = {1, 2, 3, 4, 5};\n    for(int i = 0; i < 5; i++) {\n        cout << arr[i] << ' ';\n    }\n    return 0;\n}"
+        }
+    },
+
+    {
+        "model": "words.Text",
+        "pk": 31,
+        "fields": {
+            "category": 6,
+            "text_content": "Текст на русском языке. Этот текст представляет собой простой пример."
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 32,
+        "fields": {
+            "category": 6,
+            "text_content": "Это пример использования русского языка в программировании."
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 33,
+        "fields": {
+            "category": 1,
+            "text_content": "<html>\n  <head>\n    <title>Типичный HTML документ</title>\n  </head>\n  <body>\n    <h1>Привет, мир!</h1>\n    <p>Этот документ написан с использованием HTML.</p>\n  </body>\n</html>"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 34,
+        "fields": {
+            "category": 1,
+            "text_content": "<html>\n  <head>\n    <meta charset='UTF-8'>\n    <title>HTML пример</title>\n  </head>\n  <body>\n    <h1>HTML страницы</h1>\n    <p>С помощью HTML можно создавать веб-страницы.</p>\n  </body>\n</html>"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 35,
+        "fields": {
+            "category": 2,
+            "text_content": "body {\n  background-color: #f0f0f0;\n  font-family: Arial, sans-serif;\n}\n\nh1 {\n  color: #333;\n}\n\np {\n  font-size: 14px;\n  line-height: 1.6;\n}"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 36,
+        "fields": {
+            "category": 2,
+            "text_content": "body {\n  font-family: 'Helvetica', sans-serif;\n  background-color: #fff;\n}\n\nh1 {\n  color: #0066cc;\n}\n\np {\n  color: #444;\n  line-height: 1.8;\n}"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 37,
+        "fields": {
+            "category": 3,
+            "text_content": "console.log('Hello, world!');\n\nfunction greet() {\n  alert('Welcome to JavaScript!');\n}\n\ngreet();"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 38,
+        "fields": {
+            "category": 3,
+            "text_content": "var x = 5;\nvar y = 10;\n\nfunction add(a, b) {\n  return a + b;\n}\n\nconsole.log(add(x, y));"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 39,
+        "fields": {
+            "category": 4,
+            "text_content": "def greet(name):\n    print(f'Hello, {name}!')\n\ngreet('Python Developer')"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 40,
+        "fields": {
+            "category": 4,
+            "text_content": "x = 3\ny = 5\n\ndef add(a, b):\n    return a + b\n\nprint(add(x, y))"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 41,
+        "fields": {
+            "category": 5,
+            "text_content": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int x = 10;\n    cout << 'Value of x: ' << x << endl;\n    return 0;\n}"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 42,
+        "fields": {
+            "category": 5,
+            "text_content": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int a = 7, b = 12;\n    cout << 'Sum: ' << a + b << endl;\n    return 0;\n}"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 43,
+        "fields": {
+            "category": 6,
+            "text_content": "Программирование — это увлекательное занятие, которое открывает перед вами множество возможностей для создания различных приложений и систем."
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 44,
+        "fields": {
+            "category": 6,
+            "text_content": "Чистый код всегда легче поддерживать, тестировать и развивать. Следует стремиться к улучшению читаемости и логичности программ."
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 45,
+        "fields": {
+            "category": 6,
+            "text_content": "Оптимизация — ключевой аспект при разработке программ. Чем эффективнее ваш код, тем быстрее будет работать приложение."
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 46,
+        "fields": {
+            "category": 6,
+            "text_content": "Следует всегда помнить, что хороший код — это не только код, который работает, но и код, который легко понять и изменить."
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 47,
+        "fields": {
+            "category": 7,
+            "text_content": "Programming is an art form that combines logic, creativity, and critical thinking."
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 48,
+        "fields": {
+            "category": 7,
+            "text_content": "Code readability is one of the most important aspects of software development. It is vital to write code that others can easily understand."
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 49,
+        "fields": {
+            "category": 7,
+            "text_content": "Efficient code enhances the performance of the program and makes it scalable in the long run."
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 50,
+        "fields": {
+            "category": 7,
+            "text_content": "Developers should focus on writing clean and maintainable code to ensure that the project can be easily updated over time."
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 51,
+        "fields": {
+            "category": 8,
+            "text_content": "1 2 3 4 5 6 7 8 9 10"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 52,
+        "fields": {
+            "category": 8,
+            "text_content": "11 12 13 14 15 16 17 18 19 20"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 53,
+        "fields": {
+            "category": 8,
+            "text_content": "21 22 23 24 25 26 27 28 29 30"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 54,
+        "fields": {
+            "category": 8,
+            "text_content": "31 32 33 34 35 36 37 38 39 40"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 55,
+        "fields": {
+            "category": 9,
+            "text_content": "!@#$%^&*()"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 56,
+        "fields": {
+            "category": 9,
+            "text_content": "~`<>?;:'"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 57,
+        "fields": {
+            "category": 9,
+            "text_content": "#[]{}|\\"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 58,
+        "fields": {
+            "category": 9,
+            "text_content": "*/.,+-=<>!"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 59,
+        "fields": {
+            "category": 1,
+            "text_content": "<html>\n  <head>\n    <title>Основы HTML</title>\n  </head>\n  <body>\n    <h1>Заголовок</h1>\n    <p>HTML используется для создания структуры веб-страниц.</p>\n  </body>\n</html>"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 60,
+        "fields": {
+            "category": 1,
+            "text_content": "<html>\n  <head>\n    <meta charset='UTF-8'>\n    <title>Мой первый HTML-документ</title>\n  </head>\n  <body>\n    <h1>Привет, мир!</h1>\n    <p>HTML — это язык разметки для создания веб-страниц.</p>\n  </body>\n</html>"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 61,
+        "fields": {
+            "category": 2,
+            "text_content": "body {\n  background-color: #ffffff;\n  font-size: 16px;\n  line-height: 1.5;\n}\n\nh1 {\n  color: #333;\n}\n\np {\n  color: #666;\n}"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 62,
+        "fields": {
+            "category": 2,
+            "text_content": "body {\n  font-family: Arial, sans-serif;\n  background-color: #fafafa;\n}\n\nh1 {\n  color: #1d72b8;\n}\n\np {\n  font-size: 14px;\n  color: #444;\n}"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 63,
+        "fields": {
+            "category": 3,
+            "text_content": "console.log('Hello, world!');\n\nlet num = 5;\n\nfunction multiply(a, b) {\n  return a * b;\n}\n\nconsole.log(multiply(num, 3));"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 64,
+        "fields": {
+            "category": 3,
+            "text_content": "const array = [1, 2, 3, 4, 5];\n\narray.forEach((item) => {\n  console.log(item * 2);\n});"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 65,
+        "fields": {
+            "category": 4,
+            "text_content": "def add_numbers(x, y):\n    return x + y\n\nprint(add_numbers(4, 6))"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 66,
+        "fields": {
+            "category": 4,
+            "text_content": "a = 8\nb = 12\n\ndef subtract(a, b):\n    return a - b\n\nprint(subtract(a, b))"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 67,
+        "fields": {
+            "category": 5,
+            "text_content": "#include <iostream>\nusing namespace std;\n\nint multiply(int a, int b) {\n    return a * b;\n}\n\nint main() {\n    cout << multiply(4, 5) << endl;\n    return 0;\n}"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 68,
+        "fields": {
+            "category": 5,
+            "text_content": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int x = 3, y = 9;\n    cout << 'Product: ' << x * y << endl;\n    return 0;\n}"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 69,
+        "fields": {
+            "category": 6,
+            "text_content": "Когда пишешь код, всегда думай о том, как его будет поддерживать кто-то другой, даже если ты сам им будешь заниматься."
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 70,
+        "fields": {
+            "category": 6,
+            "text_content": "Решение одной задачи может открыть новый взгляд на другие, но важно не забывать, что все имеет свою границу и не нужно слишком усложнять код."
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 71,
+        "fields": {
+            "category": 6,
+            "text_content": "Документирование кода — важный аспект разработки. Хорошо написанные комментарии облегчают понимание и поддержку программ."
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 72,
+        "fields": {
+            "category": 6,
+            "text_content": "Изучение новых технологий и подходов важно для любого разработчика. Это помогает улучшать навыки и работать эффективнее."
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 73,
+        "fields": {
+            "category": 7,
+            "text_content": "Programming languages are the tools we use to communicate with machines. The more you learn, the more power you have to bring your ideas to life."
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 74,
+        "fields": {
+            "category": 7,
+            "text_content": "Code is like a puzzle. Sometimes it seems confusing, but once you figure it out, it all falls into place."
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 75,
+        "fields": {
+            "category": 7,
+            "text_content": "Software development requires a combination of problem-solving skills, creativity, and attention to detail."
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 76,
+        "fields": {
+            "category": 7,
+            "text_content": "As a developer, you should always be learning and evolving. Technology is constantly changing, and staying up to date is crucial for success."
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 77,
+        "fields": {
+            "category": 8,
+            "text_content": "41 42 43 44 45 46 47 48 49 50"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 78,
+        "fields": {
+            "category": 8,
+            "text_content": "51 52 53 54 55 56 57 58 59 60"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 79,
+        "fields": {
+            "category": 8,
+            "text_content": "61 62 63 64 65 66 67 68 69 70"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 80,
+        "fields": {
+            "category": 8,
+            "text_content": "71 72 73 74 75 76 77 78 79 80"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 81,
+        "fields": {
+            "category": 9,
+            "text_content": "([]){}<>,.?"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 82,
+        "fields": {
+            "category": 9,
+            "text_content": "|^&*%$#@!"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 83,
+        "fields": {
+            "category": 9,
+            "text_content": "-_=+[]{}\\|;:,.?/~"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 84,
+        "fields": {
+            "category": 9,
+            "text_content": "!'\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 85,
+        "fields": {
+            "category": 1,
+            "text_content": "<html>\n  <head>\n    <title>Сложные элементы HTML</title>\n  </head>\n  <body>\n    <h1>Создание таблиц в HTML</h1>\n    <p>HTML позволяет создавать таблицы для представления данных в строках и столбцах. Мы используем теги &lt;table&gt;, &lt;tr&gt;, &lt;th&gt;, &lt;td&gt; для создания таблиц.</p>\n    <table border=\"1\">\n      <tr>\n        <th>Имя</th>\n        <th>Возраст</th>\n      </tr>\n      <tr>\n        <td>Иван</td>\n        <td>25</td>\n      </tr>\n      <tr>\n        <td>Анна</td>\n        <td>30</td>\n      </tr>\n    </table>\n  </body>\n</html>"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 86,
+        "fields": {
+            "category": 2,
+            "text_content": "body {\n  font-family: 'Arial', sans-serif;\n  margin: 0;\n  padding: 0;\n  background-color: #f4f4f4;\n}\n\nh1 {\n  color: #333;\n  text-align: center;\n  margin-top: 50px;\n}\n\np {\n  font-size: 16px;\n  color: #666;\n  line-height: 1.5;\n  text-align: justify;\n  margin: 20px;\n}\n\n.container {\n  width: 80%;\n  margin: 0 auto;\n}\n\nbutton {\n  background-color: #4CAF50;\n  color: white;\n  padding: 14px 20px;\n  border: none;\n  cursor: pointer;\n}\n\nbutton:hover {\n  background-color: #45a049;\n}"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 87,
+        "fields": {
+            "category": 3,
+            "text_content": "let fruits = ['apple', 'banana', 'cherry'];\n\nfor (let i = 0; i < fruits.length; i++) {\n  console.log('Fruit at index ' + i + ': ' + fruits[i]);\n}\n\nconst greeting = 'Hello, world!';\nconsole.log(greeting);\n\nfunction addNumbers(a, b) {\n  return a + b;\n}\n\nlet sum = addNumbers(5, 7);\nconsole.log('Sum: ' + sum);"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 88,
+        "fields": {
+            "category": 4,
+            "text_content": "def greet_user(name):\n    return f'Hello, {name}!'\n\nuser_name = 'Alice'\nprint(greet_user(user_name))\n\nlist_numbers = [1, 2, 3, 4, 5]\nfor number in list_numbers:\n    print(f'Squared number: {number ** 2}')\n\ndef multiply(x, y):\n    return x * y\n\nprint(f'Multiplication result: {multiply(4, 6)}')"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 89,
+        "fields": {
+            "category": 5,
+            "text_content": "#include <iostream>\nusing namespace std;\n\nint calculate_square(int n) {\n    return n * n;\n}\n\nint main() {\n    int num = 7;\n    cout << 'The square of ' << num << ' is: ' << calculate_square(num) << endl;\n    return 0;\n}"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 90,
+        "fields": {
+            "category": 6,
+            "text_content": "Как только ты начинаешь работать с кодом, ты сталкиваешься с непредсказуемыми ошибками, но не стоит пугаться. Все ошибки можно решить, главное — не терять терпение. Со временем ты научишься не только исправлять баги, но и предсказывать их, пока пишешь код. Программирование — это не только работа с кодом, но и постоянное улучшение своих навыков, развитие логики и умения мыслить нестандартно."
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 91,
+        "fields": {
+            "category": 7,
+            "text_content": "The more you write code, the more you learn about yourself and how you think. Programming is a journey that improves your problem-solving skills, teaches you how to break down complex tasks, and opens your mind to endless possibilities. No matter how challenging a problem may seem, remember that every bug is just a puzzle waiting to be solved. Stay persistent and enjoy the process!"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 92,
+        "fields": {
+            "category": 7,
+            "text_content": "Coding is not just about writing syntax correctly. It's about solving real-world problems. Every line of code you write should have a purpose, and with every function, loop, or condition, you solve a problem. With practice, you begin to see the world in terms of algorithms and logic. The more you practice, the more natural coding becomes. Always keep learning and challenging yourself."
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 93,
+        "fields": {
+            "category": 8,
+            "text_content": "15 16 17 18 19 20 21 22 23 24\n25 26 27 28 29 30 31 32 33 34\n35 36 37 38 39 40 41 42 43 44\n45 46 47 48 49 50 51 52 53 54\n55 56 57 58 59 60 61 62 63 64"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 94,
+        "fields": {
+            "category": 8,
+            "text_content": "65 66 67 68 69 70 71 72 73 74\n75 76 77 78 79 80 81 82 83 84\n85 86 87 88 89 90 91 92 93 94\n95 96 97 98 99 100 101 102 103 104"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 95,
+        "fields": {
+            "category": 9,
+            "text_content": "{[()]}|\\?+*^&$#%@!~`-_=><,.<>{}\""
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 96,
+        "fields": {
+            "category": 9,
+            "text_content": "!,;:'\"&*+=/(){}[]|<>,.?"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 97,
+        "fields": {
+            "category": 9,
+            "text_content": "!@#$%^&*()_+{}[]|:;<>,.?/~`\\"
+        }
+    },
+    {
+        "model": "words.Text",
+        "pk": 98,
+        "fields": {
+            "category": 9,
+            "text_content": "|^&*%$#@!~`-_=+[]{}\\|:;,./?"
+        }
+    }
+]

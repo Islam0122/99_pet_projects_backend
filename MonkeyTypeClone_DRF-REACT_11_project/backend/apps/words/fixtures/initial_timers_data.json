@@ -1,0 +1,30 @@
+[
+    {
+        "model": "words.Timer",
+        "pk": 1,
+        "fields": {
+            "seconds": 10
+        }
+    },
+    {
+        "model": "words.Timer",
+        "pk": 2,
+        "fields": {
+            "seconds": 20
+        }
+    },
+    {
+        "model": "words.Timer",
+        "pk": 3,
+        "fields": {
+            "seconds": 30
+        }
+    },
+    {
+        "model": "words.Timer",
+        "pk": 4,
+        "fields": {
+            "seconds": 60
+        }
+    }
+]
