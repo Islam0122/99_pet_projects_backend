@@ -23,7 +23,8 @@ CORS_ALLOW_HEADERS = [
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWED_ORIGIN_REGEXES = [
     r"^http://127\.0\.0\.1(:\d+)?$",  # Разрешить все порты для 127.0.0.1
-    r"^http://localhost(:\d+)?$",     # Разрешить все порты для localhost
+    r"^http://localhost(:\d+)?$",
+    r"^https://islam-dev\.up\.railway\.app$",
 ]
 
 

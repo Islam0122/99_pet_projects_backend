@@ -107,10 +107,10 @@ SPECTACULAR_SETTINGS = {
 from .cors import *
 
 JAZZMIN_SETTINGS = {
-    "site_title": "ToDoList",
-    "site_header": "Админка ToDoList",
-    "site_brand": "ToDoList",
-    "welcome_sign": "Добро пожаловать в админку ToDoList!",
+    "site_title": "Islam Devt",
+    "site_header": "Админка Islam Dev",
+    "site_brand": "Islam Dev",
+    "welcome_sign": "Добро пожаловать в админку Islam Dev!",
     "topmenu_links": [
         {"name": "Главная", "url": "/admin/", "permissions": ["auth.view_user"]},
     ],
