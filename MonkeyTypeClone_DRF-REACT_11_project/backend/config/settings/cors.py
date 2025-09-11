@@ -22,11 +22,12 @@ CORS_ALLOW_HEADERS = [
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWED_ORIGIN_REGEXES = [
-    r"^http://127\.0\.0\.1(:\d+)?$",  # Разрешить все порты для 127.0.0.1
+    r"^http://127\.0\.0\.1(:\d+)?$",
     r"^http://localhost(:\d+)?$",
     r"^https://islam-dev\.up\.railway\.app$",
-    r"^http://islam-dev\.up\.railway\.app$",
-
 ]
-
-
+CSRF_TRUSTED_ORIGINS = [
+    "http://127.0.0.1:3000",
+    "http://localhost:3000",
+    "https://islam-dev.up.railway.app",
+]
