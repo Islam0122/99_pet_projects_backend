@@ -25,6 +25,8 @@ CORS_ALLOWED_ORIGIN_REGEXES = [
     r"^http://127\.0\.0\.1(:\d+)?$",  # Разрешить все порты для 127.0.0.1
     r"^http://localhost(:\d+)?$",
     r"^https://islam-dev\.up\.railway\.app$",
+    r"^http://islam-dev\.up\.railway\.app$",
+
 ]
 
 
