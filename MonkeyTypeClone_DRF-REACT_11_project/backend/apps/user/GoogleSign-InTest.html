@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Google Sign-In Test</title>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+
+<div id="g_id_onload"
+     data-client_id="472858064873-2ldpc5il9rils2dt9nq3uk5ddetrb1ft.apps.googleusercontent.com"
+     data-callback="handleCredentialResponse">
+</div>
+
+<div class="g_id_signin" data-type="standard"></div>
+
+<script>
+function handleCredentialResponse(response) {
+    console.log("ID Token: ", response.credential);
+
+    // Отправляем токен на бэкенд
+    fetch("http://127.0.0.1:8000/api/auth/google/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: response.credential })
+    })
+    .then(res => res.json())
+    .then(data => console.log("JWT from backend:", data))
+    .catch(err => console.error(err));
+}
+</script>
+
+</body>
+</html>
