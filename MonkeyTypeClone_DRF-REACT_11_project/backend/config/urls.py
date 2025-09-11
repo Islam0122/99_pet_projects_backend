@@ -9,6 +9,7 @@ urlpatterns = [
                   path('admin/', admin.site.urls),
                   path('api/words/', include('apps.words.urls') , name='words_api'),
                   path('api/auth/', include('apps.user.urls'), ),
+                  path('api/results/', include('apps.results.urls')),
 
 ]
 

@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     #apps
     'apps.words',
     'apps.user',
+    'apps.results',
 
 
 ]
