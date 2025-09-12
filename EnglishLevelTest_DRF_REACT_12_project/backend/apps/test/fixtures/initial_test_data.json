@@ -1,0 +1,135 @@
+[
+  {
+    "model": "test.test",
+    "pk": 1,
+    "fields": {
+      "name": "Present Simple",
+      "description": "Основы использования Present Simple",
+      "level": 1,
+      "created_at": "2025-09-13T12:00:00Z",
+      "updated_at": "2025-09-13T12:00:00Z"
+    }
+  },
+  {
+    "model": "test.test",
+    "pk": 2,
+    "fields": {
+      "name": "Vocabulary A1",
+      "description": "Слова и выражения уровня A1",
+      "level": 1,
+      "created_at": "2025-09-13T12:05:00Z",
+      "updated_at": "2025-09-13T12:05:00Z"
+    }
+  },
+  {
+    "model": "test.test",
+    "pk": 3,
+    "fields": {
+      "name": "Present Continuous",
+      "description": "Основы использования Present Continuous",
+      "level": 2,
+      "created_at": "2025-09-13T12:10:00Z",
+      "updated_at": "2025-09-13T12:10:00Z"
+    }
+  },
+  {
+    "model": "test.test",
+    "pk": 4,
+    "fields": {
+      "name": "Vocabulary A2",
+      "description": "Слова и выражения уровня A2",
+      "level": 2,
+      "created_at": "2025-09-13T12:15:00Z",
+      "updated_at": "2025-09-13T12:15:00Z"
+    }
+  },
+  {
+    "model": "test.test",
+    "pk": 5,
+    "fields": {
+      "name": "Past Simple",
+      "description": "Основы использования Past Simple",
+      "level": 3,
+      "created_at": "2025-09-13T12:20:00Z",
+      "updated_at": "2025-09-13T12:20:00Z"
+    }
+  },
+  {
+    "model": "test.test",
+    "pk": 6,
+    "fields": {
+      "name": "Reading Comprehension B1",
+      "description": "Упражнения на понимание текста",
+      "level": 3,
+      "created_at": "2025-09-13T12:25:00Z",
+      "updated_at": "2025-09-13T12:25:00Z"
+    }
+  },
+  {
+    "model": "test.test",
+    "pk": 7,
+    "fields": {
+      "name": "Conditionals B2",
+      "description": "Упражнения на условные предложения",
+      "level": 4,
+      "created_at": "2025-09-13T12:30:00Z",
+      "updated_at": "2025-09-13T12:30:00Z"
+    }
+  },
+  {
+    "model": "test.test",
+    "pk": 8,
+    "fields": {
+      "name": "Reading Comprehension B2",
+      "description": "Тексты и задания на понимание",
+      "level": 4,
+      "created_at": "2025-09-13T12:35:00Z",
+      "updated_at": "2025-09-13T12:35:00Z"
+    }
+  },
+  {
+    "model": "test.test",
+    "pk": 9,
+    "fields": {
+      "name": "Advanced Grammar C1",
+      "description": "Сложные грамматические конструкции",
+      "level": 5,
+      "created_at": "2025-09-13T12:40:00Z",
+      "updated_at": "2025-09-13T12:40:00Z"
+    }
+  },
+  {
+    "model": "test.test",
+    "pk": 10,
+    "fields": {
+      "name": "Vocabulary C1",
+      "description": "Продвинутые слова и выражения",
+      "level": 5,
+      "created_at": "2025-09-13T12:45:00Z",
+      "updated_at": "2025-09-13T12:45:00Z"
+    }
+  },
+  {
+    "model": "test.test",
+    "pk": 11,
+    "fields": {
+      "name": "Idioms & Phrasal Verbs C2",
+      "description": "Идиомы и фразовые глаголы высокого уровня",
+      "level": 6,
+      "created_at": "2025-09-13T12:50:00Z",
+      "updated_at": "2025-09-13T12:50:00Z"
+    }
+  },
+  {
+    "model": "test.test",
+    "pk": 12,
+    "fields": {
+      "name": "Advanced Reading C2",
+      "description": "Сложные тексты и упражнения на понимание",
+      "level": 6,
+      "created_at": "2025-09-13T12:55:00Z",
+      "updated_at": "2025-09-13T12:55:00Z"
+    }
+  }
+]
+

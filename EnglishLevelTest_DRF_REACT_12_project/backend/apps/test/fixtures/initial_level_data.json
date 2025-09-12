@@ -1,0 +1,62 @@
+[
+  {
+    "model": "test.level",
+    "pk": 1,
+    "fields": {
+      "title": "A1",
+      "description": "Начальный уровень английского языка",
+      "created_at": "2025-09-13T12:00:00Z",
+      "updated_at": "2025-09-13T12:00:00Z"
+    }
+  },
+  {
+    "model": "test.level",
+    "pk": 2,
+    "fields": {
+      "title": "A2",
+      "description": "Элементарный уровень английского языка",
+      "created_at": "2025-09-13T12:00:00Z",
+      "updated_at": "2025-09-13T12:00:00Z"
+    }
+  },
+  {
+    "model": "test.level",
+    "pk": 3,
+    "fields": {
+      "title": "B1",
+      "description": "Средний уровень английского языка",
+      "created_at": "2025-09-13T12:00:00Z",
+      "updated_at": "2025-09-13T12:00:00Z"
+    }
+  },
+  {
+    "model": "test.level",
+    "pk": 4,
+    "fields": {
+      "title": "B2",
+      "description": "Выше среднего уровня английского языка",
+      "created_at": "2025-09-13T12:00:00Z",
+      "updated_at": "2025-09-13T12:00:00Z"
+    }
+  },
+  {
+    "model": "test.level",
+    "pk": 5,
+    "fields": {
+      "title": "C1",
+      "description": "Продвинутый уровень английского языка",
+      "created_at": "2025-09-13T12:00:00Z",
+      "updated_at": "2025-09-13T12:00:00Z"
+    }
+  },
+  {
+    "model": "test.level",
+    "pk": 6,
+    "fields": {
+      "title": "C2",
+      "description": "Свободное владение английским языком",
+      "created_at": "2025-09-13T12:00:00Z",
+      "updated_at": "2025-09-13T12:00:00Z"
+    }
+  }
+]
