@@ -55,5 +55,5 @@ class PlacementTest_Question(BaseModel):
         return f"{self.text[:50]}..."
 
     class Meta:
-        verbose_name = "Вопрос"
-        verbose_name_plural = "Вопросы"
+        verbose_name = "Placement Test Вопрос"
+        verbose_name_plural = "Placement Test Вопросы"
