@@ -26,19 +26,24 @@ class PlacementTestQuestionSerializer(serializers.ModelSerializer):
 
 class PlacementTestSerializer(serializers.ModelSerializer):
     questions = serializers.SerializerMethodField()
-    total_questions = serializers.SerializerMethodField()
 
     class Meta:
         model = PlacementTest
-        fields = ["id", "name", "description", "questions", "total_questions"]
+        fields = ["id", "name", "description", "questions"]
 
     def get_questions(self, obj):
-        qs = list(obj.questions.all())
-        if len(qs) <= 20:
-            selected = qs
-        else:
-            selected = random.sample(qs, 30)  # выбираем случайные 30 вопросов
+        qs = obj.questions.all()
+        levels = qs.values_list('level_id', flat=True).distinct().order_by('level_id')
+        selected = []
+
+        questions_per_level = 5
+
+        for lvl in levels:
+            lvl_qs = list(qs.filter(level_id=lvl))
+            if len(lvl_qs) <= questions_per_level:
+                selected.extend(lvl_qs)
+            else:
+                selected.extend(random.sample(lvl_qs, questions_per_level))
+        random.shuffle(selected)
         return PlacementTestQuestionSerializer(selected, many=True).data
 
-    def get_total_questions(self, obj):
-        return obj.questions.count() - 20

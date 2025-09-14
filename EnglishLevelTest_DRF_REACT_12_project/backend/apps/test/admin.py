@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Level, Test, Question, ResultsTest ,PlacementTest ,PlacementTest_Question
+from django.utils.html import format_html
+from .models import Level, Test, Question, ResultsTest ,PlacementTest ,PlacementTest_Question,PlacementTestResult
 from .forms.forms import QuestionForm
 
 # =========================
@@ -137,6 +138,7 @@ class PlacementTestAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return False
 
+
 @admin.register(PlacementTest_Question)
 class PlacementTestQuestionAdmin(admin.ModelAdmin):
     list_display = ("short_text", "test", "level", "question_type", "correct_answer")
@@ -164,3 +166,54 @@ class PlacementTestQuestionAdmin(admin.ModelAdmin):
     def short_text(self, obj):
         return obj.text[:50] + ("..." if len(obj.text) > 50 else "")
     short_text.short_description = "Вопрос"
+
+
+@admin.register(PlacementTestResult)
+class PlacementTestResultAdmin(admin.ModelAdmin):
+    list_display = (
+        "id", "name", "email", "test", "level",
+        "score", "correct_answers", "wrong_answers",
+        "percentage", "created_at",
+    )
+    list_filter = ("test", "level", "created_at")
+    search_fields = ("name", "email", "test__name")
+    ordering = ("-created_at",)
+
+    readonly_fields = (
+        "created_at", "updated_at", "percentage", "wrong_answers",
+        "score", "certificate",
+        "level_a1_correct", "level_a2_correct", "level_b1_correct",
+        "level_b2_correct", "level_c1_correct", "level_c2_correct"
+    )
+
+    fieldsets = (
+        ("Информация о пользователе", {
+            "fields": ("name", "email")
+        }),
+        ("Тест", {
+            "fields": ("test", "level")
+        }),
+        ("Результаты", {
+            "fields": (
+                "score", "total_questions", "correct_answers",
+                "wrong_answers", "percentage"
+            )
+        }),
+        ("Подробные результаты по уровням", {
+            "fields": (
+                "level_a1_correct", "level_a2_correct",
+                "level_b1_correct", "level_b2_correct",
+                "level_c1_correct", "level_c2_correct"
+            )
+        }),
+        ("Сертификат", {
+            "fields": ("certificate",)
+        }),
+        ("Системное", {
+            "fields": ("created_at", "updated_at"),
+        }),
+    )
+
+    def has_add_permission(self, request):
+        return False
+
