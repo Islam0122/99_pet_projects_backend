@@ -1,0 +1,12 @@
+[
+  {
+    "model": "test.placementtest",
+    "pk": 1,
+    "fields": {
+      "name": "Placement Test - English Level",
+      "description": "Тест для определения уровня английского языка",
+      "created_at": "2025-09-14T00:00:00Z",
+      "updated_at": "2025-09-14T00:00:00Z"
+    }
+  }
+]
