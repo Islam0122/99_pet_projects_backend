@@ -2,7 +2,7 @@ from .base import *
 
 DEBUG = False
 
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['mydomain.com'])
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
 
 DATABASES = {
