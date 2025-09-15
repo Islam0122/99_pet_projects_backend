@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
     libffi-dev \
     shared-mime-info \
     && rm -rf /var/lib/apt/lists/*
+RUN mkdir -p /var/log/django
 
 # Устанавливаем зависимости проекта
 WORKDIR /code
