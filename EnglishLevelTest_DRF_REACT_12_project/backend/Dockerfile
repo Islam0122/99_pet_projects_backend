@@ -1,26 +1,30 @@
 FROM python:3.13-slim
 
-# Устанавливаем зависимости для WeasyPrint
+# Системные зависимости для WeasyPrint
 RUN apt-get update && apt-get install -y \
     libcairo2 \
+    libcairo2-dev \
     libpango-1.0-0 \
-    libgdk-pixbuf-2.0-0 \
+    libpango1.0-dev \
+    libgdk-pixbuf2.0-0 \
+    libgdk-pixbuf2.0-dev \
     libffi-dev \
     shared-mime-info \
     python3-cffi \
+    build-essential \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /code
 
-# Копируем зависимости и устанавливаем
+# Устанавливаем зависимости Python
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Копируем весь проект
+# Копируем проект
 COPY . .
 
-# Создаем папку для логов
-RUN mkdir -p /code/logs
+# Папка для медиа и логов
+RUN mkdir -p /code/media /code/logs
 
-# Команда запуска через Gunicorn (1 воркер)
+# Запуск через Gunicorn (1 воркер)
 CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "1"]
