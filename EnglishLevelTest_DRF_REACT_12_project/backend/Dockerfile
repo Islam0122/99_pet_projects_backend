@@ -9,11 +9,12 @@ RUN apt-get update && apt-get install -y \
     libgdk-pixbuf2.0-0 \
     libgdk-pixbuf2.0-dev \
     libffi-dev \
-    shared-mime-info \
-    python3-cffi \
     build-essential \
+    shared-mime-info \
     fontconfig \
+    python3-cffi \
     && rm -rf /var/lib/apt/lists/*
+
 
 WORKDIR /code
 
