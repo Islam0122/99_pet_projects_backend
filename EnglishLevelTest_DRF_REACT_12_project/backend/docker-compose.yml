@@ -22,10 +22,7 @@ services:
       POSTGRES_USER: myuser
       POSTGRES_PASSWORD: mypassword
 
-  nginx:
-    image: nginx:alpine
-    volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+
 
 volumes:
   postgres_data:
