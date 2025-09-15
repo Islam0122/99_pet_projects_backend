@@ -1,6 +1,6 @@
 FROM python:3.13-slim
 
-# Устанавливаем системные библиотеки для WeasyPrint
+# Системные зависимости для WeasyPrint
 RUN apt-get update && apt-get install -y \
     libcairo2 \
     libcairo2-dev \
@@ -17,15 +17,15 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /code
 
-# Устанавливаем зависимости Python
+# Установка зависимостей Python
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Копируем весь проект
+# Копирование проекта
 COPY . .
 
-# Создаём папки для медиа и логов
+# Создание папок для медиа и логов
 RUN mkdir -p /code/media /code/logs
 
-# Запуск Django через Gunicorn
+# Команда запуска Django через Gunicorn
 CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "1"]
