@@ -1,3 +1,5 @@
+version: '3.9'
+
 services:
   web:
     build: .
@@ -10,33 +12,23 @@ services:
     command: gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 2 --timeout 120
     depends_on:
       - redis
+      - db
 
   redis:
     image: redis:7
-    container_name: redis
-    restart: unless-stopped
     ports:
       - "6379:6379"
 
-  celery:
+  celery-worker:
     build: .
-    container_name: celery-worker
-    command: celery -A config worker -l info
-    volumes:
-      - .:/code
+    command: python -m celery -A config worker -l info
     depends_on:
-      - redis
       - web
-    restart: unless-stopped
+      - redis
 
-  # Опционально: планировщик задач
   celery-beat:
     build: .
-    container_name: celery-beat
-    command: celery -A config beat -l info
-    volumes:
-      - .:/code
+    command: python -m celery -A config beat -l info
     depends_on:
-      - redis
       - web
-    restart: unless-stopped
+      - redis
