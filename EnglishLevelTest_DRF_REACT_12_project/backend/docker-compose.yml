@@ -20,12 +20,12 @@ services:
     build: .
     command: python -m celery -A config worker -l info
     depends_on:
-      - web
       - redis
+      - django-web
 
   celery-beat:
     build: .
     command: python -m celery -A config beat -l info
     depends_on:
-      - web
       - redis
+      - django-web
