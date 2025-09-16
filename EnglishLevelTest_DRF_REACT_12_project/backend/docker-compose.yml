@@ -3,11 +3,42 @@ version: '3.9'
 services:
   web:
     build: .
-    container_name: django-weasyprint
+    container_name: django-web
     ports:
       - "8000:8000"
     volumes:
       - .:/code
     restart: unless-stopped
     command: gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 2 --timeout 120
+    depends_on:
+      - redis
 
+  redis:
+    image: redis:7
+    container_name: redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+
+  celery:
+    build: .
+    container_name: celery-worker
+    command: celery -A config worker -l info
+    volumes:
+      - .:/code
+    depends_on:
+      - redis
+      - web
+    restart: unless-stopped
+
+  # Опционально: планировщик задач
+  celery-beat:
+    build: .
+    container_name: celery-beat
+    command: celery -A config beat -l info
+    volumes:
+      - .:/code
+    depends_on:
+      - redis
+      - web
+    restart: unless-stopped
