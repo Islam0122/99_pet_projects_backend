@@ -18,16 +18,25 @@ services:
     ports:
       - "6379:6379"
 
-  celery-worker:
+  celery:
     build: .
-    command: python -m celery -A config worker -l info
+    container_name: celery-worker
+    command: celery -A config worker -l info
+    volumes:
+      - .:/code
     depends_on:
       - redis
       - web
+    restart: unless-stopped
 
+  # Опционально: планировщик задач
   celery-beat:
     build: .
-    command: python -m celery -A config beat -l info
+    container_name: celery-beat
+    command: celery -A config beat -l info
+    volumes:
+      - .:/code
     depends_on:
       - redis
       - web
+    restart: unless-stopped
