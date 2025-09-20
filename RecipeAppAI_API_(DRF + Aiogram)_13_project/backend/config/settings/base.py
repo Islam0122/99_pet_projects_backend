@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     #apps
     'apps.user',
     'apps.category',
+    'apps.recipe',
 
 ]
 
