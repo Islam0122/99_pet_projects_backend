@@ -28,7 +28,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'drf_spectacular',
     #apps
-    'apps.user'
+    'apps.user',
+    'apps.category',
 
 ]
 
