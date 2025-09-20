@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     "apps.category",
     "apps.recipe",
     "apps.UserRecipe",
+    "apps.BroadcastPrompt",
 ]
 
 MIDDLEWARE = [
