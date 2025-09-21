@@ -1,6 +1,11 @@
 from django.db import models
 
 class TgUser(models.Model):
+    LANG_CHOICES = [
+        ("ru", "Русский"),
+        ("en", "English"),
+    ]
+
     username = models.CharField(
         max_length=255,
         unique=True,
@@ -16,6 +21,13 @@ class TgUser(models.Model):
         max_length=255,
         verbose_name="Telegram ID",
         help_text="Уникальный идентификатор пользователя в Telegram"
+    )
+    language = models.CharField(
+        max_length=2,
+        choices=LANG_CHOICES,
+        default="ru",
+        verbose_name="Язык пользователя",
+        help_text="Язык интерфейса пользователя"
     )
     created_at = models.DateTimeField(
         auto_now_add=True,

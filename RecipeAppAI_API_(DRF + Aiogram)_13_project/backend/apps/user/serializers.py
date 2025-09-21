@@ -11,9 +11,11 @@ class TgUserSerializer(serializers.ModelSerializer):
             "username",
             "username_with_at",
             "full_name",
+            "language",
             "telegram_id",
             "created_at",
             "joined_at",
+
         ]
         read_only_fields = ["id", "created_at", "joined_at"]
 
