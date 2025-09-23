@@ -4,7 +4,7 @@ from aiogram.types import CallbackQuery,FSInputFile
 from external_services.api_client_user import TgUserAPI
 from lexicon.lexicon_ru import LEXICON_RU
 from lexicon.lexicon_en import LEXICON_EN
-from keyboards.inline_keyboards import inline_language_keyboard
+from keyboards.inline_keyboards import inline_language_keyboard,inline_language_keyboard2, get_main_menu, get_cancel_keyboard
 
 user_router = Router()
 photo = FSInputFile("img.png")
@@ -29,6 +29,8 @@ def format_date(date_str: str, language: str = "en") -> str:
     except Exception:
         return date_str
 
+
+# ------------- start
 @user_router.message(Command("start"))
 async def cmd_start(message: types.Message):
     telegram_id = message.from_user.id
@@ -45,7 +47,8 @@ async def cmd_start(message: types.Message):
                 telegram_id=telegram_id,
                 language=user.get("language", "ru")
             )
-            lexicon = LEXICON_EN if user.get("language") == "en" else LEXICON_RU
+            lang = user.get("language", "ru")
+            lexicon = LEXICON_EN if lang == "en" else LEXICON_RU
             greeting_text = (
                 f"👋 {lexicon['greeting']}\n\n"
                 f"📌 {lexicon['start_help']}"
@@ -53,14 +56,36 @@ async def cmd_start(message: types.Message):
             await message.answer_photo(
                 photo=photo,
                 caption=greeting_text,
-                parse_mode="Markdown")
+                reply_markup=get_main_menu(lang),
+                parse_mode="Markdown"
+            )
         else:
             await message.answer(
                 "🌐 Выберите язык / Choose your language:",
                 reply_markup=inline_language_keyboard()
             )
 
+@user_router.callback_query(lambda c: c.data == "menu:main")
+async def return_to_main_menu(callback: CallbackQuery):
+    telegram_id = callback.from_user.id
 
+    async with TgUserAPI() as api:
+        user = await api.get_user_by_telegram_id(telegram_id)
+    lang = user.get("language", "ru") if user else "ru"
+    lexicon = LEXICON_EN if lang == "en" else LEXICON_RU
+    greeting_text = (
+        f"👋 {lexicon['greeting']}\n\n"
+        f"📌 {lexicon['start_help']}"
+    )
+
+    await callback.message.edit_caption(
+        caption=greeting_text,
+        reply_markup=get_main_menu(lang),
+        parse_mode="Markdown"
+    )
+    await callback.answer()
+
+# ------------- help
 @user_router.message(Command("help"))
 async def cmd_help(message: types.Message):
     telegram_id = message.from_user.id
@@ -81,7 +106,23 @@ async def cmd_help(message: types.Message):
         parse_mode="Markdown"
     )
 
+@user_router.callback_query(lambda c: c.data == "menu:help")
+async def menu_help(callback: CallbackQuery):
+    telegram_id = callback.from_user.id
 
+    async with TgUserAPI() as api:
+        user = await api.get_user_by_telegram_id(telegram_id)
+        lang = user.get("language", "ru") if user else "ru"
+
+    lexicon = LEXICON_EN if lang == "en" else LEXICON_RU
+    await callback.message.edit_caption(
+        caption=lexicon["help_text"],
+        reply_markup=get_cancel_keyboard(lang)
+
+    )
+
+
+# -------------- about
 @user_router.message(Command("about"))
 async def cmd_about(message: types.Message):
     telegram_id = message.from_user.id
@@ -97,6 +138,21 @@ async def cmd_about(message: types.Message):
         photo=photo,
         caption=about_text,
     )
+
+@user_router.callback_query(lambda c: c.data == "menu:about")
+async def menu_about(callback: CallbackQuery):
+    telegram_id = callback.from_user.id
+    async with TgUserAPI() as api:
+        user = await api.get_user_by_telegram_id(telegram_id)
+        lang = user.get("language", "ru") if user else "ru"
+
+    lexicon = LEXICON_EN if lang == "en" else LEXICON_RU
+    await callback.message.edit_caption(
+        caption=f"📌 {lexicon['about_text']}",
+        reply_markup=get_cancel_keyboard(lang)
+
+    )
+
 
 
 @user_router.message(Command("profile"))
@@ -147,6 +203,14 @@ async def cmd_profile(message: types.Message):
     )
 
 
+# ------- select language
+@user_router.callback_query(lambda c: c.data == "menu:language")
+async def open_language_menu(callback: CallbackQuery):
+    await callback.message.edit_caption(
+        caption="🌐 Выберите язык / Choose your language:",
+        reply_markup=inline_language_keyboard2()
+    )
+    await callback.answer()
 
 @user_router.callback_query(lambda c: c.data and c.data.startswith("set_lang:"))
 async def set_language(callback: CallbackQuery):
@@ -170,3 +234,31 @@ async def set_language(callback: CallbackQuery):
     )
     await callback.message.answer(greeting_text, parse_mode="Markdown")
     await callback.answer()
+
+@user_router.callback_query(lambda c: c.data and c.data.startswith("set_lang2:"))
+async def set_language2(callback: CallbackQuery):
+    lang = callback.data.split(":")[1]
+    telegram_id = callback.from_user.id
+    username = callback.from_user.username or "Unknown"
+    full_name = callback.from_user.full_name or "Unknown"
+
+    async with TgUserAPI() as api:
+        await api.create_or_update_user(
+            username=username,
+            full_name=full_name,
+            telegram_id=telegram_id,
+            language=lang
+        )
+
+    lexicon = LEXICON_EN if lang == "en" else LEXICON_RU
+    greeting_text = (
+        f"👋 {lexicon['greeting']}\n\n"
+        f"📌 {lexicon['start_help']}"
+    )
+
+    await callback.message.edit_caption(
+        caption=greeting_text,
+        reply_markup=get_main_menu(lang),
+        parse_mode="Markdown"
+    )
+    await callback.answer("✅ Язык изменён")
