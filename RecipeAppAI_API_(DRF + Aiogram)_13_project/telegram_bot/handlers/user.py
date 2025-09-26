@@ -1,7 +1,11 @@
+import json
+
 from aiogram import Router, types
 from aiogram.filters import Command
 from aiogram.types import CallbackQuery,FSInputFile
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 from external_services.api_client_user import TgUserAPI
+from external_services.api_client_recipe import APIClient
 from lexicon.lexicon_ru import LEXICON_RU
 from lexicon.lexicon_en import LEXICON_EN
 from keyboards.inline_keyboards import inline_language_keyboard,inline_language_keyboard2, get_main_menu, get_cancel_keyboard
@@ -262,3 +266,145 @@ async def set_language2(callback: CallbackQuery):
         parse_mode="Markdown"
     )
     await callback.answer("✅ Язык изменён")
+
+# -------------- recipe
+
+# 1. Популярные рецепты -> список категорий
+@user_router.callback_query(lambda c: c.data == "menu:popular_recipes")
+async def menu_popular_categories(callback: CallbackQuery):
+    telegram_id = callback.from_user.id
+
+    # Получаем язык пользователя
+    async with TgUserAPI() as user_api:
+        user = await user_api.get_user_by_telegram_id(telegram_id)
+        lang = user.get("language", "ru") if user else "ru"
+
+    lexicon = LEXICON_EN if lang == "en" else LEXICON_RU
+    async with APIClient() as api:
+        categories = await api.get_categories()
+
+    if not categories:
+        await callback.message.answer("❌ " + ("Categories not found." if lang == "en" else "Категории не найдены."))
+        await callback.answer()
+        return
+    kb = InlineKeyboardBuilder()
+    for cat in categories:
+        kb.button(
+            text=cat.get("name", "No name" if lang == "en" else "Без названия"),
+            callback_data=f"popular:category:{cat['id']}"
+        )
+    if lang == "en":
+        kb.button(text="⬅️ Back to menu", callback_data="menu:main")
+    else:
+        kb.button(text="⬅️ В меню", callback_data="menu:main")
+    kb.adjust(1)
+
+    kb.adjust(2)
+
+    await callback.message.edit_caption(
+        caption="📂 " + ("Choose a category:" if lang == "en" else "Выберите категорию:"),
+        reply_markup=kb.as_markup(),
+    )
+    await callback.answer()
+
+
+# 2. Выбор категории -> список рецептов
+@user_router.callback_query(lambda c: c.data.startswith("popular:category:"))
+async def popular_recipes_by_category(callback: CallbackQuery):
+    category_id = callback.data.split(":")[2]
+    telegram_id = callback.from_user.id
+
+    # Определяем язык пользователя
+    async with TgUserAPI() as user_api:
+        user = await user_api.get_user_by_telegram_id(telegram_id)
+        lang = user.get("language", "ru") if user else "ru"
+
+    lexicon = LEXICON_EN if lang == "en" else LEXICON_RU
+
+    # Получаем популярные рецепты
+    async with APIClient() as api:
+        recipes_data = await api.get_recipes_by_category(category_id=category_id)
+        print(recipes_data)# увеличиваем лимит для фильтрации
+
+    # Проверяем тип данных и фильтруем по категории
+    recipes = recipes_data.get("results", [])
+
+    if not recipes:
+        msg = "🍽 No popular recipes in this category yet." if lang == "en" else "🍽 В этой категории пока нет популярных рецептов."
+        await callback.message.answer(msg)
+        await callback.answer()
+        return
+
+    # Формируем inline-кнопки для рецептов
+    kb = InlineKeyboardBuilder()
+    for r in recipes:
+        recipe_title = r.get("title", "No name" if lang == "en" else "Без названия")
+        kb.button(
+            text=recipe_title,
+            callback_data=f"popular:recipe:{r['id']}"
+        )
+    if lang == "en":
+        kb.button(text="⬅️ Back to menu", callback_data="menu:main")
+    else:
+        kb.button(text="⬅️ В меню", callback_data="menu:main")
+    kb.adjust(1)
+
+    caption = "🍴 Choose a recipe:" if lang == "en" else "🍴 Выберите рецепт:"
+    await callback.message.edit_caption(
+        caption=caption,
+        reply_markup=kb.as_markup()
+    )
+    await callback.answer()
+
+
+
+# 3. Детальная карточка рецепта
+@user_router.callback_query(lambda c: c.data.startswith("popular:recipe:"))
+async def popular_recipe_detail(callback: CallbackQuery):
+    recipe_id = callback.data.split(":")[2]
+    telegram_id = callback.from_user.id
+
+    # Определяем язык пользователя
+    async with TgUserAPI() as user_api:
+        user = await user_api.get_user_by_telegram_id(telegram_id)
+        lang = user.get("language", "ru") if user else "ru"
+
+    # Запрос на бэкенд
+    async with APIClient() as api:
+        recipe = await api._get(f"recipes/{recipe_id}/")
+
+    if not recipe:
+        msg = "❌ Recipe not found." if lang == "en" else "❌ Рецепт не найден."
+        await callback.message.edit_caption(caption=msg)
+        await callback.answer()
+        return
+
+    # Данные
+    title = recipe.get("title", "No name" if lang == "en" else "Без названия")
+    desc = recipe.get("description", "")
+    ingredients = recipe.get("ingredients", "—")
+    instructions = recipe.get("instructions", "—")
+
+    # Локализация текста
+    caption = (
+        f"🍲 *{title}*\n\n"
+        f"📝 {desc}\n\n"
+        f"🥗 *{'Ingredients' if lang == 'en' else 'Ингредиенты'}:*\n{ingredients}\n\n"
+        f"👨‍🍳 *{'Instructions' if lang == 'en' else 'Шаги приготовления'}:*\n{instructions}"
+    )
+
+    # Клавиатура
+    kb = InlineKeyboardBuilder()
+    if lang == "en":
+        kb.button(text="⬅️ Back to menu", callback_data="menu:main")
+    else:
+        kb.button(text="⬅️ В меню", callback_data="menu:main")
+
+    await callback.message.edit_caption(
+        caption=caption,
+        parse_mode="Markdown",
+        reply_markup=kb.as_markup()
+    )
+    await callback.answer()
+
+
