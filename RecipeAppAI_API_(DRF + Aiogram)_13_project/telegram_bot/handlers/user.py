@@ -157,8 +157,7 @@ async def menu_about(callback: CallbackQuery):
 
     )
 
-
-
+# ----------- profile
 @user_router.message(Command("profile"))
 async def cmd_profile(message: types.Message):
     telegram_id = message.from_user.id
@@ -188,7 +187,7 @@ async def cmd_profile(message: types.Message):
             f"🆔 Telegram ID: {telegram_id_str}\n"
             f"📅 Дата создания: {created_at_fmt}\n"
             f"📌 Дата присоединения: {joined_at_fmt}\n\n"
-            f"ℹ️ {lexicon.get('profile_help', 'Здесь вы можете просмотреть свой профиль, историю и любимые рецепты.')}"
+            f"ℹ️ {lexicon.get('profile_help',)}"
         )
     else:
         profile_text = (
@@ -198,7 +197,7 @@ async def cmd_profile(message: types.Message):
             f"🆔 Telegram ID: {telegram_id_str}\n"
             f"📅 Created At: {created_at_fmt}\n"
             f"📌 Joined At: {joined_at_fmt}\n\n"
-            f"ℹ️ {lexicon.get('profile_help', 'Here you can view your profile, history, and favorite recipes.')}"
+            f"ℹ️ {lexicon.get('profile_help', )}"
         )
 
     await message.answer_photo(
@@ -206,6 +205,60 @@ async def cmd_profile(message: types.Message):
         caption=profile_text,
     )
 
+@user_router.callback_query(lambda c: c.data == "menu:profile")
+async def callback_profile(callback: CallbackQuery):
+    telegram_id = callback.from_user.id
+
+    async with TgUserAPI() as api:
+        user = await api.get_user_by_telegram_id(telegram_id)
+        if user:
+            language = user.get("language", "ru")
+            username = user.get("username", "Unknown")
+            username_with_at = user.get("username_with_at", f"@{username}")
+            full_name = user.get("full_name", "Unknown")
+            telegram_id_str = user.get("telegram_id", "Unknown")
+            created_at = user.get("created_at", "Unknown")
+            joined_at = user.get("joined_at", "Unknown")
+        else:
+            language = "ru"
+            username = username_with_at = full_name = telegram_id_str = created_at = joined_at = "Unknown"
+
+    lexicon = LEXICON_EN if language == "en" else LEXICON_RU
+    created_at_fmt = format_date(created_at, language)
+    joined_at_fmt = format_date(joined_at, language)
+
+    if language == "ru":
+        profile_text = (
+            f"👤 {lexicon.get('profile_title', 'Ваш профиль')}\n\n"
+            f"📝 Юзернейм: {username_with_at}\n"
+            f"📛 Полное имя: {full_name}\n"
+            f"🆔 Telegram ID: {telegram_id_str}\n"
+            f"📅 Дата создания: {created_at_fmt}\n"
+            f"📌 Дата присоединения: {joined_at_fmt}\n\n"
+            f"ℹ️ {lexicon.get('profile_help',)}"
+        )
+        kb = InlineKeyboardBuilder()
+        kb.button(text="⬅️ В меню", callback_data="menu:main")
+    else:
+        profile_text = (
+            f"👤 {lexicon.get('profile_title', 'Your Profile')}\n\n"
+            f"📝 Username: {username_with_at}\n"
+            f"📛 Full Name: {full_name}\n"
+            f"🆔 Telegram ID: {telegram_id_str}\n"
+            f"📅 Created At: {created_at_fmt}\n"
+            f"📌 Joined At: {joined_at_fmt}\n\n"
+            f"ℹ️ {lexicon.get('profile_help', )}"
+        )
+        kb = InlineKeyboardBuilder()
+        kb.button(text="⬅️ Back to menu", callback_data="menu:main")
+
+    kb.adjust(1)
+
+    await callback.message.edit_caption(
+        caption=profile_text,
+        reply_markup=kb.as_markup(),
+    )
+    await callback.answer()
 
 # ------- select language
 @user_router.callback_query(lambda c: c.data == "menu:language")
@@ -324,7 +377,6 @@ async def popular_recipes_by_category(callback: CallbackQuery):
     # Получаем популярные рецепты
     async with APIClient() as api:
         recipes_data = await api.get_recipes_by_category(category_id=category_id)
-        print(recipes_data)# увеличиваем лимит для фильтрации
 
     # Проверяем тип данных и фильтруем по категории
     recipes = recipes_data.get("results", [])
