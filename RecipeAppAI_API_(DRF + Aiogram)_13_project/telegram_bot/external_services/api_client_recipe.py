@@ -133,21 +133,47 @@ class APIClient:
 
 
     # ---- UserRecipe endpoints ----
-    async def get_user_recipes(self, telegram_id: int, params: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:
-        """GET /user-recipes/?telegram_id=... (если твой API поддерживает фильтр)"""
+    async def get_user_recipes(
+            self,
+            telegram_id: int,
+            params: Optional[Dict[str, Any]] = None
+    ) -> List[Dict[str, Any]]:
+        """
+        Получить список рецептов пользователя.
+        GET /user-recipes/?telegram_id=...
+        """
         p = params.copy() if params else {}
         p.update({"telegram_id": telegram_id})
-        res = await self._get("user-recipes/", params=p)
-        return res.get("results", []) if isinstance(res, dict) else res
 
-    async def create_user_recipe(self, user_id: int, category_id: Optional[int], user_text: str, ai_result: Optional[str] = None) -> Dict[str, Any]:
+        res = await self._get("user-recipes/", params=p)
+
+        # На случай, если API вернёт просто список
+        if isinstance(res, dict):
+            return res.get("results", [])
+        return res if isinstance(res, list) else []
+
+    async def create_user_recipe(
+            self,
+            user_id: int,
+            category_id: Optional[int],
+            user_text: str,
+            ai_result: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """
+        Создать новый пользовательский рецепт.
+        POST /user-recipes/
+        """
         payload = {
             "user": user_id,
             "category": category_id,
             "user_text": user_text,
-            "ai_result": ai_result
+            "ai_result": ai_result,
         }
-        return await self._post("user-recipes/", json=payload)
+
+        res = await self._post("user-recipes/", json=payload)
+
+        # Возвращаем dict (если сервер вдруг вернёт не то — подстрахуемся)
+        return res if isinstance(res, dict) else {}
 
     # ---- Custom: call AI generation endpoint (если есть) ----
     async def generate_recipe(self, prompt: str) -> str:

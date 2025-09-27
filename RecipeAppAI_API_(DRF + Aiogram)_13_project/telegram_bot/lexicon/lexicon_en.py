@@ -13,7 +13,6 @@ LEXICON_EN = {
         "/start - 🚀 Start interacting with the bot\n"
         "/help - ❓ Show this help message\n"
         "/about - ℹ️ Learn about the project\n"
-        "/recipe - 🍳 Generate a recipe\n"
         "/profile - 👤 View your profile and history\n\n"
         "You can switch language and manage settings in your profile."
     ),

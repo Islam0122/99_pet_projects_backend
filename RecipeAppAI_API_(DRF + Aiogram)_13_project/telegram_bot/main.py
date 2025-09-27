@@ -9,6 +9,7 @@ from aiogram.fsm.storage.memory import MemoryStorage  # простое хран�
 from config.config import Config, load_config
 from keyboards.main_menu import set_main_menu
 from handlers.user import user_router
+from handlers.generate import generate_router
 # Логгер
 logger = logging.getLogger(__name__)
 
@@ -46,6 +47,7 @@ async def main():
     # Подключаем роутеры
     logger.info("🔗 Подключаем роутеры...")
     dp.include_router(user_router)
+    dp.include_router(generate_router)
 
     # Подключаем middlewares (если есть)
     logger.info("⚡ Подключаем миддлвари...")
