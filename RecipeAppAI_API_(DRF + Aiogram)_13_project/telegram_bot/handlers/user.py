@@ -63,8 +63,9 @@ async def cmd_start(message: types.Message):
                 parse_mode="Markdown"
             )
         else:
-            await message.answer(
-                "🌐 Выберите язык / Choose your language:",
+            await message.answer_photo(
+                photo=photo,
+                caption="🌐 Выберите язык / Choose your language:",
                 reply_markup=inline_language_keyboard()
             )
 
@@ -288,8 +289,7 @@ async def set_language(callback: CallbackQuery):
         f"👋 {lexicon['greeting']}\n\n"
         f"📌 {lexicon['start_help']}"
     )
-    await callback.message.answer_photo(
-        photo=photo,
+    await callback.message.edit_caption(
         caption=greeting_text, parse_mode="Markdown")
     await callback.answer()
 
