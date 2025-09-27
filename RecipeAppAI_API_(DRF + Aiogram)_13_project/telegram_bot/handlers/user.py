@@ -288,7 +288,9 @@ async def set_language(callback: CallbackQuery):
         f"👋 {lexicon['greeting']}\n\n"
         f"📌 {lexicon['start_help']}"
     )
-    await callback.message.answer(greeting_text, parse_mode="Markdown")
+    await callback.message.answer_photo(
+        photo=photo,
+        caption=greeting_text, parse_mode="Markdown")
     await callback.answer()
 
 @user_router.callback_query(lambda c: c.data and c.data.startswith("set_lang2:"))
