@@ -1,124 +1,92 @@
-from unicodedata import category
-
+# external_services/api_client_recipe.py
 import aiohttp
-import asyncio
 import logging
 from typing import Optional, Dict, Any, List
 from config.config import load_config
+from .redis_client import RedisClient
+
+import json
 
 logger = logging.getLogger(__name__)
 config = load_config()
 API_BASE = f"{config.api_url.api_url}"
-HEADERS = {"Content-Type": "application/json"}
-
 DEFAULT_TIMEOUT = aiohttp.ClientTimeout(total=10)
-
+REDIS_TTL = 120
 
 class APIError(Exception):
     pass
 
-
 class APIClient:
-    """
-    Асинхронный клиент для работы с REST API проекта.
-    Использование:
-        async with APIClient() as api:
-            users = await api.get_tg_users()
-    """
-
-    def __init__(self, base_url: Optional[str] = None, token: Optional[str] = None, timeout: Optional[aiohttp.ClientTimeout] = None):
+    def __init__(self, base_url: Optional[str] = None, token: Optional[str] = None):
         self.base_url = (base_url or API_BASE).rstrip("/") + "/"
         self.token = token or ""
-        self.timeout = timeout or DEFAULT_TIMEOUT
         self.session: Optional[aiohttp.ClientSession] = None
+        self.redis_client = RedisClient(redis_url="redis://redis:6379/1")
         self._headers = {"Content-Type": "application/json"}
-
-        # если у тебя есть авторизация (Token / Bearer)
         if self.token:
-            # Пример: Token <token> или Bearer <token>
             self._headers["Authorization"] = f"Token {self.token}"
 
     async def __aenter__(self):
-        self.session = aiohttp.ClientSession(timeout=self.timeout, headers=self._headers)
+        self.session = aiohttp.ClientSession(headers=self._headers)
+        await self.redis_client.__aenter__()
         return self
 
-    async def __aexit__(self, exc_type, exc, tb):
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
         if self.session and not self.session.closed:
             await self.session.close()
+        await self.redis_client.__aexit__(exc_type, exc_val, exc_tb)
 
-    # ---- Utility ----
-    async def _get(self, path: str, params: Optional[Dict[str, Any]] = None) -> Any:
+    async def _get(self, path: str, params: Optional[Dict[str, Any]] = None):
         url = self.base_url + path.lstrip("/")
-        try:
-            async with self.session.get(url, params=params) as resp:
-                text = await resp.text()
-                if resp.status >= 400:
-                    logger.error("GET %s -> %s: %s", url, resp.status, text)
-                    raise APIError(f"GET {url} returned {resp.status}")
-                return await resp.json()
-        except aiohttp.ClientError as e:
-            logger.exception("Network error GET %s", url)
-            raise APIError(str(e))
+        async with self.session.get(url, params=params) as resp:
+            text = await resp.text()
+            if resp.status >= 400:
+                logger.error("GET %s -> %s: %s", url, resp.status, text)
+                raise APIError(f"GET {url} returned {resp.status}")
+            return await resp.json()
 
-    async def _post(self, path: str, json: Optional[Dict[str, Any]] = None) -> Any:
-        url = self.base_url + path.lstrip("/")
-        try:
-            async with self.session.post(url, json=json) as resp:
-                text = await resp.text()
-                if resp.status >= 400:
-                    logger.error("POST %s -> %s: %s", url, resp.status, text)
-                    raise APIError(f"POST {url} returned {resp.status}")
-                # some endpoints might return no content
-                if resp.content_type == "application/json":
-                    return await resp.json()
-                return text
-        except aiohttp.ClientError as e:
-            logger.exception("Network error POST %s", url)
-            raise APIError(str(e))
-
-    async def _patch(self, path: str, json: Optional[Dict[str, Any]] = None) -> Any:
-        url = self.base_url + path.lstrip("/")
-        try:
-            async with self.session.patch(url, json=json) as resp:
-                text = await resp.text()
-                if resp.status >= 400:
-                    logger.error("PATCH %s -> %s: %s", url, resp.status, text)
-                    raise APIError(f"PATCH {url} returned {resp.status}")
-                return await resp.json()
-        except aiohttp.ClientError as e:
-            logger.exception("Network error PATCH %s", url)
-            raise APIError(str(e))
-
-    async def _delete(self, path: str) -> int:
-        url = self.base_url + path.lstrip("/")
-        try:
-            async with self.session.delete(url) as resp:
-                return resp.status
-        except aiohttp.ClientError as e:
-            logger.exception("Network error DELETE %s", url)
-            raise APIError(str(e))
-
-
-    # ---- Category / Recipe endpoints ----
     async def get_categories(self) -> List[Dict[str, Any]]:
+        cache_key = "categories"
+        cached = await self.redis_client.get(cache_key)
+        if cached:
+            return cached
+
         res = await self._get("categories/")
-        return res.get("results", []) if isinstance(res, dict) else res
+        results = res.get("results", []) if isinstance(res, dict) else res
+        await self.redis_client.set(cache_key, results)
+        return results
 
-    async def get_recipes(self, params: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
-        """GET /recipes/ with optional params (search, ordering, category, page)"""
-        return await self._get("recipes/", params=params)
-
-    async def get_recipes_by_category(
-            self,
-            category_id: int,
-            params: Optional[Dict[str, Any]] = None
-    ) -> Dict[str, Any]:
-        """GET /recipes/ filtered by category (with optional params like search, ordering, page)"""
+    async def get_recipes_by_category(self, category_id: int, params: Optional[Dict[str, Any]] = None):
+        cache_key = f"recipes_category:{category_id}"
+        cached = await self.redis_client.get(cache_key)
+        if cached:
+            return cached
 
         if params is None:
             params = {}
+        res = await self._get(f"recipes/?category={category_id}", params=params)
+        await self.redis_client.set(cache_key, res)
+        return res
 
-        return await self._get(f"recipes/?category={category_id}", params=params)
+    async def get_recipes(self, params: Optional[Dict[str, Any]] = None):
+        return await self._get("recipes/", params=params)
+
+    async def generate_recipe(self, prompt: str) -> str:
+        res = await self._post("ai/generate-recipe/", json={"prompt": prompt})
+        if isinstance(res, dict):
+            return res.get("result") or res.get("ai_result") or str(res)
+        return str(res)
+
+    async def _post(self, path: str, json: Optional[Dict[str, Any]] = None):
+        url = self.base_url + path.lstrip("/")
+        async with self.session.post(url, json=json) as resp:
+            text = await resp.text()
+            if resp.status >= 400:
+                logger.error("POST %s -> %s: %s", url, resp.status, text)
+                raise APIError(f"POST {url} returned {resp.status}")
+            if resp.content_type == "application/json":
+                return await resp.json()
+            return text
 
     async def get_popular_recipes(self, limit: int = 10) -> List[Dict[str, Any]]:
         """Если есть эндпоинт /recipes/popular/ или просто сортировка по посещениям/рейтингу."""
@@ -132,7 +100,6 @@ class APIClient:
             return res.get("results", []) if isinstance(res, dict) else res
 
 
-    # ---- UserRecipe endpoints ----
     async def get_user_recipes(
             self,
             telegram_id: int,
@@ -175,20 +142,4 @@ class APIClient:
         # Возвращаем dict (если сервер вдруг вернёт не то — подстрахуемся)
         return res if isinstance(res, dict) else {}
 
-    # ---- Custom: call AI generation endpoint (если есть) ----
-    async def generate_recipe(self, prompt: str) -> str:
-        """
-        Если у тебя есть endpoint /generate-recipe/ или /ai/generate/, вызови его.
-        Иначе вместо этого можно вызвать внешнюю функцию для GigaChat/GPT.
-        """
-        try:
-            res = await self._post("ai/generate-recipe/", json={"prompt": prompt})
-            # ожидаем {'result': '...'} или raw text
-            if isinstance(res, dict):
-                return res.get("result") or res.get("ai_result") or str(res)
-            return str(res)
-        except APIError:
-            # fallback — вернуть понятную ошибку для UI
-            logger.exception("AI generation failed")
-            raise
 
