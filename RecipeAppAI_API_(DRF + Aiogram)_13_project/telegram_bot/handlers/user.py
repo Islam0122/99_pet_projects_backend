@@ -290,7 +290,10 @@ async def set_language(callback: CallbackQuery):
         f"📌 {lexicon['start_help']}"
     )
     await callback.message.edit_caption(
-        caption=greeting_text, parse_mode="Markdown")
+        caption=greeting_text,
+        parse_mode="Markdown",
+        reply_markup=get_main_menu(lang))
+
     await callback.answer()
 
 @user_router.callback_query(lambda c: c.data and c.data.startswith("set_lang2:"))
