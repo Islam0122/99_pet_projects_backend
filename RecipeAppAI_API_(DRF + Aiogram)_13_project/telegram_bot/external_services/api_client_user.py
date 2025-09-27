@@ -3,35 +3,36 @@ from datetime import datetime
 from config.config import load_config
 from lexicon.lexicon_ru import LEXICON_RU
 from lexicon.lexicon_en import LEXICON_EN
-import redis.asyncio as redis
+from .redis_client import RedisClient
+
 import json
 
 config = load_config()
 BASE_URL = f"{config.api_url.api_url}/tg-users/"
 HEADERS = {"Content-Type": "application/json"}
-REDIS_TTL = 120  # кэш 2 минуты
+REDIS_TTL = 120
 
 class TgUserAPI:
     def __init__(self):
         self.base_url = BASE_URL
         self.headers = HEADERS
         self.session = None
-        self.redis = None
+        self.redis_client = RedisClient()
 
     async def __aenter__(self):
         self.session = aiohttp.ClientSession()
-        self.redis = redis.Redis(host="redis", port=6379, db=1, decode_responses=True)
+        await self.redis_client.__aenter__()
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         await self.session.close()
-        await self.redis.close()
+        await self.redis_client.__aexit__(exc_type, exc_val, exc_tb)
 
     async def get_user_by_telegram_id(self, telegram_id: int):
         cache_key = f"tg_user:{telegram_id}"
-        cached = await self.redis.get(cache_key)
+        cached = await self.redis_client.get(cache_key)
         if cached:
-            return json.loads(cached)
+            return cached
 
         url = f"{self.base_url}?telegram_id={telegram_id}"
         async with self.session.get(url, headers=self.headers) as resp:
@@ -40,7 +41,7 @@ class TgUserAPI:
             results = data.get("results", [])
             user = results[0] if results else None
             if user:
-                await self.redis.set(cache_key, json.dumps(user), ex=REDIS_TTL)
+                await self.redis_client.set(cache_key, user)
             return user
 
     async def create_or_update_user(self, username: str, full_name: str, telegram_id: int, language: str = "ru"):
@@ -52,43 +53,24 @@ class TgUserAPI:
                 "language": language,
                 "joined_at": datetime.utcnow().isoformat()
             }
-            updated_user = await self.update_tg_user(user["id"], data_to_update)
-            await self.redis.set(f"tg_user:{telegram_id}", json.dumps(updated_user), ex=REDIS_TTL)
-            return updated_user
+            url = f"{self.base_url}{user['id']}/"
+            async with self.session.patch(url, json=data_to_update, headers=self.headers) as resp:
+                resp.raise_for_status()
+                updated_user = await resp.json()
+                await self.redis_client.set(f"tg_user:{telegram_id}", updated_user)
+                return updated_user
         else:
-            new_user = await self.create_tg_user(username, full_name, telegram_id, language)
-            await self.redis.set(f"tg_user:{telegram_id}", json.dumps(new_user), ex=REDIS_TTL)
-            return new_user
-
-
-    async def get_tg_users(self):
-        async with self.session.get(self.base_url, headers=self.headers) as resp:
-            resp.raise_for_status()
-            return await resp.json()
-
-
-    async def create_tg_user(self, username, full_name, telegram_id, language="ru"):
-        payload = {
-            "username": username,
-            "full_name": full_name,
-            "telegram_id": telegram_id,
-            "language": language
-        }
-        async with self.session.post(self.base_url, json=payload, headers=self.headers) as resp:
-            resp.raise_for_status()
-            return await resp.json()
-
-
-    async def update_tg_user(self, user_id, data: dict):
-        url = f"{self.base_url}{user_id}/"
-        async with self.session.patch(url, json=data, headers=self.headers) as resp:
-            resp.raise_for_status()
-            return await resp.json()
-
-    async def delete_tg_user(self, user_id):
-        url = f"{self.base_url}{user_id}/"
-        async with self.session.delete(url, headers=self.headers) as resp:
-            return resp.status
+            payload = {
+                "username": username,
+                "full_name": full_name,
+                "telegram_id": telegram_id,
+                "language": language
+            }
+            async with self.session.post(self.base_url, json=payload, headers=self.headers) as resp:
+                resp.raise_for_status()
+                new_user = await resp.json()
+                await self.redis_client.set(f"tg_user:{telegram_id}", new_user)
+                return new_user
 
     async def get_user_lexicon(self, telegram_id: int):
         try:
