@@ -321,7 +321,6 @@ async def set_language2(callback: CallbackQuery):
     await callback.answer("✅ Язык изменён")
 
 # -------------- recipe
-
 # 1. Популярные рецепты -> список категорий
 @user_router.callback_query(lambda c: c.data == "menu:popular_recipes")
 async def menu_popular_categories(callback: CallbackQuery):
@@ -359,7 +358,6 @@ async def menu_popular_categories(callback: CallbackQuery):
         reply_markup=kb.as_markup(),
     )
     await callback.answer()
-
 
 # 2. Выбор категории -> список рецептов
 @user_router.callback_query(lambda c: c.data.startswith("popular:category:"))
@@ -407,8 +405,6 @@ async def popular_recipes_by_category(callback: CallbackQuery):
         reply_markup=kb.as_markup()
     )
     await callback.answer()
-
-
 
 # 3. Детальная карточка рецепта
 @user_router.callback_query(lambda c: c.data.startswith("popular:recipe:"))
