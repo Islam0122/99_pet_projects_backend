@@ -3,11 +3,14 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
-
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 urlpatterns = [
                   path('admin/', admin.site.urls),
                   path('api/auth/', include('apps.user.urls'), ),
+                  path('api/', include('apps.table.urls'), ),
+                  path('api/', include('apps.reservation.urls'), ),
+
 ]
 
 urlpatterns += [

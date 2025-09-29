@@ -29,6 +29,8 @@ INSTALLED_APPS = [
     "social_django",
     #apps
     'apps.user',
+    'apps.table',
+    'apps.reservation',
 
 
 ]

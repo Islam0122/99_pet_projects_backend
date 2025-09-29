@@ -1,0 +1,54 @@
+[
+  {
+    "model": "table.table",
+    "pk": 1,
+    "fields": {
+      "image": "",
+      "number": 1,
+      "capacity": 2,
+      "location": "main",
+      "is_active": true,
+      "created_at": "2025-09-28T12:00:00Z",
+      "updated_at": "2025-09-28T12:00:00Z"
+    }
+  },
+  {
+    "model": "table.table",
+    "pk": 2,
+    "fields": {
+      "image": "",
+      "number": 2,
+      "capacity": 4,
+      "location": "main",
+      "is_active": true,
+      "created_at": "2025-09-28T12:00:00Z",
+      "updated_at": "2025-09-28T12:00:00Z"
+    }
+  },
+  {
+    "model": "table.table",
+    "pk": 3,
+    "fields": {
+      "image": "",
+      "number": 3,
+      "capacity": 2,
+      "location": "terrace",
+      "is_active": true,
+      "created_at": "2025-09-28T12:00:00Z",
+      "updated_at": "2025-09-28T12:00:00Z"
+    }
+  },
+  {
+    "model": "table.table",
+    "pk": 4,
+    "fields": {
+      "image": "",
+      "number": 4,
+      "capacity": 6,
+      "location": "vip",
+      "is_active": true,
+      "created_at": "2025-09-28T12:00:00Z",
+      "updated_at": "2025-09-28T12:00:00Z"
+    }
+  }
+]
