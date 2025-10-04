@@ -26,10 +26,12 @@ INSTALLED_APPS = [
     'corsheaders',
     'drf_spectacular',
     "rest_framework_simplejwt",
+    'rest_framework_simplejwt.token_blacklist',
     "social_django",
+    'django_filters',
     #apps
     'apps.product',
-    'django_filters',
+    'apps.user',
 ]
 
 MIDDLEWARE = [
@@ -79,6 +81,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+AUTH_USER_MODEL = 'user.User'
 
 # --- DRF ---
 REST_FRAMEWORK = {
