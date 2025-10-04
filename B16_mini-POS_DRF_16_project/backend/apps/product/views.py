@@ -4,14 +4,12 @@ from .serializers import CategorySerializer, ProductSerializer
 from .models import Category, Product
 from rest_framework import status
 from rest_framework.response import Response
+from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiParameter
+from rest_framework.decorators import action
 
 class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-
-
-from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiParameter
-from rest_framework.decorators import action
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
