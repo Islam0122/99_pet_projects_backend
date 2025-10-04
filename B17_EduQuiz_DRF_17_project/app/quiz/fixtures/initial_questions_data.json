@@ -1,0 +1,724 @@
+[
+  {
+    "model": "quiz.Question",
+    "pk": 1,
+    "fields": {
+      "topic": 1,
+      "text": "Что такое переменная в Python?",
+      "option_a": "Место для хранения данных",
+      "option_b": "Тип данных",
+      "option_c": "Оператор",
+      "option_d": "Функция",
+      "correct_answer": "A",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "quiz.Question",
+    "pk": 2,
+    "fields": {
+      "topic": 1,
+      "text": "Что такое тип данных в Python?",
+      "option_a": "Класс объекта",
+      "option_b": "Строка",
+      "option_c": "Целое число",
+      "option_d": "Тип переменной",
+      "correct_answer": "C",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "quiz.Question",
+    "pk": 3,
+    "fields": {
+      "topic": 1,
+      "text": "Как объявить переменную в Python?",
+      "option_a": "var x = 5",
+      "option_b": "x = 5",
+      "option_c": "int x = 5",
+      "option_d": "let x = 5",
+      "correct_answer": "B",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "quiz.Question",
+    "pk": 4,
+    "fields": {
+      "topic": 1,
+      "text": "Как создать список в Python?",
+      "option_a": "list = [1, 2, 3]",
+      "option_b": "list = (1, 2, 3)",
+      "option_c": "list = {1, 2, 3}",
+      "option_d": "list = 1, 2, 3",
+      "correct_answer": "A",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "quiz.Question",
+    "pk": 5,
+    "fields": {
+      "topic": 1,
+      "text": "Как добавить элемент в список в Python?",
+      "option_a": "list.add(4)",
+      "option_b": "list.append(4)",
+      "option_c": "list.insert(4)",
+      "option_d": "list.extend(4)",
+      "correct_answer": "B",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "quiz.Question",
+    "pk": 6,
+    "fields": {
+      "topic": 1,
+      "text": "Что такое цикл for в Python?",
+      "option_a": "Цикл для итерации по элементам",
+      "option_b": "Цикл для повторения блока кода",
+      "option_c": "Цикл для выполнения условий",
+      "option_d": "Цикл для обработки исключений",
+      "correct_answer": "A",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "quiz.Question",
+    "pk": 7,
+    "fields": {
+      "topic": 1,
+      "text": "Как создать словарь в Python?",
+      "option_a": "dict = { 'key': 'value' }",
+      "option_b": "dict = ( 'key': 'value' )",
+      "option_c": "dict = [ 'key': 'value' ]",
+      "option_d": "dict = { 'key', 'value' }",
+      "correct_answer": "A",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "quiz.Question",
+    "pk": 8,
+    "fields": {
+      "topic": 1,
+      "text": "Как извлечь элемент из словаря по ключу в Python?",
+      "option_a": "dict.get('key')",
+      "option_b": "dict['key']",
+      "option_c": "dict.key()",
+      "option_d": "dict.get_value('key')",
+      "correct_answer": "B",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "quiz.Question",
+    "pk": 9,
+    "fields": {
+      "topic": 1,
+      "text": "Что такое функция в Python?",
+      "option_a": "Блок кода, который можно вызывать",
+      "option_b": "Переменная",
+      "option_c": "Тип данных",
+      "option_d": "Модуль",
+      "correct_answer": "A",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "quiz.Question",
+    "pk": 10,
+    "fields": {
+      "topic": 1,
+      "text": "Как вызвать функцию в Python?",
+      "option_a": "function()",
+      "option_b": "call function()",
+      "option_c": "execute function()",
+      "option_d": "function.call()",
+      "correct_answer": "A",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "quiz.Question",
+    "pk": 11,
+    "fields": {
+      "topic": 2,
+      "text": "Что такое тег <div> в HTML?",
+      "option_a": "Элемент для стилизации текста",
+      "option_b": "Контейнер для других элементов",
+      "option_c": "Тег для вставки изображений",
+      "option_d": "Список элементов",
+      "correct_answer": "B",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "quiz.Question",
+    "pk": 12,
+    "fields": {
+      "topic": 2,
+      "text": "Что такое тег <p> в HTML?",
+      "option_a": "Абзац текста",
+      "option_b": "Картинка",
+      "option_c": "Список",
+      "option_d": "Контейнер",
+      "correct_answer": "A",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "quiz.Question",
+    "pk": 13,
+    "fields": {
+      "topic": 2,
+      "text": "Какой атрибут используется для задания пути к изображению в HTML?",
+      "option_a": "src",
+      "option_b": "href",
+      "option_c": "alt",
+      "option_d": "link",
+      "correct_answer": "A",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "quiz.Question",
+    "pk": 14,
+    "fields": {
+      "topic": 2,
+      "text": "Какой тег используется для добавления ссылки в HTML?",
+      "option_a": "<link>",
+      "option_b": "<a>",
+      "option_c": "<url>",
+      "option_d": "<href>",
+      "correct_answer": "B",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "quiz.Question",
+    "pk": 15,
+    "fields": {
+      "topic": 2,
+      "text": "Как создать список с маркированными пунктами в HTML?",
+      "option_a": "<ul>",
+      "option_b": "<ol>",
+      "option_c": "<dl>",
+      "option_d": "<li>",
+      "correct_answer": "A",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "quiz.Question",
+    "pk": 16,
+    "fields": {
+      "topic": 2,
+      "text": "Как правильно вставить таблицу в HTML?",
+      "option_a": "<table>",
+      "option_b": "<tr>",
+      "option_c": "<td>",
+      "option_d": "<th>",
+      "correct_answer": "A",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "quiz.Question",
+    "pk": 17,
+    "fields": {
+      "topic": 2,
+      "text": "Какой атрибут позволяет задать стиль для элемента в HTML?",
+      "option_a": "style",
+      "option_b": "class",
+      "option_c": "id",
+      "option_d": "href",
+      "correct_answer": "A",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "quiz.Question",
+    "pk": 18,
+    "fields": {
+      "topic": 2,
+      "text": "Что такое метатеги в HTML?",
+      "option_a": "Теги, содержащие информацию о странице",
+      "option_b": "Теги для стилизации страницы",
+      "option_c": "Теги для добавления мультимедийных элементов",
+      "option_d": "Теги для добавления ссылок",
+      "correct_answer": "A",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "quiz.Question",
+    "pk": 19,
+    "fields": {
+      "topic": 2,
+      "text": "Как задать цвет фона в HTML?",
+      "option_a": "color",
+      "option_b": "bgcolor",
+      "option_c": "background",
+      "option_d": "style",
+      "correct_answer": "B",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "quiz.Question",
+    "pk": 20,
+    "fields": {
+      "topic": 2,
+      "text": "Как указать путь к файлу стилей в HTML?",
+      "option_a": "<style>",
+      "option_b": "<link>",
+      "option_c": "<script>",
+      "option_d": "<meta>",
+      "correct_answer": "B",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "quiz.Question",
+    "pk": 21,
+    "fields": {
+      "topic": 2,
+      "text": "Что такое CSS?",
+      "option_a": "Язык для стилизации веб-страниц",
+      "option_b": "Язык программирования",
+      "option_c": "База данных",
+      "option_d": "Язык разметки",
+      "correct_answer": "A",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "quiz.Question",
+    "pk": 22,
+    "fields": {
+      "topic": 2,
+      "text": "Как задать цвет фона элемента в CSS?",
+      "option_a": "background-color",
+      "option_b": "color",
+      "option_c": "font-color",
+      "option_d": "bg-color",
+      "correct_answer": "A",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "quiz.Question",
+    "pk": 23,
+    "fields": {
+      "topic": 2,
+      "text": "Как изменить шрифт текста в CSS?",
+      "option_a": "font-family",
+      "option_b": "text-font",
+      "option_c": "font-size",
+      "option_d": "font-weight",
+      "correct_answer": "A",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+
+    }
+  },
+  {
+    "model": "quiz.Question",
+    "pk": 24,
+    "fields": {
+      "topic": 2,
+      "text": "Как задать отступы вокруг элемента в CSS?",
+      "option_a": "padding",
+      "option_b": "margin",
+      "option_c": "border",
+      "option_d": "spacing",
+      "correct_answer": "A",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "quiz.Question",
+    "pk": 25,
+    "fields": {
+      "topic": 2,
+      "text": "Как задать расстояние между строками в CSS?",
+      "option_a": "line-height",
+      "option_b": "height",
+      "option_c": "spacing",
+      "option_d": "line-spacing",
+      "correct_answer": "A",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "quiz.Question",
+    "pk": 26,
+    "fields": {
+      "topic": 2,
+      "text": "Что такое flexbox в CSS?",
+      "option_a": "Система для создания макетов",
+      "option_b": "Шрифт для веб-страниц",
+      "option_c": "Метод анимации",
+      "option_d": "Язык разметки",
+      "correct_answer": "A",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "quiz.Question",
+    "pk": 27,
+    "fields": {
+      "topic": 2,
+      "text": "Как задать выравнивание текста в CSS?",
+      "option_a": "text-align",
+      "option_b": "align-text",
+      "option_c": "vertical-align",
+      "option_d": "justify-content",
+      "correct_answer": "A",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "quiz.Question",
+    "pk": 28,
+    "fields": {
+      "topic": 2,
+      "text": "Как задать тень для элемента в CSS?",
+      "option_a": "box-shadow",
+      "option_b": "text-shadow",
+      "option_c": "shadow",
+      "option_d": "element-shadow",
+      "correct_answer": "A",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "quiz.Question",
+    "pk": 29,
+    "fields": {
+      "topic": 2,
+      "text": "Как сделать элемент невидимым, но оставить его в потоке документа?",
+      "option_a": "visibility: hidden",
+      "option_b": "display: none",
+      "option_c": "opacity: 0",
+      "option_d": "z-index: -1",
+      "correct_answer": "A",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "quiz.Question",
+    "pk": 30,
+    "fields": {
+      "topic": 2,
+      "text": "Как задать рамку для элемента в CSS?",
+      "option_a": "border",
+      "option_b": "outline",
+      "option_c": "frame",
+      "option_d": "padding",
+      "correct_answer": "A",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "quiz.Question",
+    "pk": 31,
+    "fields": {
+      "topic": 3,
+      "text": "Что такое переменная в JavaScript?",
+      "option_a": "Место для хранения данных",
+      "option_b": "Функция",
+      "option_c": "Цикл",
+      "option_d": "Объект",
+      "correct_answer": "A",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "quiz.Question",
+    "pk": 32,
+    "fields": {
+      "topic": 3,
+      "text": "Что такое функция в JavaScript?",
+      "option_a": "Набор инструкций для выполнения задачи",
+      "option_b": "Тип данных",
+      "option_c": "Переменная",
+      "option_d": "Цикл",
+      "correct_answer": "A",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "quiz.Question",
+    "pk": 33,
+    "fields": {
+      "topic": 3,
+      "text": "Как объявить переменную в JavaScript?",
+      "option_a": "let, const, var",
+      "option_b": "variable",
+      "option_c": "set",
+      "option_d": "var, set",
+      "correct_answer": "A",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "quiz.Question",
+    "pk": 34,
+    "fields": {
+      "topic": 3,
+      "text": "Что такое 'undefined' в JavaScript?",
+      "option_a": "Переменная не была присвоена значению",
+      "option_b": "Числовое значение",
+      "option_c": "Объект",
+      "option_d": "Массив",
+      "correct_answer": "A",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "quiz.Question",
+    "pk": 35,
+    "fields": {
+      "topic": 3,
+      "text": "Как вызвать функцию в JavaScript?",
+      "option_a": "functionName()",
+      "option_b": "call functionName",
+      "option_c": "run functionName",
+      "option_d": "functionName[]",
+      "correct_answer": "A",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+
+    }
+  },
+  {
+    "model": "quiz.Question",
+    "pk": 36,
+    "fields": {
+      "topic": 3,
+      "text": "Что такое массив в JavaScript?",
+      "option_a": "Структура данных, которая хранит несколько значений",
+      "option_b": "Тип данных для чисел",
+      "option_c": "Функция",
+      "option_d": "Числовое значение",
+      "correct_answer": "A",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "quiz.Question",
+    "pk": 37,
+    "fields": {
+      "topic": 3,
+      "text": "Как добавить элемент в массив в JavaScript?",
+      "option_a": "array.push()",
+      "option_b": "array.add()",
+      "option_c": "array.insert()",
+      "option_d": "array.append()",
+      "correct_answer": "A",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "quiz.Question",
+    "pk": 38,
+    "fields": {
+      "topic": 3,
+      "text": "Что такое объект в JavaScript?",
+      "option_a": "Составной тип данных, содержащий пары ключ-значение",
+      "option_b": "Массив",
+      "option_c": "Число",
+      "option_d": "Функция",
+      "correct_answer": "A",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "quiz.Question",
+    "pk": 39,
+    "fields": {
+      "topic": 3,
+      "text": "Как создать объект в JavaScript?",
+      "option_a": "let obj = {};",
+      "option_b": "let obj = [];",
+      "option_c": "let obj = new Object();",
+      "option_d": "let obj = function();",
+      "correct_answer": "A",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "quiz.Question",
+    "pk": 40,
+    "fields": {
+      "topic": 3,
+      "text": "Что такое цикл 'for' в JavaScript?",
+      "option_a": "Структура, которая повторяет блок кода несколько раз",
+      "option_b": "Тип данных",
+      "option_c": "Функция",
+      "option_d": "Оператор",
+      "correct_answer": "A",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "quiz.Question",
+    "pk": 41,
+    "fields": {
+      "topic": 3,
+      "text": "Как завершить выполнение цикла в JavaScript?",
+      "option_a": "break",
+      "option_b": "continue",
+      "option_c": "end",
+      "option_d": "stop",
+      "correct_answer": "A",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "quiz.Question",
+    "pk": 42,
+    "fields": {
+      "topic": 3,
+      "text": "Что такое асинхронный код в JavaScript?",
+      "option_a": "Код, который выполняется параллельно с другим кодом",
+      "option_b": "Код, который выполняется последовательно",
+      "option_c": "Код, который вызывает ошибки",
+      "option_d": "Код, который работает только с базой данных",
+      "correct_answer": "A",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "quiz.Question",
+    "pk": 43,
+    "fields": {
+      "topic": 3,
+      "text": "Как создать промис в JavaScript?",
+      "option_a": "new Promise()",
+      "option_b": "new Async()",
+      "option_c": "Promise.create()",
+      "option_d": "Async.create()",
+      "correct_answer": "A",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "quiz.Question",
+    "pk": 44,
+    "fields": {
+      "topic": 3,
+      "text": "Что такое 'this' в JavaScript?",
+      "option_a": "Контекст выполнения функции",
+      "option_b": "Тип данных",
+      "option_c": "Функция",
+      "option_d": "Переменная",
+      "correct_answer": "A",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "quiz.Question",
+    "pk": 45,
+    "fields": {
+      "topic": 3,
+      "text": "Что делает метод 'map()' в JavaScript?",
+      "option_a": "Создает новый массив с результатами выполнения функции для каждого элемента",
+      "option_b": "Удаляет элемент из массива",
+      "option_c": "Добавляет элемент в массив",
+      "option_d": "Переводит строку в число",
+      "correct_answer": "A",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  }
+]

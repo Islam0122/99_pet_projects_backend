@@ -1,0 +1,194 @@
+[
+    {
+        "model": "Groups.Student",
+        "pk": 1,
+        "fields": {
+            "full_name": "КАЛМАМАТОВ ИСЛАМ",
+            "group": 1,
+            "is_active": true,
+            "created_by": 1,
+            "created_at": "2024-02-23T12:00:00Z",
+            "updated_at": "2024-02-23T12:00:00Z"
+        }
+    },
+    {
+        "model": "Groups.Student",
+        "pk": 2,
+        "fields": {
+            "full_name": "КАЛМАМАТОВ АЛИМРАН",
+            "group": 1,
+            "is_active": true,
+            "created_by": 1,
+            "created_at": "2024-02-23T12:00:00Z",
+            "updated_at": "2024-02-23T12:00:00Z"
+        }
+    },
+    {
+        "model": "Groups.Student",
+        "pk": 3,
+        "fields": {
+            "full_name": "ЧЫНГЫЗОВА БЕРМЕТ",
+            "group": 1,
+            "is_active": true,
+            "created_by": 1,
+            "created_at": "2024-02-23T12:00:00Z",
+            "updated_at": "2024-02-23T12:00:00Z"
+        }
+    },
+    {
+        "model": "Groups.Student",
+        "pk": 4,
+        "fields": {
+            "full_name": "ТУРАБАЕВ НУРМУХАММЕД",
+            "group": 1,
+            "is_active": true,
+            "created_by": 1,
+            "created_at": "2024-02-23T12:00:00Z",
+            "updated_at": "2024-02-23T12:00:00Z"
+        }
+    },
+    {
+        "model": "Groups.Student",
+        "pk": 5,
+        "fields": {
+            "full_name": "Ашимов Адилет",
+            "group": 2,
+            "is_active": true,
+            "created_by": 1,
+            "created_at": "2024-02-23T12:00:00Z",
+            "updated_at": "2024-02-23T12:00:00Z"
+        }
+    },
+    {
+        "model": "Groups.Student",
+        "pk": 6,
+        "fields": {
+            "full_name": "Кулмаматов Аманкелди",
+            "group": 2,
+            "is_active": true,
+            "created_by": 1,
+            "created_at": "2024-02-23T12:00:00Z",
+            "updated_at": "2024-02-23T12:00:00Z"
+        }
+    },
+    {
+        "model": "Groups.Student",
+        "pk": 7,
+        "fields": {
+            "full_name": "Ашимова Альбина",
+            "group": 2,
+            "is_active": true,
+            "created_by": 1,
+            "created_at": "2024-02-23T12:00:00Z",
+            "updated_at": "2024-02-23T12:00:00Z"
+        }
+    },
+    {
+        "model": "Groups.Student",
+        "pk": 8,
+        "fields": {
+            "full_name": "Абдираимова Нусойба",
+            "group": 2,
+            "is_active": true,
+            "created_by": 1,
+            "created_at": "2024-02-23T12:00:00Z",
+            "updated_at": "2024-02-23T12:00:00Z"
+        }
+    },
+    {
+        "model": "Groups.Student",
+        "pk": 9,
+        "fields": {
+            "full_name": "Муканбетов Нурдин",
+            "group": 2,
+            "is_active": true,
+            "created_by": 1,
+            "created_at": "2024-02-23T12:00:00Z",
+            "updated_at": "2024-02-23T12:00:00Z"
+        }
+    },
+    {
+        "model": "Groups.Student",
+        "pk": 10,
+        "fields": {
+            "full_name": "Кемелбеков Нурболот",
+            "group": 2,
+            "is_active": true,
+            "created_by": 1,
+            "created_at": "2024-02-23T12:00:00Z",
+            "updated_at": "2024-02-23T12:00:00Z"
+        }
+    },
+    {
+        "model": "Groups.Student",
+        "pk": 11,
+        "fields": {
+            "full_name": "Тологон уулу Саридин",
+            "group": 2,
+            "is_active": true,
+            "created_by": 1,
+            "created_at": "2024-02-23T12:00:00Z",
+            "updated_at": "2024-02-23T12:00:00Z"
+        }
+    },
+    {
+        "model": "Groups.Student",
+        "pk": 12,
+        "fields": {
+            "full_name": "Адиков Тимур",
+            "group": 2,
+            "is_active": true,
+            "created_by": 1,
+            "created_at": "2024-02-23T12:00:00Z",
+            "updated_at": "2024-02-23T12:00:00Z"
+        }
+    },
+    {
+        "model": "Groups.Student",
+        "pk": 13,
+        "fields": {
+            "full_name": "Жолдошбеков Талгар",
+            "group": 2,
+            "is_active": true,
+            "created_by": 1,
+            "created_at": "2024-02-23T12:00:00Z",
+            "updated_at": "2024-02-23T12:00:00Z"
+        }
+    },
+    {
+        "model": "Groups.Student",
+        "pk": 14,
+        "fields": {
+            "full_name": "Салахидинов Усман",
+            "group": 2,
+            "is_active": true,
+            "created_by": 1,
+            "created_at": "2024-02-23T12:00:00Z",
+            "updated_at": "2024-02-23T12:00:00Z"
+        }
+    },
+    {
+        "model": "Groups.Student",
+        "pk": 15,
+        "fields": {
+            "full_name": "Асанкалыев Ырыскелди",
+            "group": 2,
+            "is_active": true,
+            "created_by": 1,
+            "created_at": "2024-02-23T12:00:00Z",
+            "updated_at": "2024-02-23T12:00:00Z"
+        }
+    },
+    {
+        "model": "Groups.Student",
+        "pk": 16,
+        "fields": {
+            "full_name": "Дуйшобаев Ислам",
+            "group": 2,
+            "is_active": true,
+            "created_by": 1,
+            "created_at": "2024-02-23T12:00:00Z",
+            "updated_at": "2024-02-23T12:00:00Z"
+        }
+    }
+]

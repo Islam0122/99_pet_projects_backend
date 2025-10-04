@@ -1,0 +1,23 @@
+[
+    {
+        "model": "Typing.Timer",
+        "pk": 1,
+        "fields": {
+            "seconds": 10
+        }
+    },
+    {
+        "model": "Typing.Timer",
+        "pk": 2,
+        "fields": {
+            "seconds": 20
+        }
+    },
+    {
+        "model": "Typing.Timer",
+        "pk": 3,
+        "fields": {
+            "seconds": 30
+        }
+    }
+]

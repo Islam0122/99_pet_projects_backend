@@ -1,0 +1,143 @@
+[
+  {
+    "model": "Video.VideoCategory",
+    "pk": 1,
+    "fields": {
+      "title": "Программирование"
+    }
+  },
+  {
+    "model": "Video.VideoCategory",
+    "pk": 2,
+    "fields": {
+      "title": "Python"
+    }
+  },
+  {
+    "model": "Video.VideoCategory",
+    "pk": 3,
+    "fields": {
+      "title": "HTML/CSS"
+    }
+  },
+  {
+    "model": "Video.Video",
+    "pk": 1,
+    "fields": {
+      "title": "Как научиться программировать за 1 месяц",
+      "video_url": "https://www.youtube.com/watch?v=8errm5QnciA",
+      "created_at": "2025-02-21T00:00:00Z",
+      "is_active": true,
+      "video_category": 1,
+      "description": "В этом видео мы расскажем, как можно научиться программировать за месяц."
+    }
+  },
+  {
+    "model": "Video.Video",
+    "pk": 2,
+    "fields": {
+      "title": "Основы Python для начинающих",
+      "video_url": "https://www.youtube.com/watch?v=rfscVS0vtbw",
+      "created_at": "2025-02-21T00:00:00Z",
+      "is_active": true,
+      "video_category": 2,
+      "description": "Видео, которое объясняет основы языка программирования Python для новичков."
+    }
+  },
+  {
+    "model": "Video.Video",
+    "pk": 3,
+    "fields": {
+      "title": "Основы работы с VSCode",
+      "video_url": "https://www.youtube.com/watch?v=I6XkT0v30pM",
+      "created_at": "2025-02-21T00:00:00Z",
+      "is_active": true,
+      "video_category": 3,
+      "description": "Введение в использование редактора кода VSCode для начинающих разработчиков."
+    }
+  },
+  {
+    "model": "Video.Video",
+    "pk": 4,
+    "fields": {
+      "title": "HTML для начинающих",
+      "video_url": "https://www.youtube.com/watch?v=UB1O30fR-EE",
+      "created_at": "2025-02-21T00:00:00Z",
+      "is_active": true,
+      "video_category": 3,
+      "description": "Основы HTML, которые необходимы для создания веб-страниц."
+    }
+  },
+  {
+    "model": "Video.Video",
+    "pk": 5,
+    "fields": {
+      "title": "CSS для начинающих",
+      "video_url": "https://www.youtube.com/watch?v=yfoY53QXEnI",
+      "created_at": "2025-02-21T00:00:00Z",
+      "is_active": true,
+      "video_category": 3,
+      "description": "Обучение стилям CSS для создания красивых веб-страниц."
+    }
+  },
+  {
+    "model": "Video.Video",
+    "pk": 6,
+    "fields": {
+      "title": "Изучение JavaScript для новичков",
+      "video_url": "https://www.youtube.com/watch?v=upDLs1sn7g4",
+      "created_at": "2025-02-21T00:00:00Z",
+      "is_active": true,
+      "video_category": 2,
+      "description": "Руководство по основам JavaScript, идеальное для начинающих."
+    }
+  },
+  {
+    "model": "Video.Video",
+    "pk": 7,
+    "fields": {
+      "title": "Основы работы с Git",
+      "video_url": "https://www.youtube.com/watch?v=SWYqp7iY_Tc",
+      "created_at": "2025-02-21T00:00:00Z",
+      "is_active": true,
+      "video_category": 2,
+      "description": "Введение в систему контроля версий Git."
+    }
+  },
+  {
+    "model": "Video.Video",
+    "pk": 8,
+    "fields": {
+      "title": "Как работать с API",
+      "video_url": "https://www.youtube.com/watch?v=H1Z7bOwck-Q",
+      "created_at": "2025-02-21T00:00:00Z",
+      "is_active": true,
+      "video_category": 2,
+      "description": "Видео о том, как работать с API для взаимодействия с сервисами."
+    }
+  },
+  {
+    "model": "Video.Video",
+    "pk": 9,
+    "fields": {
+      "title": "Секреты CSS Grid",
+      "video_url": "https://www.youtube.com/watch?v=E4zJ6hj3fp0",
+      "created_at": "2025-02-21T00:00:00Z",
+      "is_active": true,
+      "video_category": 3,
+      "description": "Погружаемся в основы CSS Grid для создания сложных макетов."
+    }
+  },
+  {
+    "model": "Video.Video",
+    "pk": 10,
+    "fields": {
+      "title": "Продвинутый CSS",
+      "video_url": "https://www.youtube.com/watch?v=IzoS6Q_3j6A",
+      "created_at": "2025-02-21T00:00:00Z",
+      "is_active": true,
+      "video_category": 3,
+      "description": "Продвинутые приемы работы с CSS для опытных веб-разработчиков."
+    }
+  }
+]

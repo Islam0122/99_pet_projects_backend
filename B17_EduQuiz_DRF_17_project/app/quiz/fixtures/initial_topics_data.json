@@ -1,0 +1,38 @@
+[
+  {
+    "model": "quiz.Topic",
+    "pk": 1,
+    "fields": {
+      "name": "Python (Базовый)",
+      "description": "Основы Python, переменные, типы данных и операторы.",
+      "difficulty": "easy",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "quiz.Topic",
+    "pk": 2,
+    "fields": {
+      "name": "HTML и CSS",
+      "description": "Основы HTML и CSS, создание веб-страниц.",
+      "difficulty": "medium",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "quiz.Topic",
+    "pk": 3,
+    "fields": {
+      "name": "JavaScript",
+      "description": "Основы JavaScript, создание интерактивных элементов на веб-странице.",
+      "difficulty": "hard",
+      "created_by": 1,
+      "created_at": "2024-02-23T12:00:00Z",
+      "updated_at": "2024-02-23T12:00:00Z"
+    }
+  }
+]

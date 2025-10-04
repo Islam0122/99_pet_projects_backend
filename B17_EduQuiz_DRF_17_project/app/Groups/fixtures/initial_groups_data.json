@@ -1,0 +1,22 @@
+[
+    {
+        "model": "Groups.group",
+        "pk": 1,
+        "fields": {
+            "name": "progg 50",
+            "created_at": "2024-02-23T12:00:00Z",
+            "updated_at": "2024-02-23T12:00:00Z",
+            "created_by": 1
+        }
+    },
+    {
+        "model": "Groups.group",
+        "pk": 2,
+        "fields": {
+            "name": "A5 FRONTEND",
+            "created_at": "2024-02-23T12:00:00Z",
+            "updated_at": "2024-02-23T12:00:00Z",
+            "created_by": 1
+        }
+    }
+]
