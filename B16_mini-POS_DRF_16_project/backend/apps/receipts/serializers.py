@@ -5,47 +5,32 @@ from ..product.serializers import ProductSerializer
 
 class ReceiptItemSerializer(serializers.ModelSerializer):
     product = ProductSerializer(read_only=True)
+
     class Meta:
         model = ReceiptItem
-        fields = (
-            "id",
-            "product",
-            "quantity",
-            "price",
-            "discount",
-            "final_price",
-        )
+        fields = ('id', 'product', 'quantity', 'price', 'discount', 'final_price')
 
 
 class ReceiptSerializer(serializers.ModelSerializer):
-    cashier = serializers.StringRelatedField(read_only=True)
     items = ReceiptItemSerializer(many=True, read_only=True)
-    qr_code_url = serializers.SerializerMethodField()
+    cashier_name = serializers.CharField(source='cashier.fullname', read_only=True)
     pdf_url = serializers.SerializerMethodField()
+    qr_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Receipt
         fields = (
-            "id",
-            "cashier",
-            "total_amount",
-            "payment_method",
-            "paid_amount",
-            "change",
-            "created_at",
-            "items",
-            "qr_code_url",
-            "pdf_url",
+            'id', 'cashier', 'cashier_name', 'total_amount', 'payment_method',
+            'paid_amount', 'change', 'created_at', 'items', 'pdf_url', 'qr_url'
         )
-
-    def get_qr_code_url(self, obj):
-        if obj.qr_code:
-            request = self.context.get("request")
-            return request.build_absolute_uri(obj.qr_code.url)
-        return None
+        read_only_fields = ('total_amount', 'change', 'created_at', 'items', 'pdf_url', 'qr_url')
 
     def get_pdf_url(self, obj):
         if obj.pdf_receipt:
-            request = self.context.get("request")
-            return request.build_absolute_uri(obj.pdf_receipt.url)
+            return obj.pdf_receipt.url
+        return None
+
+    def get_qr_url(self, obj):
+        if obj.qr_code:
+            return obj.qr_code.url
         return None

@@ -6,11 +6,6 @@ from .serializers import ReceiptSerializer, ReceiptItemSerializer
 from ..product.models import Product
 
 class ReceiptViewSet(viewsets.ModelViewSet):
-    """
-    ViewSet для работы с чеками.
-    - Кассир видит только свои чеки
-    - Админ видит все
-    """
     serializer_class = ReceiptSerializer
     permission_classes = [IsAuthenticated]
 
@@ -21,29 +16,16 @@ class ReceiptViewSet(viewsets.ModelViewSet):
         return Receipt.objects.filter(cashier=user).order_by("-created_at")
 
     def create(self, request, *args, **kwargs):
-        """
-        Создание чека.
-        Ожидаем:
-        {
-            "items": [
-                {"product_id": 1, "quantity": 2},
-                {"product_id": 2, "quantity": 1}
-            ],
-            "payment_method": "cash",
-            "paid_amount": 1200.0
-        }
-        """
-        user = request.user
         data = request.data
         items_data = data.get("items", [])
         payment_method = data.get("payment_method", "cash")
-        paid_amount = float(data.get("paid_amount", 0))
+        paid_amount = data.get("paid_amount", 0)
 
         if not items_data:
-            return Response({"error": "Нужно добавить хотя бы один товар"}, status=400)
+            return Response({"error": "Добавьте хотя бы один товар"}, status=status.HTTP_400_BAD_REQUEST)
 
         receipt = Receipt.objects.create(
-            cashier=user,
+            cashier=request.user,
             total_amount=0,
             payment_method=payment_method,
             paid_amount=paid_amount,
@@ -55,7 +37,7 @@ class ReceiptViewSet(viewsets.ModelViewSet):
             product_id = item.get("product_id")
             quantity = int(item.get("quantity", 1))
             product = Product.objects.get(id=product_id)
-            price = float(product.sale_price)
+            price = product.sale_price
             final_price = price * quantity
 
             ReceiptItem.objects.create(
@@ -69,7 +51,7 @@ class ReceiptViewSet(viewsets.ModelViewSet):
             total_amount += final_price
 
         receipt.total_amount = total_amount
-        receipt.change = paid_amount - total_amount if payment_method == "cash" else 0
+        receipt.change = float(paid_amount) - float(total_amount) if payment_method == "cash" else 0
         receipt.save()
 
         serializer = self.get_serializer(receipt)

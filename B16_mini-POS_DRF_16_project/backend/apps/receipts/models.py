@@ -63,8 +63,6 @@ class Receipt(models.Model):
     def generate_qr_code(self):
         """Создание QR-кода с данными чека"""
         qr_data = f"Чек №{self.id}\nСумма: {self.total_amount} сом\nОплата: {self.get_payment_method_display()}"
-
-        # Создаем объект QRCode
         qr = qrcode.QRCode(
             version=1,
             error_correction=qrcode.constants.ERROR_CORRECT_L,
@@ -73,18 +71,14 @@ class Receipt(models.Model):
         )
         qr.add_data(qr_data)
         qr.make(fit=True)
-
         qr_img = qr.make_image(fill_color="black", back_color="white")
 
         buffer = BytesIO()
         qr_img.save(buffer, format='PNG')
         buffer.seek(0)
-
         file_name = f"receipt_{self.id}_qr.png"
         self.qr_code.save(file_name, ContentFile(buffer.getvalue()), save=False)
         buffer.close()
-
-        super().save(update_fields=["qr_code"])
 
     def generate_pdf_receipt(self):
         """Генерация PDF-чека"""
