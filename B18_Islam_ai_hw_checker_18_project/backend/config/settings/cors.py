@@ -24,7 +24,8 @@ CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWED_ORIGIN_REGEXES = [
     r"^http://127\.0\.0\.1(:\d+)?$",
     r"^http://localhost(:\d+)?$",
-    r"https://islamdev\.up\.railway\.app$",
+    "https://islamdev.up.railway.app",
+
 ]
 
 
