@@ -1,6 +1,44 @@
 from django.db import models
 
 
+class Group(models.Model):
+    title = models.CharField(
+        max_length=100,
+        verbose_name="Название группы",
+        help_text="Введите название учебной группы",
+    )
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = "Группа"
+        verbose_name_plural = "Группы"
+        ordering = ["title"]
+
+
+class Student(models.Model):
+    name = models.CharField(
+        max_length=100,
+        verbose_name="Имя студента",
+        help_text="Введите полное имя студента",
+    )
+    group = models.ForeignKey(
+        Group, on_delete=models.CASCADE, related_name="students", verbose_name="Группа"
+    )
+    email = models.EmailField(
+        unique=True, verbose_name="Email студента", help_text="Введите email студента"
+    )
+
+    def __str__(self):
+        return f"{self.name} ({self.group.title})"
+
+    class Meta:
+        verbose_name = "Студент"
+        verbose_name_plural = "Студенты"
+        ordering = ["name"]
+
+
 class HomeWork(models.Model):
     LESSON_CHOICES = [
         ("Введение в Python", "Введение в Python. Переменные, типы данных"),
@@ -24,28 +62,22 @@ class HomeWork(models.Model):
         ("Финальный проект", "Итоговый проект месяца"),
     ]
 
-    student_name = models.CharField(
-        max_length=100,
-        verbose_name="Имя ученика",
-        help_text="Введите имя и фамилию ученика"
-    )
-    student_email = models.EmailField(
-        verbose_name="Электронная почта ученика",
-        help_text="Введите e-mail ученика"
+    student = models.ForeignKey(
+        Student,
+        on_delete=models.CASCADE,
+        related_name="homeworks",
+        verbose_name="Студент",
     )
     lesson = models.CharField(
         max_length=100,
         choices=LESSON_CHOICES,
         verbose_name="Урок",
-        help_text="Выберите урок, к которому относится задание"
+        help_text="Выберите урок, к которому относится задание",
     )
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-        verbose_name="Дата создания"
-    )
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
 
     def __str__(self):
-        return f"{self.student_name} ({self.lesson})"
+        return f"{self.student.name} — {self.lesson}"
 
     class Meta:
         verbose_name = "Результат задания"
@@ -58,37 +90,38 @@ class HwItem(models.Model):
         HomeWork,
         on_delete=models.CASCADE,
         related_name="items",
-        verbose_name="Домашняя работа"
+        verbose_name="Домашняя работа",
     )
     task_condition = models.TextField(
         verbose_name="Условие задания",
-        help_text="Введите условие задания, данное ученику"
+        help_text="Введите условие задания, данное ученику",
     )
     student_answer = models.TextField(
-        verbose_name="Ответ ученика",
-        help_text="Введите ответ ученика"
+        verbose_name="Ответ ученика", help_text="Введите ответ ученика"
     )
     grade = models.FloatField(
         verbose_name="Оценка (из 10)",
         help_text="Введите оценку за задание (от 0 до 10)",
         null=True,
-        blank=True
+        blank=True,
     )
     ai_feedback = models.TextField(
         verbose_name="Комментарий от Islam AI Checker",
         help_text="Комментарий, сгенерированный системой Islam AI Checker",
         null=True,
-        blank=True
+        blank=True,
     )
     originality_check = models.TextField(
         verbose_name="Анализ оригинальности",
         help_text="Проверка, сам ли ученик выполнил задание или использовал AI",
         null=True,
-        blank=True
+        blank=True,
     )
 
     def __str__(self):
-        return f"Задание ({self.homework.lesson}) — {self.homework.student_name}"
+        return (
+            f"Задание по уроку: {self.homework.lesson} — {self.homework.student.name}"
+        )
 
     class Meta:
         verbose_name = "Пункт задания"
