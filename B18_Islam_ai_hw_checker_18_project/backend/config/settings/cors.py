@@ -21,11 +21,12 @@ CORS_ALLOW_HEADERS = [
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOWED_ORIGIN_REGEXES = [
+
+CORS_ALLOWED_ORIGIN_REGEXES = [                       # общий адрес GitHub Pages
     r"^http://127\.0\.0\.1(:\d+)?$",
     r"^http://localhost(:\d+)?$",
-    "https://islamdev.up.railway.app",
-
+    r"^https://islamdev.up.railway.app$",
 ]
-
-
+CSRF_TRUSTED_ORIGINS = [
+    "https://islamdev.up.railway.app",
+]
