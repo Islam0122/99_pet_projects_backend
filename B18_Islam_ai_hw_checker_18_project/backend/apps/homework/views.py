@@ -18,7 +18,7 @@ class StudentRead(viewsets.ReadOnlyModelViewSet):
         """
         Проверяет, существует ли студент по имени и email.
         Пример: /api/students/check/?name=Islam&email=example@gmail.com
-        Возвращает { "exists": true } или { "exists": false }
+        Возвращает { "exists": true, "student_id": 1 } или { "exists": false }
         """
         name = request.query_params.get("name")
         email = request.query_params.get("email")
@@ -29,10 +29,18 @@ class StudentRead(viewsets.ReadOnlyModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        exists = Student.objects.filter(name__iexact=name, email__iexact=email).exists()
-        return Response({"exists": exists})
+        try:
+            student = Student.objects.get(name__iexact=name, email__iexact=email)
+            exists = True
+            student_id = student.id
+        except Student.DoesNotExist:
+            exists = False
+            student_id = None
 
-
+        return Response({
+            "exists": exists,
+            "student_id": student_id
+        })
 
 
 class HomeWorkViewSet(viewsets.ModelViewSet):
