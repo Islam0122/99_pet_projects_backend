@@ -39,6 +39,7 @@ async def get_task_by_id(task_id: int) -> dict:
 
 
 async def create_task(
+    owner: int,
     title: str,
     description: Optional[str] = None,
     category_ids: Optional[List[int]] = None,
@@ -46,6 +47,7 @@ async def create_task(
     done: bool = False
 ) -> dict:
     payload = {
+        "owner": owner,
         "title": title,
         "description": description or "",
         "done": done,

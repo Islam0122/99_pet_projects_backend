@@ -1,9 +1,12 @@
 from aiogram import Router, types, F
 from keyboards.inline_keyboards import return_menu_kb, tasks_inline_kb,tasks2_inline_kb
 from api.tasks import get_tasks_by_telegram_id, get_task_by_id, delete_task, mark_task_done
+from api.telegramusers import get_telegram_user,mark_task_done_and_update_user
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from dialogs.add_task_dialog import AddTaskSG
 
 tasks_router = Router()
+
 
 @tasks_router.callback_query(lambda c: c.data == "my_tasks")
 async def show_my_tasks(callback: types.CallbackQuery):
@@ -86,4 +89,24 @@ async def delete_task_callback(callback: types.CallbackQuery):
 async def mark_done_callback(callback: types.CallbackQuery):
     task_id = int(callback.data.split("_")[1])
     await mark_task_done(task_id)
-    await callback.message.edit_text(text=f"✅ Задача ID {task_id} отмечена как выполненная.",reply_markup=return_menu_kb())
+    user_data = await get_telegram_user(callback.from_user.id)
+    user_stats = await mark_task_done_and_update_user(user_data['id'])
+
+    await callback.message.edit_text(
+        text=(
+            f"✅ Задача ID {task_id} выполнена!\n\n"
+            f"Всего выполнено: {user_stats['total_task_completes']}\n"
+            f"Streak дней: {user_stats['streak_days']}"
+        ),
+        reply_markup=return_menu_kb()
+    )
+
+
+@tasks_router.callback_query(lambda c: c.data == "add_task")
+async def add_tasks(callback: types.CallbackQuery):
+    await callback.message.edit_text(
+        text="✏️ Чтобы добавить задачу, напишите /add или нажмите кнопку ниже:",
+        reply_markup=return_menu_kb()
+    )
+    await callback.answer()
+
