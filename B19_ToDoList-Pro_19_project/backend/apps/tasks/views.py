@@ -6,10 +6,10 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .tasks import send_task_reminders
 
-@api_view(['POST'])
+@api_view(["GET"])
 def test_send_reminders(request):
     send_task_reminders.delay()
-    return Response({"status": "Celery task triggered"})
+    return Response({"status": "reminders sent"})
 
 
 class CategoryViewSet(viewsets.ReadOnlyModelViewSet):

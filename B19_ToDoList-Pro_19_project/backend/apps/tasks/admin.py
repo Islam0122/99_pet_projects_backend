@@ -39,7 +39,7 @@ class TaskAdmin(admin.ModelAdmin):
     list_filter = ("done", "categories", "due_date", "created_at")
     search_fields = ("title", "description", "owner__username")
     ordering = ("-created_at",)
-    readonly_fields = ("created_at",)
+    readonly_fields = ("created_at","due_reminder_sent","created_reminder_sent")
     filter_horizontal = ("categories",)
 
     fieldsets = (
@@ -50,7 +50,7 @@ class TaskAdmin(admin.ModelAdmin):
             "fields": ("done", "due_date")
         }),
         ("Системная информация", {
-            "fields": ("created_at",),
+            "fields": ("created_at","due_reminder_sent","created_reminder_sent"),
             "classes": ("collapse",)
         }),
     )

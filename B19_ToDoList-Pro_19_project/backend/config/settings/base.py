@@ -68,7 +68,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 
 LANGUAGE_CODE = 'ru-RU'
-TIME_ZONE = 'America/Adak'
+TIME_ZONE = 'Asia/Almaty'
 USE_TZ = True
 USE_I18N = True
 USE_L10N = True
@@ -79,14 +79,17 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+CELERY_BROKER_URL = "redis://localhost:6379/0"  # если через docker
+CELERY_RESULT_BACKEND = "redis://localhost:6379/0"
+CELERY_TIMEZONE = 'Asia/Almaty'
+CELERY_ENABLE_UTC = False
 CELERY_BEAT_SCHEDULE = {
-    "send-task-reminders-every-10-minutes": {
-        "task": "cdapps.tasks.tasks.send_task_reminders",
-        "schedule": crontab(minute="*/10"),  # каждые 10 минут
+    "send-task-reminders-every-5-min": {
+        "task": "apps.tasks.tasks.send_task_reminders",
+        "schedule": 300.0,
     },
 }
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+
 
 
 REST_FRAMEWORK = {

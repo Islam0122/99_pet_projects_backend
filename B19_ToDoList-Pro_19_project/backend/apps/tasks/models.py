@@ -79,6 +79,14 @@ class Task(models.Model):
         verbose_name="Выполнено",
         help_text="Отметьте, если задача завершена"
     )
+    created_reminder_sent = models.BooleanField(
+        default=False,
+        verbose_name="Напоминание о создании отправлено"
+    )
+    due_reminder_sent = models.BooleanField(
+        default=False,
+        verbose_name="Напоминание о дедлайне отправлено"
+    )
 
     class Meta:
         ordering = ["-created_at"]
