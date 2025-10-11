@@ -14,6 +14,17 @@ services:
       - redis
       - db
     restart: always
+  bot:
+    build:
+      context: ./bot
+    container_name: todo_bot
+    volumes:
+      - ./bot:/app/bot
+    env_file:
+      - ./bot/.env
+    depends_on:
+      - web
+    restart: always
 
   celery_worker:
     build:
