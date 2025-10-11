@@ -1,5 +1,4 @@
 from aiogram import Router, types, F
-from aiogram.types import CallbackQuery
 from keyboards.inline_keyboards import return_menu_kb, tasks_inline_kb,tasks2_inline_kb
 from api.tasks import get_tasks_by_telegram_id, get_task_by_id, delete_task, mark_task_done
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
@@ -23,7 +22,6 @@ async def show_my_tasks(callback: types.CallbackQuery):
 async def show_old_tasks(callback: types.CallbackQuery):
     tg_id = callback.from_user.id
     tasks = await get_tasks_by_telegram_id(tg_id)
-    print(tasks)
     done_tasks = [t for t in tasks if t.get("done")]
 
     if not done_tasks:
@@ -60,6 +58,7 @@ async def task_actions(callback: types.CallbackQuery):
         f"📝 Описание: {task.get('description', 'Нет описания')}\n"
         f"🏷 Категории: {categories}\n"
         f"⏰ Срок: {due}\n"
+        f"🕒 Создано: {task.get('created_at', 'Нет данных')}\n"
         f"Статус: {status}"
     )
 
@@ -88,4 +87,3 @@ async def mark_done_callback(callback: types.CallbackQuery):
     task_id = int(callback.data.split("_")[1])
     await mark_task_done(task_id)
     await callback.message.edit_text(text=f"✅ Задача ID {task_id} отмечена как выполненная.",reply_markup=return_menu_kb())
-
