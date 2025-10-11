@@ -88,8 +88,11 @@ CELERY_BEAT_SCHEDULE = {
         "task": "apps.tasks.tasks.send_task_reminders",
         "schedule": 300.0,
     },
+    "remind-unfinished-tasks-every-6-hours": {
+        "task": "apps.tasks.tasks.remind_unfinished_tasks",
+        "schedule": 21600.0,
+    },
 }
-
 
 
 

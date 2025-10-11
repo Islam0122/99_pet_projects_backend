@@ -12,6 +12,7 @@ services:
       - .env
     depends_on:
       - redis
+      - db
     restart: always
 
   celery_worker:
@@ -25,6 +26,7 @@ services:
       - .env
     depends_on:
       - redis
+      - db
     restart: always
 
   celery_beat:
@@ -38,6 +40,7 @@ services:
       - .env
     depends_on:
       - redis
+      - db
     restart: always
 
   redis:
@@ -46,3 +49,19 @@ services:
     ports:
       - "6379:6379"
     restart: always
+
+  db:
+    image: postgres:15
+    container_name: todo_postgres
+    environment:
+      POSTGRES_DB: todo_db
+      POSTGRES_USER: todo_user
+      POSTGRES_PASSWORD: todo_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: always
+
+volumes:
+  pgdata:
