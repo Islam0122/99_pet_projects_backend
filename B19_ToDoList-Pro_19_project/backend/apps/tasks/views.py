@@ -18,7 +18,6 @@ class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
     filter_backends = [filters.SearchFilter]
     search_fields = ["name"]
 
-
 class TaskViewSet(viewsets.ModelViewSet):
     serializer_class = TaskSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
@@ -27,5 +26,15 @@ class TaskViewSet(viewsets.ModelViewSet):
     ordering_fields = ["created_at", "due_date"]
     ordering = ["-created_at"]
 
-    def perform_update(self, serializer):
-        serializer.save()
+    def get_queryset(self):
+        tg_id = self.request.query_params.get("telegram_id")
+        if tg_id:
+            return Task.objects.filter(owner__telegram_id=tg_id).order_by("-created_at")
+        return Task.objects.all().order_by("-created_at")
+
+    def perform_create(self, serializer):
+        tg_id = self.request.data.get("telegram_id")
+        if tg_id:
+            serializer.save(owner_id=tg_id)
+        else:
+            serializer.save()

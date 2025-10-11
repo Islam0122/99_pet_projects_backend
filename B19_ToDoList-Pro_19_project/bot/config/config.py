@@ -25,9 +25,9 @@ def load_config(path: Optional[str] = None) -> Config:
 
     return Config(
         bot=TgBot(
-            token=env.str("TELEGRAM_BOT_TOKEN",),
+            token=env.str("TELEGRAM_BOT_TOKEN", ),
         ),
         api_url=BaseApiUrl(
-            api_url=env.str("TELEGRAM_API_URL", ),
+            api_url=env.str("TELEGRAM_API_URL",),
         ),
     )

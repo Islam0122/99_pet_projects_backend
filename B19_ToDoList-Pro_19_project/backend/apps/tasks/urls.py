@@ -7,7 +7,7 @@ router.register(r"tasks", TaskViewSet, basename="task")
 router.register(r"categories", CategoryViewSet, basename="category")
 
 urlpatterns = [
-    path("api/", include(router.urls)),
+    path("", include(router.urls)),
     path('test-reminders/', test_send_reminders, name='test-reminders'),
 
 ]
