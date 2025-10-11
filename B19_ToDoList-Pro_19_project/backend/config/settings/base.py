@@ -79,8 +79,8 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-CELERY_BROKER_URL = "redis://localhost:6379/0"  # если через docker
-CELERY_RESULT_BACKEND = "redis://localhost:6379/0"
+CELERY_BROKER_URL = 'redis://redis:6379/0'
+CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
 CELERY_TIMEZONE = 'Asia/Almaty'
 CELERY_ENABLE_UTC = False
 CELERY_BEAT_SCHEDULE = {
@@ -89,6 +89,7 @@ CELERY_BEAT_SCHEDULE = {
         "schedule": 300.0,
     },
 }
+
 
 
 

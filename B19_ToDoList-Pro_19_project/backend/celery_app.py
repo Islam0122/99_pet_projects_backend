@@ -1,9 +1,8 @@
 import os
 from celery import Celery
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.development')  # укажи свой settings
 
-app = Celery("config")
-app.config_from_object("django.conf:settings", namespace="CELERY")
-app.conf.broker_url = "redis://localhost:6379/0"
+app = Celery('backend')
+app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks()
