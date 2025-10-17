@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'apps.accounts',
     'apps.book',
     'apps.parser_app',
+    'apps.broadcastprompt',
 
 
 ]
