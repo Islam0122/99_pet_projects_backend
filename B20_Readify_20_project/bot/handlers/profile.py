@@ -3,8 +3,10 @@ from api.telegramusers import get_telegram_user, get_top_users
 from aiogram.filters import Command
 from keyboards.inline_keyboards import return_menu_kb
 from datetime import datetime
+from pathlib import Path
 
 profile_router = Router()
+photo = "AgACAgIAAxkBAAIBXmjyji-cVZO1zhue4OhyMYaTX9UtAAIL-DEbw-l5S3ATNiEmk1T9AQADAgADeQADNgQ"
 
 def format_date(date_str):
     """Преобразует дату из API в красивый формат"""
@@ -47,7 +49,7 @@ async def show_profile(message: types.Message):
         f"📌 <b>В системе с:</b> {member_since}"
     )
 
-    await message.answer(text, reply_markup=return_menu_kb(), parse_mode="HTML")
+    await message.answer_photo(photo=photo,caption=text, reply_markup=return_menu_kb(), parse_mode="HTML")
 
 
 # ------------------ Кнопка Профиль ------------------
@@ -81,7 +83,7 @@ async def show_profile_callback(callback: types.CallbackQuery):
         f"📌 <b>В системе с:</b> {member_since}"
     )
 
-    await callback.message.edit_text(text, reply_markup=return_menu_kb(), parse_mode="HTML")
+    await callback.message.edit_caption(caption=text, reply_markup=return_menu_kb(), parse_mode="HTML")
     await callback.answer()
 
 
@@ -102,6 +104,6 @@ async def top_xp(callback: types.CallbackQuery):
                 f"   С нами с: {user.get('member_since')}\n\n"
             )
 
-        await callback.message.edit_text(text=text, reply_markup=return_menu_kb())
+        await callback.message.edit_caption(caption=text, reply_markup=return_menu_kb())
     except Exception as e:
         await callback.message.answer(text=f"Ошибка при получении топа !!")
