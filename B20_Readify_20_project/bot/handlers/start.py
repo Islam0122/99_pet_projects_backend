@@ -72,8 +72,3 @@ async def about_bot(callback: CallbackQuery):
 async def soon_update(callback: CallbackQuery):
     await callback.message.edit_caption(caption=SOON_UPDATE_TEXT, reply_markup=return_menu_kb())
 
-@start_router.message()
-async def get_file_id(message: types.Message):
-    if message.photo:
-        largest_photo = message.photo[-1]
-        await message.answer(f"File ID: {largest_photo.file_id}")
