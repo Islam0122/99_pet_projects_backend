@@ -5,7 +5,8 @@ from keyboards.inline_keyboards import return_menu_kb
 from aiogram.filters import CommandObject, Command
 
 book_router = Router()
-photo = "AgACAgIAAxkBAAIBXmjyji-cVZO1zhue4OhyMYaTX9UtAAIL-DEbw-l5S3ATNiEmk1T9AQADAgADeQADNgQ"
+# photo = "AgACAgIAAxkBAAIBXmjyji-cVZO1zhue4OhyMYaTX9UtAAIL-DEbw-l5S3ATNiEmk1T9AQADAgADeQADNgQ"
+photo = "AgACAgIAAxkBAAMDaPKvyEnH5FIT0qqDz0MDw7bDd3EAAgv4MRvD6XlLxL9qsd2EDbkBAAMCAAN5AAM2BA"
 
 text = "❗ Укажите название книги после команды /search\n📖 Пример: /search Гарри Поттер\n⚠️ Если книга не найдена, проверьте правильность написания названия."
 
