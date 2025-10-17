@@ -6,7 +6,6 @@ from datetime import datetime
 
 profile_router = Router()
 
-
 def format_date(date_str):
     """Преобразует дату из API в красивый формат"""
     if not date_str:
@@ -25,7 +24,6 @@ async def show_profile(message: types.Message):
     if not user_data:
         await message.answer("❌ Пользователь не найден.")
         return
-
     username = user_data.get("username") or message.from_user.username or message.from_user.id
     streak_days = user_data.get("streak_days", 0)
     streak_status = user_data.get("streak_status", "Не начинал streak 🌱")
@@ -56,6 +54,7 @@ async def show_profile(message: types.Message):
 @profile_router.callback_query(F.data == "profile")
 async def show_profile_callback(callback: types.CallbackQuery):
     user_data = await get_telegram_user(callback.from_user.id)
+
     if not user_data:
         await callback.message.answer("❌ Пользователь не найден.")
         return
@@ -70,7 +69,6 @@ async def show_profile_callback(callback: types.CallbackQuery):
     last_read_date = format_date(user_data.get("last_read_date"))
     last_active = format_date(user_data.get("last_active"))
     member_since = format_date(user_data.get("member_since"))
-
     text = (
         f"👤 <b>Профиль @{username}</b>\n\n"
         f"🔥 <b>Streak:</b> {streak_status} ({streak_days} дней подряд)\n"
@@ -105,6 +103,5 @@ async def top_xp(callback: types.CallbackQuery):
             )
 
         await callback.message.edit_text(text=text, reply_markup=return_menu_kb())
-
     except Exception as e:
         await callback.message.answer(text=f"Ошибка при получении топа !!")
