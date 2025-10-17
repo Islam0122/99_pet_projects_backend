@@ -107,3 +107,4 @@ async def top_xp(callback: types.CallbackQuery):
         await callback.message.edit_caption(caption=text, reply_markup=return_menu_kb())
     except Exception as e:
         await callback.message.answer(text=f"Ошибка при получении топа !!")
+
