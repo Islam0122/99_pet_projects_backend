@@ -21,9 +21,12 @@ CORS_ALLOW_HEADERS = [
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOWED_ORIGIN_REGEXES = [
-    r"^http://127\.0\.0\.1(:\d+)?$",  # Разрешить все порты для 127.0.0.1
-    r"^http://localhost(:\d+)?$",     # Разрешить все порты для localhost
+CORS_ALLOWED_ORIGIN_REGEXES = [                       # общий адрес GitHub Pages
+    r"^http://127\.0\.0\.1(:\d+)?$",
+    r"^http://localhost(:\d+)?$",
+    r"^https://server-bp5n-production.up.railway.app$",
 ]
-
+CSRF_TRUSTED_ORIGINS = [
+    "https://server-bp5n-production.up.railway.app",
+]
 

@@ -98,10 +98,10 @@ REST_FRAMEWORK = {
 from .cors import *
 
 JAZZMIN_SETTINGS = {
-    "site_title": "ToDoList",
-    "site_header": "Админка ToDoList",
-    "site_brand": "ToDoList",
-    "welcome_sign": "Добро пожаловать в админку ToDoList!",
+    "site_title": "Readify",
+    "site_header": "Админка Readify",
+    "site_brand": "Readify",
+    "welcome_sign": "Добро пожаловать в админку Readify!",
     "topmenu_links": [
         {"name": "Главная", "url": "/admin/", "permissions": ["auth.view_user"]},
     ],
