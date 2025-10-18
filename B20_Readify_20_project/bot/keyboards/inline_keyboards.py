@@ -15,7 +15,7 @@ def main_menu_kb():
                 InlineKeyboardButton(text="🔍 Найти книгу", callback_data="search_book"),
             ],
             [
-                InlineKeyboardButton(text="🤖 AI Help", callback_data="ai_chat")
+                InlineKeyboardButton(text="🤖 AI Help", callback_data="ai_help")
             ],
             [
                 InlineKeyboardButton(text="ℹ️ О боте", callback_data="about_bot"),
