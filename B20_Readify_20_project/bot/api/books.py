@@ -111,15 +111,26 @@ async def delete_user_book(book_id: int) -> bool:
             return False
 
 
-async def read_user_book(book_id: int) -> Optional[Dict]:
-    """📖 Чтение файла книги с нумерацией строк"""
+async def read_user_book(book_id: int, telegram_user_id: int = None) -> Optional[Dict]:
+    """📖 Чтение файла книги с нумерацией строк и обновление статистики"""
     url = f"{API_URL}/user-books/{book_id}/read_file/"
     async with aiohttp.ClientSession() as session:
         try:
             async with session.get(url) as resp:
-                resp.raise_for_status()
-                return await resp.json()
+                if resp.status == 200:
+                    book_content = await resp.json()
+
+                    if telegram_user_id:
+                        from .telegramusers import update_user_reading_stats, add_xp_to_user
+                        await update_user_reading_stats(telegram_user_id)
+                        await add_xp_to_user(telegram_user_id, 10)  # +10 XP за чтение
+                        logger.info(f"XP добавлен пользователю {telegram_user_id} за чтение книги {book_id}")
+
+                    return book_content
+                else:
+                    error_text = await resp.text()
+                    logger.error(f"Ошибка API при чтении книги {book_id}: {resp.status} - {error_text}")
+                    return None
         except aiohttp.ClientError as e:
             logger.error(f"Ошибка при чтении файла книги ID={book_id}: {e}")
             return None
-

@@ -2,7 +2,7 @@ from aiogram import Router, types, F, Bot
 from aiogram.fsm.context import FSMContext
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from api.books import fetch_user_books, delete_user_book, read_user_book
-from api.telegramusers import get_telegram_user
+from api.telegramusers import get_telegram_user, update_user_reading_stats, add_xp_to_user
 import logging
 
 user_books_router = Router()
@@ -83,24 +83,27 @@ async def show_user_books(callback: types.CallbackQuery, state: FSMContext, bot:
 
     try:
         user_data = await get_telegram_user(callback.from_user.id)
-        telegram_user_id = user_data['id']
+        telegram_user_id = user_data['telegram_id']
 
         all_books = await fetch_user_books()
 
         user_books = [
             book for book in all_books
-            if book.get('telegram_user') == telegram_user_id
+            if book.get('telegram_user') == user_data['id']
         ]
 
         if not user_books:
-            await callback.message.edit_caption(
-                caption=(
-                    "📖 <b>Мои книги</b>\n\n"
-                    "📭 У вас пока нет добавленных книг.\n\n"
-                    "Нажмите '📤 Добавить книгу' чтобы добавить свою первую книгу!"
+            await callback.message.edit_media(
+                media=types.InputMediaPhoto(
+                    media=photo,
+                    caption=(
+                        "📖 <b>Мои книги</b>\n\n"
+                        "📭 У вас пока нет добавленных книг.\n\n"
+                        "Нажмите '📤 Добавить книгу' чтобы добавить свою первую книгу!"
+                    ),
+                    parse_mode="HTML"
                 ),
-                reply_markup=get_user_books_kb(),
-                parse_mode="HTML"
+                reply_markup=get_user_books_kb()
             )
         else:
             await state.update_data(all_user_books=user_books, current_page=0)
@@ -108,13 +111,16 @@ async def show_user_books(callback: types.CallbackQuery, state: FSMContext, bot:
 
     except Exception as e:
         logger.error(f"Ошибка при получении книг пользователя: {e}")
-        await callback.message.edit_caption(
-            caption=(
-                "❌ <b>Ошибка</b>\n\n"
-                "Не удалось загрузить ваши книги. Попробуйте позже."
+        await callback.message.edit_media(
+            media=types.InputMediaPhoto(
+                media=photo,
+                caption=(
+                    "❌ <b>Ошибка</b>\n\n"
+                    "Не удалось загрузить ваши книги. Попробуйте позже."
+                ),
+                parse_mode="HTML"
             ),
-            reply_markup=get_user_books_kb(),
-            parse_mode="HTML"
+            reply_markup=get_user_books_kb()
         )
 
     await callback.answer()
@@ -139,20 +145,15 @@ async def show_book_detail(callback: types.CallbackQuery, state: FSMContext):
             f"📅 <b>Добавлена:</b> {book['created_at'][:10]}\n"
             f"🆔 <b>ID:</b> {book['id']}"
         )
-        try:
-            await callback.message.edit_caption(
-            caption=book_text,
-            reply_markup=get_book_actions_kb(book_id),
-            parse_mode="HTML"
-            )
-        except Exception as e:
-            await callback.message.delete()
-            await callback.message.answer_photo(
-                photo=photo,
+
+        await callback.message.edit_media(
+            media=types.InputMediaPhoto(
+                media=photo,
                 caption=book_text,
-                reply_markup=get_book_actions_kb(book_id),
                 parse_mode="HTML"
-            )
+            ),
+            reply_markup=get_book_actions_kb(book_id)
+        )
 
     except Exception as e:
         logger.error(f"Ошибка при показе деталей книги: {e}")
@@ -201,45 +202,54 @@ async def confirm_delete_book(callback: types.CallbackQuery, state: FSMContext, 
         success = await delete_user_book(book_id)
 
         if success:
-            await callback.message.edit_caption(
-                caption="✅ <b>Книга успешно удалена!</b>",
+            await callback.message.edit_media(
+                media=types.InputMediaPhoto(
+                    media=photo,
+                    caption="✅ <b>Книга успешно удалена!</b>",
+                    parse_mode="HTML"
+                ),
                 reply_markup=InlineKeyboardMarkup(
                     inline_keyboard=[
                         [InlineKeyboardButton(text="📖 Мои книги", callback_data="users_books")],
                         [InlineKeyboardButton(text="⏪ Главное меню", callback_data="main_menu")]
                     ]
-                ),
-                parse_mode="HTML"
+                )
             )
         else:
-            await callback.message.edit_caption(
-                caption="❌ <b>Ошибка</b>\n\nНе удалось удалить книгу.",
+            await callback.message.edit_media(
+                media=types.InputMediaPhoto(
+                    media=photo,
+                    caption="❌ <b>Ошибка</b>\n\nНе удалось удалить книгу.",
+                    parse_mode="HTML"
+                ),
                 reply_markup=InlineKeyboardMarkup(
                     inline_keyboard=[
                         [InlineKeyboardButton(text="📖 Мои книги", callback_data="users_books")],
                         [InlineKeyboardButton(text="⏪ Главное меню", callback_data="main_menu")]
                     ]
-                ),
-                parse_mode="HTML"
+                )
             )
 
     except Exception as e:
         logger.error(f"Ошибка при удалении книги: {e}")
-        await callback.message.edit_caption(
-            caption="❌ <b>Ошибка</b>\n\nНе удалось удалить книгу.",
+        await callback.message.edit_media(
+            media=types.InputMediaPhoto(
+                media=photo,
+                caption="❌ <b>Ошибка</b>\n\nНе удалось удалить книгу.",
+                parse_mode="HTML"
+            ),
             reply_markup=InlineKeyboardMarkup(
                 inline_keyboard=[
                     [InlineKeyboardButton(text="📖 Мои книги", callback_data="users_books")],
                     [InlineKeyboardButton(text="⏪ Главное меню", callback_data="main_menu")]
                 ]
-            ),
-            parse_mode="HTML"
+            )
         )
 
     await callback.answer()
 
 
-def get_reading_pagination_kb(book_id: int, current_page: int, total_pages: int):
+def get_reading_pagination_kb(book_id: int, current_page: int, total_pages: int, total_xp: int = 0):
     """Клавиатура для пагинации при чтении книги"""
     keyboard = []
 
@@ -250,8 +260,13 @@ def get_reading_pagination_kb(book_id: int, current_page: int, total_pages: int)
         pagination_buttons.append(
             InlineKeyboardButton(text="⬅️", callback_data=f"read_page_{book_id}_{current_page - 1}"))
 
+    # Добавляем информацию о XP
+    page_info = f"{current_page + 1}/{total_pages}"
+    if total_xp > 0:
+        page_info = f"{current_page + 1}/{total_pages} (+{total_xp}XP)"
+
     pagination_buttons.append(InlineKeyboardButton(
-        text=f"{current_page + 1}/{total_pages}",
+        text=page_info,
         callback_data="current_reading_page"
     ))
 
@@ -268,7 +283,6 @@ def get_reading_pagination_kb(book_id: int, current_page: int, total_pages: int)
     ])
 
     return InlineKeyboardMarkup(inline_keyboard=keyboard)
-
 
 async def show_books_page(callback: types.CallbackQuery, state: FSMContext, bot: Bot):
     """Показать страницу с книгами"""
@@ -298,21 +312,20 @@ async def show_books_page(callback: types.CallbackQuery, state: FSMContext, bot:
         books_text += "📭 На этой странице нет книг."
     else:
         pass
-        # for i, book in enumerate(current_books, start_idx + 1):
-            # books_text += f"{i}. <b>{book['title']}</b>\n"
-            # if book.get('description'):
-            #     books_text += f"   📝 {book['description'][:50]}...\n"
-            # books_text += f"   📅 {book['created_at'][:10]}\n\n"
-
     books_text += f"📚 Всего книг: {len(user_books)}"
 
     try:
-        await callback.message.edit_caption(
-            caption=books_text,
-            reply_markup=get_books_pagination_kb(user_books, current_page, books_per_page),
-            parse_mode="HTML"
+        await callback.message.edit_media(
+            media=types.InputMediaPhoto(
+                media=photo,
+                caption=books_text,
+                parse_mode="HTML"
+            ),
+            reply_markup=get_books_pagination_kb(user_books, current_page, books_per_page)
         )
     except Exception as e:
+        logger.error(f"Ошибка при редактировании сообщения: {e}")
+        # Если не удалось отредактировать, отправляем новое
         await callback.message.delete()
         await callback.message.answer_photo(
             photo=photo,
@@ -339,23 +352,43 @@ async def handle_current_page(callback: types.CallbackQuery):
 
 @user_books_router.callback_query(F.data.startswith("read_book_"))
 async def read_book_handler(callback: types.CallbackQuery, state: FSMContext, bot: Bot):
-    """Чтение книги с пагинацией"""
+    """Чтение книги с пагинацией и добавлением XP"""
     book_id = int(callback.data.split("_")[2])
 
     try:
+        # Получаем данные пользователя
+        user_data = await get_telegram_user(callback.from_user.id)
+
+        if not user_data:
+            await callback.message.edit_media(
+                media=types.InputMediaPhoto(
+                    media=photo,
+                    caption="❌ <b>Ошибка</b>\n\nПользователь не найден.",
+                    parse_mode="HTML"
+                ),
+                reply_markup=get_book_actions_kb(book_id)
+            )
+            return
+
+        telegram_user_id = user_data['telegram_id']
+
         await callback.message.edit_caption(
             caption="⏳ <b>Загружаю книгу...</b>",
             reply_markup=None,
             parse_mode="HTML"
         )
 
+        # Получаем содержимое книги
         book_content = await read_user_book(book_id)
 
         if not book_content:
-            await callback.message.edit_caption(
-                caption="❌ <b>Ошибка</b>\n\nНе удалось загрузить книгу.",
-                reply_markup=get_book_actions_kb(book_id),
-                parse_mode="HTML"
+            await callback.message.edit_media(
+                media=types.InputMediaPhoto(
+                    media=photo,
+                    caption="❌ <b>Ошибка</b>\n\nНе удалось загрузить книгу.",
+                    parse_mode="HTML"
+                ),
+                reply_markup=get_book_actions_kb(book_id)
             )
             return
 
@@ -363,7 +396,7 @@ async def read_book_handler(callback: types.CallbackQuery, state: FSMContext, bo
         title = book_content.get('title', 'Книга')
 
         # Разбиваем на страницы
-        MAX_PAGE_LENGTH = 3000  # символов на страницу
+        MAX_PAGE_LENGTH = 3000
         pages = []
         current_page = ""
 
@@ -386,21 +419,56 @@ async def read_book_handler(callback: types.CallbackQuery, state: FSMContext, bo
             'book_pages': pages,
             'current_reading_page': 0,
             'reading_book_id': book_id,
-            'reading_book_title': title
+            'reading_book_title': title,
+            'telegram_user_id': telegram_user_id,  # Сохраняем ID пользователя
+            'pages_with_xp': set()  # Множество страниц за которые уже дали XP
         })
+
+        await add_xp_for_page(telegram_user_id, 0, state)
 
         # Показываем первую страницу
         await show_reading_page(callback, state, bot)
 
     except Exception as e:
         logger.error(f"Ошибка при чтении книги: {e}")
-        await callback.message.edit_caption(
-            caption="❌ <b>Ошибка</b>\n\nНе удалось загрузить книгу.",
-            reply_markup=get_book_actions_kb(book_id),
-            parse_mode="HTML"
+        await callback.message.edit_media(
+            media=types.InputMediaPhoto(
+                media=photo,
+                caption="❌ <b>Ошибка</b>\n\nНе удалось загрузить книгу.",
+                parse_mode="HTML"
+            ),
+            reply_markup=get_book_actions_kb(book_id)
         )
 
     await callback.answer()
+
+
+async def add_xp_for_page(telegram_user_id: int, page_number: int, state: FSMContext):
+    """Добавляет XP за прочтение страницы (если еще не давали)"""
+    try:
+        data = await state.get_data()
+        pages_with_xp = data.get('pages_with_xp', set())
+
+        # Если за эту страницу еще не давали XP
+        if page_number not in pages_with_xp:
+            # Добавляем XP за страницу
+            await add_xp_to_user(telegram_user_id, 5)  # +5 XP за каждую страницу
+
+            # Обновляем статистику чтения (только для первой страницы книги)
+            if page_number == 0:
+                await update_user_reading_stats(telegram_user_id)
+
+            # Добавляем страницу в множество обработанных
+            pages_with_xp.add(page_number)
+            await state.update_data(pages_with_xp=pages_with_xp)
+
+            logger.info(f"Добавлено 5 XP пользователю {telegram_user_id} за страницу {page_number}")
+            return True
+        return False
+
+    except Exception as e:
+        logger.error(f"Ошибка при добавлении XP за страницу: {e}")
+        return False
 
 
 async def show_reading_page(callback: types.CallbackQuery, state: FSMContext, bot: Bot):
@@ -410,10 +478,12 @@ async def show_reading_page(callback: types.CallbackQuery, state: FSMContext, bo
     current_page = data.get('current_reading_page', 0)
     book_id = data.get('reading_book_id')
     title = data.get('reading_book_title', 'Книга')
+    telegram_user_id = data.get('telegram_user_id')
+    pages_with_xp = data.get('pages_with_xp', set())
 
     if not pages or current_page >= len(pages):
-        await callback.message.edit_caption(
-            caption="❌ <b>Ошибка</b>\n\nСтраница не найдена.",
+        await callback.message.answer(
+            text="❌ <b>Ошибка</b>\n\nСтраница не найдена.",
             reply_markup=get_book_actions_kb(book_id),
             parse_mode="HTML"
         )
@@ -421,15 +491,41 @@ async def show_reading_page(callback: types.CallbackQuery, state: FSMContext, bo
 
     page_content = pages[current_page]
 
-    # Формируем текст
-    text = f"📖 <b>{title}</b>\n\n{page_content}\n\n📄 Страница {current_page + 1}/{len(pages)}"
-    await callback.message.delete()
-    await callback.message.answer(
-        text=text,
-        reply_markup=get_reading_pagination_kb(book_id, current_page, len(pages)),
-        parse_mode="HTML"
-    )
+    # Добавляем XP за текущую страницу (если еще не давали)
+    xp_added = await add_xp_for_page(telegram_user_id, current_page, state)
 
+    # Считаем общее количество полученного XP
+    total_xp_earned = len(pages_with_xp) * 5
+
+    # Формируем текст с сообщением о XP
+    xp_message = "🎉 +5 XP за страницу!\n\n" if xp_added else ""
+
+    text = f"📖 <b>{title}</b>\n\n{xp_message}{page_content}\n\n📄 Страница {current_page + 1}/{len(pages)}"
+
+    # Для первой страницы отправляем новое сообщение, для остальных редактируем существующее
+    if current_page == 0:
+        await callback.message.delete()
+        await callback.message.answer(
+            text=text,
+            reply_markup=get_reading_pagination_kb(book_id, current_page, len(pages), total_xp_earned),
+            parse_mode="HTML"
+        )
+    else:
+        try:
+            await callback.message.edit_text(
+                text=text,
+                reply_markup=get_reading_pagination_kb(book_id, current_page, len(pages), total_xp_earned),
+                parse_mode="HTML"
+            )
+        except Exception as e:
+            logger.error(f"Ошибка при редактировании сообщения: {e}")
+            # Если не удалось отредактировать, отправляем новое
+            await callback.message.delete()
+            await callback.message.answer(
+                text=text,
+                reply_markup=get_reading_pagination_kb(book_id, current_page, len(pages), total_xp_earned),
+                parse_mode="HTML"
+            )
 
 @user_books_router.callback_query(F.data.startswith("read_page_"))
 async def handle_reading_pagination(callback: types.CallbackQuery, state: FSMContext, bot: Bot):
@@ -448,9 +544,6 @@ async def handle_reading_pagination(callback: types.CallbackQuery, state: FSMCon
 
     await callback.answer()
 
-
 @user_books_router.callback_query(F.data == "current_reading_page")
 async def handle_current_reading_page(callback: types.CallbackQuery):
-    """Обработка нажатия на номер текущей страницы чтения"""
     await callback.answer("📄 Текущая страница")
-

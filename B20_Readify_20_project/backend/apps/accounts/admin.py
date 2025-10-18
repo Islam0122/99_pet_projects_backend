@@ -24,7 +24,7 @@ class TGUserAdmin(admin.ModelAdmin):
             "fields": ("telegram_id", "username"),
         }),
         ("🔥 Активность пользователя", {
-            "fields": ("xp", "total_read_books", "streak_days", "last_read_date", "last_active"),
+            "fields": ("xp", "total_read_books", "streak_days","level","rank", "last_read_date", "last_active"),
         }),
         ("🕓 Системная информация", {
             "fields": ("created_at",),
