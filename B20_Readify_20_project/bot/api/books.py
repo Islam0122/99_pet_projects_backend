@@ -9,8 +9,7 @@ config = load_config()
 API_URL = f"{config.api_url.api_url}"  # базовый URL API
 
 
-async def fetch_books() -> list:
-    """Получение списка всех книг"""
+async def fetch_books() -> List[Dict]:
     url = f"{API_URL}/books/"
     async with aiohttp.ClientSession() as session:
         try:
@@ -22,35 +21,49 @@ async def fetch_books() -> list:
             return []
 
 
-async def fetch_chapter(book_id: int, chapter_number: int) -> dict:
-    """Получение конкретной главы"""
-    url = f"{API_URL}/books/{book_id}/chapters/{chapter_number}/"
+async def fetch_book_chapters(book_id: int) -> List[Dict]:
+    url = f"{API_URL}/books/{book_id}/chapters/"
     async with aiohttp.ClientSession() as session:
         try:
             async with session.get(url) as resp:
                 resp.raise_for_status()
                 return await resp.json()
         except aiohttp.ClientError as e:
-            logger.error(f"Ошибка при получении главы {chapter_number} книги {book_id}: {e}")
-            return {}
+            logger.error(f"Ошибка при получении глав книги {book_id}: {e}")
+            return []
 
 
-async def load_book(olid: str) -> dict:
-    """Авто-добавление книги через OLID"""
-    url = f"{API_URL}/books/load/"
-    payload = {"olid": olid}
+async def fetch_chapter(book_id: int, chapter_number: int) -> Optional[Dict]:
+    url = f"{API_URL}/books/{book_id}/chapter/{chapter_number}/"
     async with aiohttp.ClientSession() as session:
         try:
-            async with session.post(url, json=payload) as resp:
-                resp.raise_for_status()
-                return await resp.json()
+            async with session.get(url) as resp:
+                if resp.status == 200:
+                    return await resp.json()
+                else:
+                    return None
         except aiohttp.ClientError as e:
-            logger.error(f"Ошибка при загрузке книги OLID={olid}: {e}")
-            return {}
+            logger.error(f"Ошибка при получении главы {chapter_number} книги {book_id}: {e}")
+            return None
+
+
+async def load_book_from_openlibrary(olid: str) -> Optional[Dict]:
+    url = f"{API_URL}/load-book/"
+    async with aiohttp.ClientSession() as session:
+        try:
+            async with session.post(url, json={"olid": olid}) as resp:
+                if resp.status == 201:
+                    return await resp.json()
+                else:
+                    error_text = await resp.text()
+                    logger.error(f"Ошибка при загрузке книги: {resp.status} - {error_text}")
+                    return None
+        except aiohttp.ClientError as e:
+            logger.error(f"Ошибка при загрузке книги {olid}: {e}")
+            return None
 
 
 async def fetch_user_books() -> List[Dict]:
-    """📚 Получение списка всех пользовательских книг"""
     url = f"{API_URL}/user-books/"
     async with aiohttp.ClientSession() as session:
         try:
@@ -95,7 +108,6 @@ async def create_user_book(
 
 
 async def delete_user_book(book_id: int) -> bool:
-    """🗑️ Удаление пользовательской книги"""
     url = f"{API_URL}/user-books/{book_id}/"
     async with aiohttp.ClientSession() as session:
         try:
@@ -112,8 +124,7 @@ async def delete_user_book(book_id: int) -> bool:
 
 
 async def read_user_book(book_id: int, telegram_user_id: int = None) -> Optional[Dict]:
-    """📖 Чтение файла книги с нумерацией строк и обновление статистики"""
-    url = f"{API_URL}/user-books/{book_id}/read_file/"
+\    url = f"{API_URL}/user-books/{book_id}/read_file/"
     async with aiohttp.ClientSession() as session:
         try:
             async with session.get(url) as resp:

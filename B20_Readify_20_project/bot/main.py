@@ -11,6 +11,7 @@ from handlers.book import book_router
 from handlers.add_book import add_book_router
 from handlers.user_book import user_books_router
 from handlers.ai_chat import ai_help_private_router
+from handlers.library import library_router
 from aiogram_dialog import  setup_dialogs
 
 logger = logging.getLogger(__name__)
@@ -45,6 +46,7 @@ async def main():
     dp.include_router(add_book_router)
     dp.include_router(user_books_router)
     dp.include_router(ai_help_private_router)
+    dp.include_router(library_router)
     setup_dialogs(dp)
 
     await bot.delete_webhook(drop_pending_updates=True)

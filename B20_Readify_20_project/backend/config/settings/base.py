@@ -30,7 +30,6 @@ INSTALLED_APPS = [
     #apps
     'apps.accounts',
     'apps.book',
-    'apps.parser_app',
     'apps.broadcastprompt',
 
 
