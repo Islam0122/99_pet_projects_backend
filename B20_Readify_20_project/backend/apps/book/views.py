@@ -71,14 +71,13 @@ class ChapterDetailAPIView(APIView):
 
 
 class LoadBookAPIView(APIView):
-    """🔄 Загрузка книги по OLID (через OpenLibrary API)"""
-
+    """Авто-добавление книги через OLID (если нет — создаётся)"""
     def post(self, request):
         olid = request.data.get("olid")
         if not olid:
             return Response({"error": "Не указан OLID"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Проверяем, есть ли уже книга
+        # Предполагаем, что в модели есть поле `olid`
         book = Book.objects.filter(title=olid).first()
         if book:
             serializer = BookSerializer(book)

@@ -47,6 +47,20 @@ async def fetch_chapter(book_id: int, chapter_number: int) -> Optional[Dict]:
             return None
 
 
+async def load_book(olid: str) -> dict:
+    """Авто-добавление книги через OLID"""
+    url = f"{API_URL}/load-book/"
+    payload = {"olid": olid}
+    async with aiohttp.ClientSession() as session:
+        try:
+            async with session.post(url, json=payload) as resp:
+                resp.raise_for_status()
+                return await resp.json()
+        except aiohttp.ClientError as e:
+            logger.error(f"Ошибка при загрузке книги OLID={olid}: {e}")
+            return {}
+
+
 async def load_book_from_openlibrary(olid: str) -> Optional[Dict]:
     url = f"{API_URL}/load-book/"
     async with aiohttp.ClientSession() as session:
@@ -124,7 +138,7 @@ async def delete_user_book(book_id: int) -> bool:
 
 
 async def read_user_book(book_id: int, telegram_user_id: int = None) -> Optional[Dict]:
-\    url = f"{API_URL}/user-books/{book_id}/read_file/"
+    url = f"{API_URL}/user-books/{book_id}/read_file/"
     async with aiohttp.ClientSession() as session:
         try:
             async with session.get(url) as resp:
