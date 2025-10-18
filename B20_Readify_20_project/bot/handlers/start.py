@@ -62,6 +62,7 @@ async def main_menu(callback: CallbackQuery):
     try:
         await callback.message.edit_caption(caption=WELCOME_TEXT, reply_markup=main_menu_kb())
     except:
+        await callback.message.delete()
         await callback.message.answer_photo(photo=photo, caption=WELCOME_TEXT, reply_markup=main_menu_kb())
 
 @start_router.callback_query(F.data == "about_bot")
