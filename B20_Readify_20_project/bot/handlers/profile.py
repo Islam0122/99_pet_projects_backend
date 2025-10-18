@@ -8,6 +8,7 @@ from pathlib import Path
 profile_router = Router()
 # photo = "AgACAgIAAxkBAAIBXmjyji-cVZO1zhue4OhyMYaTX9UtAAIL-DEbw-l5S3ATNiEmk1T9AQADAgADeQADNgQ"
 photo = "AgACAgIAAxkBAAMDaPKvyEnH5FIT0qqDz0MDw7bDd3EAAgv4MRvD6XlLxL9qsd2EDbkBAAMCAAN5AAM2BA"
+
 def format_date(date_str):
     """Преобразует дату из API в красивый формат"""
     if not date_str:

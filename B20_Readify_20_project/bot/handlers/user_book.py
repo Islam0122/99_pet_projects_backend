@@ -7,7 +7,8 @@ import logging
 
 user_books_router = Router()
 logger = logging.getLogger(__name__)
-photo = "AgACAgIAAxkBAAIBXmjyji-cVZO1zhue4OhyMYaTX9UtAAIL-DEbw-l5S3ATNiEmk1T9AQADAgADeQADNgQ"
+# photo = "AgACAgIAAxkBAAIBXmjyji-cVZO1zhue4OhyMYaTX9UtAAIL-DEbw-l5S3ATNiEmk1T9AQADAgADeQADNgQ"
+photo = "AgACAgIAAxkBAAMDaPKvyEnH5FIT0qqDz0MDw7bDd3EAAgv4MRvD6XlLxL9qsd2EDbkBAAMCAAN5AAM2BA"
 
 
 def get_user_books_kb():

@@ -5,8 +5,8 @@ from api.telegramusers import create_or_update_telegram_user
 from aiogram.filters import Command
 
 start_router = Router()
-photo = "AgACAgIAAxkBAAIBXmjyji-cVZO1zhue4OhyMYaTX9UtAAIL-DEbw-l5S3ATNiEmk1T9AQADAgADeQADNgQ"
-# photo = "AgACAgIAAxkBAAMDaPKvyEnH5FIT0qqDz0MDw7bDd3EAAgv4MRvD6XlLxL9qsd2EDbkBAAMCAAN5AAM2BA"
+# photo = "AgACAgIAAxkBAAIBXmjyji-cVZO1zhue4OhyMYaTX9UtAAIL-DEbw-l5S3ATNiEmk1T9AQADAgADeQADNgQ"
+photo = "AgACAgIAAxkBAAMDaPKvyEnH5FIT0qqDz0MDw7bDd3EAAgv4MRvD6XlLxL9qsd2EDbkBAAMCAAN5AAM2BA"
 
 WELCOME_TEXT = """
 👋 Привет! Добро пожаловать в Readify 1.0 — твой персональный помощник в мире книг!
