@@ -1,4 +1,6 @@
 from django.db import models
+from ..accounts.models import TGUser
+
 
 class Book(models.Model):
     title = models.CharField(
@@ -55,3 +57,44 @@ class Chapter(models.Model):
 
     def __str__(self):
         return f"{self.book.title} — Глава {self.number}"
+
+
+class UserBook(models.Model):
+    telegram_user = models.ForeignKey(
+        TGUser,
+        on_delete=models.CASCADE,
+        related_name="user_books",
+        verbose_name="Пользователь",
+        help_text="Пользователь, который добавил книгу"
+    )
+
+    title = models.CharField(
+        max_length=255,
+        verbose_name="Название книги",
+        help_text="Введите название вашей книги"
+    )
+
+    description = models.TextField(
+        verbose_name="Описание книги",
+        help_text="Кратко опишите, о чём книга"
+    )
+
+    file = models.FileField(
+        upload_to="user_books/files/",
+        verbose_name="Файл книги (PDF, TXT и др.)",
+        help_text="Загрузите файл книги"
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="Дата добавления",
+        help_text="Когда книга была добавлена пользователем"
+    )
+
+    class Meta:
+        verbose_name = "Книга пользователя"
+        verbose_name_plural = "Книги пользователей"
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.title} — {self.telegram_user.username or self.telegram_user.telegram_id}"

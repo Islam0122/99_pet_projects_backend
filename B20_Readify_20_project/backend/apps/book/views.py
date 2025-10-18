@@ -1,38 +1,44 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
 from django.shortcuts import get_object_or_404
-from .models import Book, Chapter
-from .serializers import BookSerializer, ChapterSerializer
+from rest_framework import viewsets, status
+from rest_framework.views import APIView
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
+
+from .models import Book, Chapter, UserBook
+from .serializers import BookSerializer, ChapterSerializer, UserBookSerializer
 from .utils import load_book_from_openlibrary
 from ..accounts.models import TGUser
 
 
 class BookListAPIView(APIView):
-    """Список всех книг, сортировка по названию"""
+    """📚 Список всех книг"""
     def get(self, request):
         books = Book.objects.all().order_by('title')
         serializer = BookSerializer(books, many=True)
         return Response(serializer.data)
 
 
-
 class ChapterDetailAPIView(APIView):
-    """Получение конкретной главы книги по номеру"""
+    """📖 Получение конкретной главы книги по номеру"""
     def get(self, request, book_id, chapter_number):
-        chapter = get_object_or_404(Chapter.objects.select_related('book'),
-                                    book_id=book_id, number=chapter_number)
+        chapter = get_object_or_404(
+            Chapter.objects.select_related('book'),
+            book_id=book_id,
+            number=chapter_number
+        )
         serializer = ChapterSerializer(chapter)
         return Response(serializer.data)
 
 
 class LoadBookAPIView(APIView):
-    """Авто-добавление книги через OLID (если нет — создаётся)"""
+    """🔄 Загрузка книги по OLID (через OpenLibrary API)"""
     def post(self, request):
         olid = request.data.get("olid")
         if not olid:
             return Response({"error": "Не указан OLID"}, status=status.HTTP_400_BAD_REQUEST)
 
+        # Проверяем, есть ли уже книга
         book = Book.objects.filter(title=olid).first()
         if book:
             serializer = BookSerializer(book)
@@ -45,3 +51,60 @@ class LoadBookAPIView(APIView):
 
         serializer = BookSerializer(book)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class UserBookViewSet(viewsets.ModelViewSet):
+    """📘 Управление пользовательскими книгами"""
+    queryset = UserBook.objects.all().order_by("-created_at")
+    serializer_class = UserBookSerializer
+    permission_classes = [AllowAny]
+    lookup_field = "id"
+
+    @action(detail=True, methods=["get"])
+    def read_file(self, request, id=None):
+        """📄 Открывает файл книги, добавляет нумерацию строк и возвращает текст"""
+        book = self.get_object()
+
+        if not book.file:
+            return Response({"error": "Файл не найден"}, status=status.HTTP_404_NOT_FOUND)
+
+        try:
+            with open(book.file.path, "r", encoding="utf-8") as f:
+                lines = f.readlines()
+
+            numbered_lines = [
+                f"{i + 1}. {line.strip()}"
+                for i, line in enumerate(lines)
+                if line.strip()
+            ]
+            content = "\n".join(numbered_lines)
+
+            return Response({
+                "title": book.title,
+                "content": content
+            })
+
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def list(self, request, *args, **kwargs):
+        """📂 Получение списка всех пользовательских книг"""
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def create(self, request, *args, **kwargs):
+        """➕ Добавление новой книги"""
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(
+            {"message": "📘 Книга успешно добавлена!", "data": serializer.data},
+            status=status.HTTP_201_CREATED
+        )
+
+    def destroy(self, request, *args, **kwargs):
+        """🗑️ Удаление книги"""
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response({"message": "✅ Книга успешно удалена."}, status=status.HTTP_204_NO_CONTENT)
