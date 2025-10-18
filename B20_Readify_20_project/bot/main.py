@@ -9,7 +9,7 @@ from handlers.start import start_router
 from handlers.profile import profile_router
 from handlers.book import book_router
 from handlers.add_book import add_book_router
-
+from handlers.user_book import user_books_router
 from aiogram_dialog import  setup_dialogs
 
 logger = logging.getLogger(__name__)
@@ -42,6 +42,7 @@ async def main():
     dp.include_router(profile_router)
     dp.include_router(book_router)
     dp.include_router(add_book_router)
+    dp.include_router(user_books_router)
     setup_dialogs(dp)
 
     await bot.delete_webhook(drop_pending_updates=True)

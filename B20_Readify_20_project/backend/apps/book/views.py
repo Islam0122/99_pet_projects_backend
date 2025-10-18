@@ -54,15 +54,12 @@ class LoadBookAPIView(APIView):
 
 
 class UserBookViewSet(viewsets.ModelViewSet):
-    """📘 Управление пользовательскими книгами"""
     queryset = UserBook.objects.all().order_by("-created_at")
     serializer_class = UserBookSerializer
     permission_classes = [AllowAny]
-    lookup_field = "id"
 
     @action(detail=True, methods=["get"])
-    def read_file(self, request, id=None):
-        """📄 Открывает файл книги, добавляет нумерацию строк и возвращает текст"""
+    def read_file(self, request, pk=None):
         book = self.get_object()
 
         if not book.file:
@@ -73,7 +70,7 @@ class UserBookViewSet(viewsets.ModelViewSet):
                 lines = f.readlines()
 
             numbered_lines = [
-                f"{i + 1}. {line.strip()}"
+                f" {line.strip()}"
                 for i, line in enumerate(lines)
                 if line.strip()
             ]
@@ -88,13 +85,11 @@ class UserBookViewSet(viewsets.ModelViewSet):
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def list(self, request, *args, **kwargs):
-        """📂 Получение списка всех пользовательских книг"""
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
     def create(self, request, *args, **kwargs):
-        """➕ Добавление новой книги"""
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -102,9 +97,3 @@ class UserBookViewSet(viewsets.ModelViewSet):
             {"message": "📘 Книга успешно добавлена!", "data": serializer.data},
             status=status.HTTP_201_CREATED
         )
-
-    def destroy(self, request, *args, **kwargs):
-        """🗑️ Удаление книги"""
-        instance = self.get_object()
-        self.perform_destroy(instance)
-        return Response({"message": "✅ Книга успешно удалена."}, status=status.HTTP_204_NO_CONTENT)
