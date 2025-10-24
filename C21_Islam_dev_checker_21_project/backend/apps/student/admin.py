@@ -68,8 +68,7 @@ class StudentAdmin(admin.ModelAdmin):
         qs = super().get_queryset(request)
         return qs.select_related("group")
 
-    def has_add_permission(self, request):
-        return False
+
 
 
 

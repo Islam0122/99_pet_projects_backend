@@ -106,3 +106,50 @@ async def show_complete_profile(callback: types.CallbackQuery, bot: Bot):
         )
 
 
+@profile_router.callback_query(F.data == "menu:top_students")
+async def show_top_students(callback: types.CallbackQuery):
+    """Показывает топ студентов"""
+    try:
+        await callback.answer()
+
+        async with StudentAPI() as student_api:
+            top_students = await student_api.get_top_students(limit=10)  # можно изменить лимит
+
+            if not top_students:
+                await callback.message.answer(
+                    "❌ Пока нет данных о студентах.",
+                    reply_markup=return_menu()
+                )
+                return
+
+            # Формируем красивый текст с прогресс-барами
+            text = "🏆 <b>Топ студентов:</b>\n\n"
+            for idx, s in enumerate(top_students, start=1):
+                # Прогресс-бар
+                total_homeworks = s.get('total_homeworks', 0)
+                completed_homeworks = s.get('completed_homeworks', 0)
+                progress_percent = 0
+                if total_homeworks > 0:
+                    progress_percent = (completed_homeworks / total_homeworks) * 100
+                filled = int((progress_percent / 100) * 10)
+                empty = 10 - filled
+                progress_bar = "█" * filled + "░" * empty
+
+                text += (
+                    f"{idx}. {s.get('full_name', 'Неизвестно')} — {s.get('progress_level', 'Новичок')}\n"
+                    f"    📊 Прогресс: {progress_bar} {progress_percent:.1f}%\n"
+                    f"    ⭐ Баллы: {s.get('total_points', 0)}\n\n"
+                )
+
+            await callback.message.edit_caption(
+                caption=text,
+                reply_markup=return_menu(),
+                parse_mode="HTML"
+            )
+
+    except Exception as e:
+        logging.error(f"Error showing top students: {e}")
+        await callback.message.answer(
+            "❌ Ошибка при загрузке топа студентов.",
+            reply_markup=return_menu()
+        )
