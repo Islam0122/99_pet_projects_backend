@@ -137,6 +137,7 @@ async def show_top_students(callback: types.CallbackQuery):
 
                 text += (
                     f"{idx}. {s.get('full_name', 'Неизвестно')} — {s.get('progress_level', 'Новичок')}\n"
+                    f"    Группа: {s.get('group_title')}\n"
                     f"    📊 Прогресс: {progress_bar} {progress_percent:.1f}%\n"
                     f"    ⭐ Баллы: {s.get('total_points', 0)}\n\n"
                 )
