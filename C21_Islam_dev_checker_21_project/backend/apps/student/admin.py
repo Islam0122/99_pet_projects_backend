@@ -60,7 +60,6 @@ class StudentAdmin(admin.ModelAdmin):
     readonly_fields = (
         "average_score",
         "best_score",
-        "total_points",
         "rank",
         "last_homework_done",
     )

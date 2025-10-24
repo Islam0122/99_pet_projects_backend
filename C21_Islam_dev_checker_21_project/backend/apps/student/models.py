@@ -104,6 +104,39 @@ class Student(models.Model):
         help_text="Отображает, активен ли студент в учебной программе",
     )
 
+    def save(self, *args, **kwargs):
+        if self.total_homeworks == 0:
+            level = "Новичок"
+        else:
+            completion_rate = (self.completed_homeworks / self.total_homeworks) * 100
+            if completion_rate < 20:
+                level = "Новичок"
+            elif completion_rate < 40:
+                level = "Начинающий"
+            elif completion_rate < 60:
+                level = "Средний"
+            elif completion_rate < 80:
+                level = "Продвинутый"
+            else:
+                level = "Лидер"
+
+        if self.progress_level != level:
+            self.progress_level = level
+
+        if self.completed_homeworks > 0:
+            self.average_score = self.total_points / self.completed_homeworks
+        else:
+            self.average_score = 0.0
+        if self.best_score < self.average_score:
+            self.best_score = self.average_score
+
+        super().save(*args, **kwargs)
+
+        students_in_group = Student.objects.filter(group=self.group).order_by('-total_points', 'full_name')
+        for idx, student in enumerate(students_in_group, start=1):
+            if student.rank != idx:
+                Student.objects.filter(pk=student.pk).update(rank=idx)
+
     def __str__(self):
         return f"{self.full_name} ({self.group.title})"
 
