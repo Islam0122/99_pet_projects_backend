@@ -14,11 +14,7 @@ class ApiConfig:
 
 @dataclass
 class RedisConfig:
-    host: str = "localhost"
-    port: int = 6379
-    db: int = 0
-    password: Optional[str] = None
-    url: Optional[str] = None  # если используется Railway REDIS_URL
+    url: Optional[str] = None
 
 @dataclass
 class Config:
@@ -45,32 +41,8 @@ def load_config(path: Optional[str] = None) -> Config:
 
     # Redis
     redis_config = RedisConfig(
-        host=env.str("REDIS_HOST", "localhost"),
-        port=env.int("REDIS_PORT", 6379),
-        db=env.int("REDIS_DB", 0),
-        password=env.str("REDIS_PASSWORD", None),
         url=env.str("REDIS_URL", None)  # Railway REDIS_URL
     )
 
     return Config(bot=bot, api=api, redis=redis_config)
 
-# Пример подключения к Redis
-def get_redis_connection(config: RedisConfig):
-    if config.url:
-        # Используем Railway REDIS_URL
-        return redis.from_url(config.url, decode_responses=True)
-    else:
-        # Локальный Redis
-        return redis.Redis(
-            host=config.host,
-            port=config.port,
-            db=config.db,
-            password=config.password,
-            decode_responses=True
-        )
-
-# Использование
-config = load_config()
-r = get_redis_connection(config.redis)
-
-print("Redis ping:", r.ping())
