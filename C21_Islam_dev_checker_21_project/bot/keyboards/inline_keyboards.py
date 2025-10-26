@@ -29,7 +29,7 @@ def get_main_menu():
 
 def month_pending_tasks():
     kb = InlineKeyboardBuilder()
-    kb.button(text="📘 1-й месяц", callback_data="month:1:pending_tasks")
+    kb.button(text="📘 1-й месяц", callback_data="month:1")
     kb.button(text="📗 2-й месяц", callback_data="month:2:pending_tasks")
     kb.button(text="📕 3-й месяц", callback_data="month:3:pending_tasks")
     kb.button(
@@ -41,7 +41,7 @@ def month_pending_tasks():
 
 def month_checked_tasks():
     kb = InlineKeyboardBuilder()
-    kb.button(text="📘 1-й месяц", callback_data="month:1:checked_tasks")
+    kb.button(text="📘 1-й месяц", callback_data="month:1")
     kb.button(text="📗 2-й месяц", callback_data="month:2:checked_tasks")
     kb.button(text="📕 3-й месяц", callback_data="month:3:checked_tasks")
     kb.button(

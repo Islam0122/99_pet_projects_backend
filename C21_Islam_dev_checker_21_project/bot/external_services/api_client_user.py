@@ -439,3 +439,243 @@ class HWMonth2(BaseAPI):
             return result
         else:
             return None
+
+
+class HWMonth1(BaseAPI):
+    BASE_URL = f"{config.api.api_url}/month1/"
+
+    def __init__(self):
+        super().__init__(self.BASE_URL)
+
+    async def get_homeworks(
+            self,
+            student_id: int = None,
+            lesson: str = None,
+            is_checked: bool = None,
+            use_cache: bool = True
+    ) -> List[Dict]:
+        """Получить домашки с фильтрацией"""
+        cache_key_parts = ["month1"]
+        if student_id:
+            cache_key_parts.append(f"student:{student_id}")
+        if lesson:
+            cache_key_parts.append(f"lesson:{lesson}")
+        if is_checked is not None:
+            cache_key_parts.append(f"checked:{is_checked}")
+
+        cache_key = ":".join(cache_key_parts)
+
+        if use_cache:
+            cached = await self._get_cached_data(cache_key)
+            if cached:
+                return cached
+
+        params = {}
+        if student_id:
+            params["student"] = student_id
+        if lesson:
+            params["lesson"] = lesson
+        if is_checked is not None:
+            params["is_checked"] = str(is_checked).lower()
+
+        result = await self._make_request("GET", self.base_url, params=params)
+
+        if result and "error" not in result:
+            if use_cache:
+                await self._set_cached_data(cache_key, result)
+            return result
+        else:
+            logging.error(
+                f"Failed to get homeworks: {result.get('error', 'Unknown error') if result else 'No response'}")
+            return []
+
+    async def get_homework_by_id(self, homework_id: int, use_cache: bool = True) -> Optional[Dict]:
+        """Получить конкретную домашку по ID"""
+        cache_key = f"month1:id:{homework_id}"
+
+        if use_cache:
+            cached = await self._get_cached_data(cache_key)
+            if cached:
+                return cached
+
+        url = f"{self.base_url}{homework_id}/"
+        result = await self._make_request("GET", url)
+
+        if result and "error" not in result:
+            if use_cache:
+                await self._set_cached_data(cache_key, result)
+            return result
+        else:
+            return None
+
+    async def create_homework(
+            self,
+            student_id: int,
+            lesson: str,
+            tasks: List[Dict]
+    ) -> Optional[Dict]:
+        """Создать домашнее задание для 1-го месяца"""
+        payload = {
+            "student": student_id,
+            "lesson": lesson,
+            "tasks": tasks
+        }
+
+        result = await self._make_request("POST", self.base_url, json=payload)
+
+        if result and "error" not in result:
+            # Инвалидируем кэш связанный со студентом
+            cache_keys_to_delete = [
+                f"month1:student:{student_id}",
+                f"month1:student:{student_id}:checked:false",
+                "month1:all"
+            ]
+            for key in cache_keys_to_delete:
+                await self.redis.delete(key)
+            return result
+        else:
+            error_msg = result.get("error", "Unknown error") if result else "No response"
+            logging.error(f"Failed to create homework: {error_msg}")
+            return None
+
+    async def recheck_homework(self, homework_id: int) -> Optional[Dict]:
+        """Запросить перепроверку домашнего задания"""
+        url = f"{self.base_url}{homework_id}/recheck/"
+        result = await self._make_request("POST", url)
+
+        if result and "error" not in result:
+            # Инвалидируем кэш для этого homework
+            await self.redis.delete(f"month1:id:{homework_id}")
+            return result
+        else:
+            error_msg = result.get("error", "Unknown error") if result else "No response"
+            logging.error(f"Failed to recheck homework: {error_msg}")
+            return None
+
+    async def get_student_homeworks(self, student_id: int, use_cache: bool = True) -> List[Dict]:
+        """Получить все домашние работы конкретного студента"""
+        return await self.get_homeworks(student_id=student_id, use_cache=use_cache)
+
+    async def get_checked_tasks(self, student_id: int, use_cache: bool = True) -> List[Dict]:
+        """Получить проверенные задания студента"""
+        homeworks = await self.get_homeworks(student_id=student_id, use_cache=use_cache)
+        checked_tasks = []
+
+        for homework in homeworks:
+            checked_items = [item for item in homework.get('items', []) if item.get('is_checked')]
+            if checked_items:
+                homework_copy = homework.copy()
+                homework_copy['items'] = checked_items
+                checked_tasks.append(homework_copy)
+
+        return checked_tasks
+
+    async def get_pending_tasks(self, student_id: int, use_cache: bool = True) -> List[Dict]:
+        """Получить задания, ожидающие проверки"""
+        homeworks = await self.get_homeworks(student_id=student_id, use_cache=use_cache)
+        pending_tasks = []
+
+        for homework in homeworks:
+            pending_items = [item for item in homework.get('items', []) if not item.get('is_checked')]
+            if pending_items:
+                homework_copy = homework.copy()
+                homework_copy['items'] = pending_items
+                pending_tasks.append(homework_copy)
+
+        return pending_tasks
+
+    async def get_available_lessons(self, use_cache: bool = True) -> List[Dict]:
+        """Получить список доступных уроков"""
+        cache_key = "month1:lessons"
+
+        if use_cache:
+            cached = await self._get_cached_data(cache_key)
+            if cached:
+                return cached
+
+        url = f"{self.base_url}lessons/"
+        result = await self._make_request("GET", url)
+
+        if result and "error" not in result:
+            if use_cache:
+                await self._set_cached_data(cache_key, result, ttl=3600)  # Долгий TTL для уроков
+            return result
+        else:
+            logging.error(f"Failed to get lessons: {result.get('error', 'Unknown error') if result else 'No response'}")
+            return []
+
+    async def update_grade(
+            self,
+            homework_id: int,
+            item_id: int,
+            grade: float
+    ) -> Optional[Dict]:
+        """Обновить оценку задания вручную"""
+        url = f"{self.base_url}{homework_id}/update-grade/"
+        payload = {
+            "item_id": item_id,
+            "grade": max(0, min(10, grade))  # Ограничение 0-10
+        }
+
+        result = await self._make_request("PATCH", url, json=payload)
+
+        if result and "error" not in result:
+            # Инвалидируем кэш
+            await self.redis.delete(f"month1:id:{homework_id}")
+            return result
+        else:
+            error_msg = result.get("error", "Unknown error") if result else "No response"
+            logging.error(f"Failed to update grade: {error_msg}")
+            return None
+
+    async def get_student_stats(self, student_id: int, use_cache: bool = True) -> Dict[str, Any]:
+        """Получить статистику студента по 1-му месяцу"""
+        cache_key = f"month1:student:{student_id}:stats"
+
+        if use_cache:
+            cached = await self._get_cached_data(cache_key)
+            if cached:
+                return cached
+
+        homeworks = await self.get_student_homeworks(student_id, use_cache=False)
+
+        stats = {
+            "total_homeworks": len(homeworks),
+            "total_tasks": 0,
+            "checked_tasks": 0,
+            "pending_tasks": 0,
+            "average_grade": 0,
+            "completed_lessons": [],
+            "pending_lessons": []
+        }
+
+        all_grades = []
+
+        for homework in homeworks:
+            lesson = homework.get('lesson')
+            items = homework.get('items', [])
+            stats["total_tasks"] += len(items)
+
+            checked_count = sum(1 for item in items if item.get('is_checked'))
+            stats["checked_tasks"] += checked_count
+            stats["pending_tasks"] += len(items) - checked_count
+
+            # Собираем оценки
+            for item in items:
+                if item.get('is_checked') and item.get('grade') is not None:
+                    all_grades.append(item['grade'])
+
+            # Определяем статус урока
+            if all(item.get('is_checked') for item in items):
+                stats["completed_lessons"].append(lesson)
+            else:
+                stats["pending_lessons"].append(lesson)
+
+        # Рассчитываем среднюю оценку
+        if all_grades:
+            stats["average_grade"] = sum(all_grades) / len(all_grades)
+
+        if use_cache:
+            await self._set_cached_data(cache_key, stats)
+
+        return stats

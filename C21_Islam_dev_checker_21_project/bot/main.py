@@ -11,6 +11,7 @@ from handlers.start import start_router
 from handlers.profile import profile_router
 from handlers.month3 import month3_router
 from handlers.month2 import month2_router
+from handlers.month1 import month1_router
 
 
 logger = logging.getLogger(__name__)
@@ -42,6 +43,7 @@ async def main():
     dp.include_router(profile_router)
     dp.include_router(month2_router)
     dp.include_router(month3_router)
+    dp.include_router(month1_router)
 
     logger.info("⚡ Подключаем миддлвари...")
 

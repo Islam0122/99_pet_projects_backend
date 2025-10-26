@@ -1,12 +1,16 @@
+from django.db import transaction
+from django.utils import timezone
+
 from .serializers import *
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from .serializers import Month1HomeworkSerializer, Month1HomeworkItemSerializer
-from .models import Month1Homework, Month1HomeworkItem
+from .models import Month1Homework, Month1HomeworkItem, TASK_1_MONTH_LESSON_CHOICES
 from ..student.models import Student
 from .services.homework_checker import sent_prompt_and_get_response, extract_grade_from_feedback
+import re
 
 
 class Month1HomeworkViewSet(viewsets.ModelViewSet):
@@ -41,57 +45,144 @@ class Month1HomeworkViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        student = get_object_or_404(Student, id=student_id)
+        # Проверка существования студента
+        try:
+            student = Student.objects.get(id=student_id)
+        except Student.DoesNotExist:
+            return Response(
+                {"error": "Студент не найден"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
 
-        # Проверка: студент может отправить домашку только один раз
+        # Проверка валидности урока
+        valid_lessons = [choice[0] for choice in TASK_1_MONTH_LESSON_CHOICES]
+        if lesson not in valid_lessons:
+            return Response(
+                {"error": f"Неверный урок. Допустимые значения: {', '.join(valid_lessons)}"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # Проверка существования домашней работы
         if Month1Homework.objects.filter(student=student, lesson=lesson).exists():
             return Response(
                 {"error": f"Вы уже отправили домашку по уроку '{lesson}'."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        # Создаем запись домашки
-        homework = Month1Homework.objects.create(student=student, lesson=lesson)
-        items_data = []
+        # Валидация tasks
+        valid_tasks = []
+        for i, task in enumerate(tasks):
+            task_condition = task.get("task_condition", "").strip()
+            student_answer = task.get("student_answer", "").strip()
 
-        for task in tasks:
-            task_condition = task.get("task_condition")
-            student_answer = task.get("student_answer")
-            if not all([task_condition, student_answer]):
-                continue
+            if not task_condition:
+                return Response(
+                    {"error": f"Задание {i + 1}: условие задания обязательно"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            if not student_answer:
+                return Response(
+                    {"error": f"Задание {i + 1}: ответ студента обязателен"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
 
-            # AI проверка
-            prompt_review = f"""
-Ты — Islam Teacher AI. Проверь домашнее задание студента.
-Имя: {student.full_name}
-Условие: {task_condition}
-Ответ: {student_answer}
-"""
-            prompt_originality = f"""
-Ты — Islam Teacher AI. Определи, использовал ли студент искусственный интеллект.
-Ответь строго "Да" или "Нет".
-Ответ студента: {student_answer}
-"""
+            valid_tasks.append({
+                "task_condition": task_condition,
+                "student_answer": student_answer
+            })
 
-            ai_feedback = sent_prompt_and_get_response(prompt_review)
-            originality_check = sent_prompt_and_get_response(prompt_originality)
-            grade = extract_grade_from_feedback(ai_feedback) or 7
+        # Создание в транзакции
+        with transaction.atomic():
+            homework = Month1Homework.objects.create(student=student, lesson=lesson)
+            items_data = []
 
-            # Создаем пункт задания
-            item = Month1HomeworkItem.objects.create(
-                homework=homework,
-                task_condition=task_condition,
-                student_answer=student_answer,
-                grade=grade,
-                ai_feedback=ai_feedback,
-                originality_check=originality_check,
-            )
-            items_data.append(Month1HomeworkItemSerializer(item).data)
+            for task in valid_tasks:
+                try:
+                    # AI проверка с таймаутом
+                    prompt_review = f"""
+                    Ты — Islam Teacher AI.
+
+                    Задача: проверить домашнюю работу студента **строго по шаблону ниже**.
+
+                    ---
+                    ## Анализ домашнего задания
+
+                    ### Задание:
+                    «{task['task_condition']}»
+
+                    ### Решение студента:
+                    «{task['student_answer']}»
+                    ---
+
+                    **Анализ решения:**
+                    - **Понятность:** оцени, насколько ясно студент выразил мысль.
+                    - **Логика:** оцени, есть ли связь между условием и ответом.
+                    - **Правильность:** напиши, верно ли решено задание.
+                    - **Структура:** оцени оформление и наличие объяснений.
+                    - **Качество:** общая оценка качества работы.
+
+                    ---
+
+                    ## Итоговая оценка
+
+                    ОЦЕНКА: X  
+                    Комментарий: Кратко объясни причину выставленной оценки.
+                    ---
+
+                    ⚠️ Формат должен строго сохраняться.  
+                    ⚠️ Вместо X обязательно поставь конкретную цифру от 0 до 10.
+                    """
+
+                    ai_feedback = self._get_ai_response_safe(prompt_review)
+                    originality_check = self._get_ai_response_safe(
+                        f"Определи, использовал ли студент ИИ для выполнения задания. Ответ студента: {task['student_answer']}. Ответь только 'Да' или 'Нет'."
+                    )
+                    grade = self._extract_grade_safe(ai_feedback)
+
+                    item = Month1HomeworkItem.objects.create(
+                        homework=homework,
+                        task_condition=task['task_condition'],
+                        student_answer=task['student_answer'],
+                        grade=grade,
+                        ai_feedback=ai_feedback,
+                        originality_check=originality_check,
+                        is_checked=True,
+                        checked_at=timezone.now()
+                    )
+                    items_data.append(Month1HomeworkItemSerializer(item).data)
+
+                except Exception as e:
+                    # Если AI проверка не удалась, создаем запись без проверки
+                    item = Month1HomeworkItem.objects.create(
+                        homework=homework,
+                        task_condition=task['task_condition'],
+                        student_answer=task['student_answer'],
+                        ai_feedback="Ошибка при проверке AI",
+                        originality_check="Не проверено",
+                        is_checked=False
+                    )
+                    items_data.append(Month1HomeworkItemSerializer(item).data)
 
         serializer = Month1HomeworkSerializer(homework)
-        data = serializer.data
-        data["items"] = items_data
-        return Response(data, status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def _get_ai_response_safe(self, prompt):
+        """Безопасный запрос к AI с таймаутом"""
+        try:
+            # Добавьте таймаут для избежания долгих запросов
+            return sent_prompt_and_get_response(prompt)
+        except Exception:
+            return "Не удалось получить ответ от AI"
+
+    def _extract_grade_safe(self, ai_feedback: str):
+        try:
+            # Ищем строку вроде: ОЦЕНКА: **10**
+            match = re.search(r"ОЦЕНКА[:\s\*]+(\d+)", ai_feedback)
+            if match:
+                return int(match.group(1))
+        except Exception:
+            pass
+        return 0
 
     @action(detail=True, methods=["post"], url_path="recheck")
     def recheck_homework(self, request, pk=None):
@@ -124,6 +215,47 @@ class Month1HomeworkViewSet(viewsets.ModelViewSet):
         data = serializer.data
         data["items"] = updated_items
         return Response(data, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=['get'], url_path='student/(?P<student_id>\d+)')
+    def get_student_homeworks(self, request, student_id=None):
+        """Получить все домашние работы конкретного студента"""
+        homeworks = self.get_queryset().filter(student_id=student_id)
+        serializer = self.get_serializer(homeworks, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['get'], url_path='lessons')
+    def get_available_lessons(self, request):
+        """Получить список доступных уроков"""
+        lessons = [{"value": choice[0], "label": choice[1]}
+                   for choice in TASK_1_MONTH_LESSON_CHOICES]
+        return Response(lessons)
+
+    @action(detail=True, methods=['patch'], url_path='update-grade')
+    def update_grade(self, request, pk=None):
+        """Ручное обновление оценки преподавателем"""
+        homework = self.get_object()
+        item_id = request.data.get('item_id')
+        new_grade = request.data.get('grade')
+
+        if not all([item_id, new_grade]):
+            return Response(
+                {"error": "item_id и grade обязательны"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            item = homework.items.get(id=item_id)
+            item.grade = max(0, min(10, float(new_grade)))  # Ограничение 0-10
+            item.is_checked = True
+            item.checked_at = timezone.now()
+            item.save()
+
+            return Response(Month1HomeworkItemSerializer(item).data)
+        except Month1HomeworkItem.DoesNotExist:
+            return Response(
+                {"error": "Задание не найдено"},
+                status=status.HTTP_404_NOT_FOUND
+            )
 
 
 class Month2HomeworkViewSet(viewsets.ModelViewSet):

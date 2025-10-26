@@ -130,7 +130,11 @@ class Month1HomeworkItem(models.Model):
         blank=True,
     )
     is_checked = models.BooleanField(default=False, verbose_name="Проверено")
-
+    checked_at = models.DateTimeField(
+        verbose_name="Время проверки",
+        null=True,
+        blank=True
+    )
     def __str__(self):
         return f"Задание: {self.homework.lesson} — {self.homework.student.full_name}"
 
