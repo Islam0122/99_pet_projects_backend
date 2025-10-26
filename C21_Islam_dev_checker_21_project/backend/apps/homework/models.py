@@ -168,16 +168,17 @@ class Month2Homework(models.Model):
     )
     is_checked = models.BooleanField(default=False, verbose_name="Проверено")
     github_url = models.URLField(blank=True, null=True, verbose_name="GitHub URL")
-    file_presentation = models.FileField(
-        upload_to="presentations/month2/",
-        blank=True,
-        null=True,
-        verbose_name="Файл презентации",
-    )
+
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
 
     def __str__(self):
         return f"{self.student.full_name} — {self.title}"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.student:
+            self.student.update_progress(month=2)
+
 
     class Meta:
         verbose_name = "Домашняя работа (2 месяц)"
@@ -221,7 +222,7 @@ class Month3Homework(models.Model):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         if self.student:
-            self.student.update_progress()
+            self.student.update_progress(month=3)
 
 
     class Meta:

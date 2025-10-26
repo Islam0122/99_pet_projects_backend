@@ -59,93 +59,88 @@ class Student(models.Model):
     total_homeworks = models.PositiveIntegerField(
         default=0,
         verbose_name="Всего домашних заданий",
-        help_text="Общее количество заданий, выданных студенту",
     )
     completed_homeworks = models.PositiveIntegerField(
         default=0,
         verbose_name="Выполненные задания",
-        help_text="Количество заданий, успешно выполненных студентом",
     )
     last_homework_done = models.DateTimeField(
         blank=True,
         null=True,
         verbose_name="Последнее выполненное задание",
-        help_text="Дата и время последнего выполненного задания",
     )
     average_score = models.FloatField(
         default=0.0,
         verbose_name="Средний балл",
-        help_text="Средний балл по всем сданным заданиям",
     )
     best_score = models.FloatField(
         default=0.0,
         verbose_name="Лучший балл",
-        help_text="Максимальный балл, полученный студентом за домашние задания",
     )
     total_points = models.FloatField(
         default=0.0,
         verbose_name="Общее количество баллов",
-        help_text="Сумма всех полученных баллов студента",
     )
     rank = models.PositiveIntegerField(
         default=0,
         verbose_name="Рейтинг в группе",
-        help_text="Позиция студента в рейтинге группы",
     )
     progress_level = models.CharField(
         max_length=50,
         default="Новичок",
         verbose_name="Уровень прогресса",
-        help_text="Статус студента: например, 'Новичок', 'Продвинутый', 'Лидер'",
     )
     is_active = models.BooleanField(
         default=True,
         verbose_name="Активен",
-        help_text="Отображает, активен ли студент в учебной программе",
     )
 
-    def save(self, *args, **kwargs):
+    # ---------- Вспомогательные методы ----------
+    def calculate_progress_level(self) -> str:
+        """Вычисляет уровень прогресса по проценту выполнения"""
         if self.total_homeworks == 0:
-            level = "Новичок"
-        else:
-            completion_rate = (self.completed_homeworks / self.total_homeworks) * 100
-            if completion_rate < 20:
-                level = "Новичок"
-            elif completion_rate < 40:
-                level = "Начинающий"
-            elif completion_rate < 60:
-                level = "Средний"
-            elif completion_rate < 80:
-                level = "Продвинутый"
-            else:
-                level = "Лидер"
+            return "Новичок"
 
-        if self.progress_level != level:
-            self.progress_level = level
+        completion_rate = (self.completed_homeworks / self.total_homeworks) * 100
+        if completion_rate < 20:
+            return "Новичок"
+        elif completion_rate < 40:
+            return "Начинающий"
+        elif completion_rate < 60:
+            return "Средний"
+        elif completion_rate < 80:
+            return "Продвинутый"
+        return "Лидер"
 
-        if self.completed_homeworks > 0:
-            self.average_score = self.total_points / self.completed_homeworks
-        else:
-            self.average_score = 0.0
-        if self.best_score < self.average_score:
-            self.best_score = self.average_score
-
-        super().save(*args, **kwargs)
-
-        students_in_group = Student.objects.filter(group=self.group).order_by('-total_points', 'full_name')
-        for idx, student in enumerate(students_in_group, start=1):
-            if student.rank != idx:
-                Student.objects.filter(pk=student.pk).update(rank=idx)
-
-    def __str__(self):
-        return f"{self.full_name} ({self.group.title})"
-
-
-    def update_progress(self):
-        homeworks = self.month3_homeworks.all()  # все домашки студента
+    def calculate_scores(self, homeworks):
+        """Обновляет статистику студента по списку домашних заданий"""
         self.total_homeworks = homeworks.count()
-        self.completed_homeworks = homeworks.filter(is_checked=True).count()
-        self.total_points = sum(hw.grade or 0 for hw in homeworks if hw.is_checked)
+        checked_homeworks = homeworks.filter(is_checked=True)
+
+        self.completed_homeworks = checked_homeworks.count()
+        self.total_points = sum(hw.grade or 0 for hw in checked_homeworks)
+        self.average_score = (
+            self.total_points / self.completed_homeworks if self.completed_homeworks else 0.0
+        )
+        self.best_score = max((hw.grade or 0 for hw in checked_homeworks), default=0)
+        self.progress_level = self.calculate_progress_level()
+
+    # ---------- Методы обновления ----------
+    def update_progress(self, month: int):
+        """Обновляет статистику студента при изменении оценок"""
+        relation_name = f"month{month}_homeworks"
+        if not hasattr(self, relation_name):
+            raise AttributeError(f"У студента нет домашних заданий за {month}-й месяц")
+
+        homeworks = getattr(self, relation_name).all()
+
+        # Все проверенные домашки
+        checked_homeworks = homeworks.filter(is_checked=True)
+
+        # Количество и суммы
+        self.total_homeworks = homeworks.count()
+        self.completed_homeworks = checked_homeworks.count()
+        self.total_points = sum(hw.grade or 0 for hw in checked_homeworks)
 
         # Средний балл
         if self.completed_homeworks > 0:
@@ -153,30 +148,58 @@ class Student(models.Model):
         else:
             self.average_score = 0.0
 
-        # Лучший балл
-        self.best_score = max((hw.grade or 0 for hw in homeworks if hw.is_checked), default=0)
+        # Лучший балл (самый высокий из всех проверенных)
+        self.best_score = max((hw.grade or 0 for hw in checked_homeworks), default=0)
 
-        # Обновляем уровень прогресса
+        # Уровень прогресса (в зависимости от процента выполненных)
         if self.total_homeworks == 0:
-            level = "Новичок"
+            self.progress_level = "Новичок"
         else:
             completion_rate = (self.completed_homeworks / self.total_homeworks) * 100
             if completion_rate < 20:
-                level = "Новичок"
+                self.progress_level = "Новичок"
             elif completion_rate < 40:
-                level = "Начинающий"
+                self.progress_level = "Начинающий"
             elif completion_rate < 60:
-                level = "Средний"
+                self.progress_level = "Средний"
             elif completion_rate < 80:
-                level = "Продвинутый"
+                self.progress_level = "Продвинутый"
             else:
-                level = "Лидер"
+                self.progress_level = "Лидер"
 
-        self.progress_level = level
         self.save(update_fields=[
-            "total_homeworks", "completed_homeworks", "total_points",
-            "average_score", "best_score", "progress_level"
+            "total_homeworks",
+            "completed_homeworks",
+            "total_points",
+            "average_score",
+            "best_score",
+            "progress_level",
         ])
+
+    # ---------- Переопределение save ----------
+    def save(self, *args, **kwargs):
+        self.progress_level = self.calculate_progress_level()
+
+        if self.completed_homeworks > 0:
+            self.average_score = self.total_points / self.completed_homeworks
+        else:
+            self.average_score = 0.0
+
+        if self.best_score < self.average_score:
+            self.best_score = self.average_score
+
+        super().save(*args, **kwargs)
+
+        # Пересчёт рейтинга в группе
+        students_in_group = Student.objects.filter(group=self.group).order_by(
+            "-total_points", "full_name"
+        )
+        for idx, student in enumerate(students_in_group, start=1):
+            if student.rank != idx:
+                Student.objects.filter(pk=student.pk).update(rank=idx)
+
+    def __str__(self):
+        return f"{self.full_name} ({self.group.title})"
 
     class Meta:
         verbose_name = "Студент"

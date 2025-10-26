@@ -1,13 +1,4 @@
-from django.shortcuts import get_object_or_404
-from rest_framework import viewsets, status
-from rest_framework.response import Response
-from rest_framework.decorators import action
-from .models import *
 from .serializers import *
-from ..student.models import Student
-from .services.homework_checker import sent_prompt_and_get_response, extract_grade_from_feedback
-
-
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, status
 from rest_framework.response import Response
@@ -143,10 +134,17 @@ class Month2HomeworkViewSet(viewsets.ModelViewSet):
         queryset = super().get_queryset()
         student_id = self.request.query_params.get("student")
         lesson = self.request.query_params.get("lesson")
+        is_checked = self.request.query_params.get("is_checked")
+
         if student_id:
-            queryset = queryset.filter(student=student_id)
+            queryset = queryset.filter(student_id=student_id)
         if lesson:
             queryset = queryset.filter(lesson=lesson)
+        if is_checked is not None:
+            # Конвертируем "true"/"false" в bool
+            is_checked_bool = is_checked.lower() == "true"
+            queryset = queryset.filter(is_checked=is_checked_bool)
+
         return queryset
 
     def create(self, request, *args, **kwargs):
@@ -154,6 +152,7 @@ class Month2HomeworkViewSet(viewsets.ModelViewSet):
         lesson = request.data.get("lesson")
         title = request.data.get("title")
         task_condition = request.data.get("task_condition")
+        github_url = request.data.get("github_url")
 
         if not all([student_id, lesson, title, task_condition]):
             return Response(
@@ -173,7 +172,8 @@ class Month2HomeworkViewSet(viewsets.ModelViewSet):
             student=student,
             lesson=lesson,
             title=title,
-            task_condition=task_condition
+            task_condition=task_condition,
+            github_url=github_url
         )
         serializer = Month2HomeworkSerializer(homework)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -187,7 +187,7 @@ class Month3HomeworkViewSet(viewsets.ModelViewSet):
         queryset = super().get_queryset()
         student_id = self.request.query_params.get("student")
         lesson = self.request.query_params.get("lesson")
-        is_checked = self.request.query_params.get("is_checked")  # новый параметр
+        is_checked = self.request.query_params.get("is_checked")
 
         if student_id:
             queryset = queryset.filter(student_id=student_id)

@@ -1,41 +1,46 @@
 from aiogram import Router, types, Bot, F
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
-from external_services.api_client_user import StudentAPI, GroupsAPI, HWMonth3
+from external_services.api_client_user import StudentAPI, GroupsAPI
 from keyboards.inline_keyboards import get_main_menu, get_teacher_account, return_menu
 import logging
 import re
 from aiogram import types
 from datetime import datetime
+from aiogram import Router, types, Bot, F
+from aiogram.fsm.context import FSMContext
+from external_services.api_client_user import StudentAPI, HWMonth2 as HWMonth3
+from keyboards.inline_keyboards import get_main_menu
+import logging
 
-month3_router = Router()
+month2_router = Router()
 photo = types.FSInputFile("img.png")
 
-TASK_3_MONTH_LESSON_CHOICES = [
-    ("Введение в Django", "📚 Урок 1: Структура проекта"),
-    ("Первые view, urls", "🚀 Урок 2: Создание view и маршрутов"),
-    ("Django templates / html / css", "🎨 Урок 3: Работа с шаблонами"),
-    ("Модели и база данных", "💾 Урок 4: Создание моделей и миграций"),
-    ("Практика: блог (CRUD)", "📝 Урок 5: Практическая работа — блог"),
-    ("Class Based Views, Django Forms", "⚡ Урок 6: Работа с CBV и формами"),
-    ("Django Admin, суперпользователь", "👑 Урок 7: Настройка админки"),
-    ("Request/Response в Django", "🔄 Урок 8: Основы Request и Response"),
-    ("Аутентификация и авторизация", "🔐 Урок 9: Пользователи и права"),
-    ("Практика: сайт-магазин", "🛒 Урок 10: Практическая работа — магазин"),
-    ("Django Rest Framework. APIView", "🌐 Урок 11: Создание API с DRF"),
-    ("Сериализаторы, валидация данных", "📊 Урок 12: Работа с сериализаторами"),
-    ("Class Based Views и mixins в DRF", "🎯 Урок 13: CBV и миксины"),
-    ("ViewSets, routers, пагинация", "🔗 Урок 14: ViewSets и маршрутизация"),
-    ("Практика: API для интернет-магазина", "💻 Урок 15: Практическая работа"),
-    ("Аутентификация и разрешения в DRF", "🛡️ Урок 16: Права доступа"),
-    ("Тестирование (pytest, unittest)", "🧪 Урок 17: Тестирование API"),
-    ("Документация API (Swagger)", "📖 Урок 18: Документирование API"),
-    ("Итоговый проект Bootcamp (сайт or API or бот)", "🎓 Урок 19: Финальный проект"),
-    ("Защита финальных проектов", "🏆 Урок 20: Презентация проектов"),
+TASK_2_MONTH_LESSON_CHOICES = [
+    ("Создание первого бота", "📱 Урок 1: Настройка токена и создание первого бота"),
+    ("Обработка сообщений и команд", "💬 Урок 2: Основы обработки сообщений и команд"),
+    ("Кнопки (Reply и Inline)", "⌨️ Урок 3: Добавление кнопок Reply и Inline"),
+    ("FSM: состояния и хранение данных", "🔄 Урок 4: Состояния и хранение данных"),
+    ("Практика: бот-анкета", "📝 Урок 5: Практическая работа — бот анкета"),
+    ("Подключение базы данных (SQLite)", "💾 Урок 6: Подключение базы данных"),
+    ("CRUD-операции в БД", "🗃️ Урок 7: Создание, чтение, обновление, удаление"),
+    ("Интеграция БД с ботом", "🔗 Урок 8: Связь бота с базой данных"),
+    ("FSMAdmin, админ-панель", "👑 Урок 9: Работа с FSMAdmin и админкой"),
+    ("Практика: бот-магазин (без оплаты)", "🛒 Урок 10: Практика — магазин бот"),
+    ("Работа с API (requests)", "🌐 Урок 11: Использование API"),
+    ("Web scraping (BS4)", "🕸️ Урок 12: Сбор данных с веб-сайтов"),
+    ("Планировщик задач (Aioschedule)", "⏰ Урок 13: Настройка планировщика задач"),
+    ("Middleware, фильтры, флаги", "⚙️ Урок 14: Настройка Middleware и фильтров"),
+    ("Практика: бот-новостник или бот-напоминалка", "📰 Урок 15: Практическая работа"),
+    ("Git/GitHub --> command", "🔧 Урок 16: Основы Git"),
+    ("Git/GitHub / Деплой на сервер (Heroku/VPS)", "🚀 Урок 17: Деплой проекта"),
+    ("Практика: деплой Telegram-бота", "🌍 Урок 18: Практическая работа"),
+    ("Итоговый проект месяца (командная работа)", "👥 Урок 19: Командная работа"),
+    ("Презентация проектов", "🎤 Урок 20: Презентация результатов"),
 ]
 
 
-class HomeworkStates(StatesGroup):
+class Homework2States(StatesGroup):
     waiting_for_lesson = State()
     waiting_for_title = State()
     waiting_for_description = State()
@@ -45,7 +50,7 @@ class HomeworkStates(StatesGroup):
 user_last_message = {}
 
 
-@month3_router.callback_query(F.data == "cancel")
+@month2_router.callback_query(F.data == "cancel")
 async def cancel_task_3month(callback: types.CallbackQuery, state: FSMContext):
     """Отмена создания домашнего задания"""
     user_id = callback.from_user.id
@@ -74,14 +79,14 @@ async def cancel_task_3month(callback: types.CallbackQuery, state: FSMContext):
     await callback.answer()
 
 
-@month3_router.callback_query(F.data == "month:3")
+@month2_router.callback_query(F.data == "month:2")
 async def send_task_3month(callback: types.CallbackQuery):
     """Главное меню 3-го месяца"""
     user_id = callback.from_user.id
 
     try:
         await callback.message.edit_caption(
-            caption="🎯 *3-й месяц: Django & DRF*\n\n"
+            caption="🎯 *2-й месяц: Aiogram*\n\n"
                     "📚 *Выберите урок для отправки домашнего задания:*\n"
                     "────────────────────",
             reply_markup=generate_lessons_keyboard(),
@@ -91,7 +96,7 @@ async def send_task_3month(callback: types.CallbackQuery):
     except Exception:
         new_message = await callback.message.answer_photo(
             photo=photo,
-            caption="🎯 *3-й месяц: Django & DRF*\n\n"
+            caption="🎯 *2-й месяц: Aiogram*\n\n"
                     "📚 *Выберите урок для отправки домашнего задания:*\n"
                     "────────────────────",
             reply_markup=generate_lessons_keyboard(),
@@ -102,7 +107,7 @@ async def send_task_3month(callback: types.CallbackQuery):
     await callback.answer()
 
 
-@month3_router.callback_query(F.data.startswith("lesson_"))
+@month2_router.callback_query(F.data.startswith("lesson2_"))
 async def select_lesson(callback: types.CallbackQuery, state: FSMContext):
     """Выбор урока для домашнего задания"""
     user_id = callback.from_user.id
@@ -116,8 +121,7 @@ async def select_lesson(callback: types.CallbackQuery, state: FSMContext):
         await callback.message.edit_caption(
             caption=f"✅ *Выбран урок:* {lesson_display}\n\n"
                     "📝 *Введите название вашего домашнего задания:*\n"
-                    "────────────────────\n"
-                    "💡 *Пример:* \"Мой блог на Django\", \"Интернет-магазин\"",
+                    "────────────────────\n",
             reply_markup=get_cancel_keyboard(),
             parse_mode="Markdown"
         )
@@ -128,18 +132,17 @@ async def select_lesson(callback: types.CallbackQuery, state: FSMContext):
             photo=photo,
             caption=f"✅ *Выбран урок:* {lesson_display}\n\n"
                     "📝 *Введите название вашего домашнего задания:*\n"
-                    "────────────────────\n"
-                    "💡 *Пример:* \"Мой блог на Django\", \"Интернет-магазин\"",
+                    ,
             reply_markup=get_cancel_keyboard(),
             parse_mode="Markdown"
         )
         user_last_message[user_id] = new_message.message_id
 
-    await state.set_state(HomeworkStates.waiting_for_title)
+    await state.set_state(Homework2States.waiting_for_title)
     await callback.answer()
 
 
-@month3_router.message(HomeworkStates.waiting_for_title)
+@month2_router.message(Homework2States.waiting_for_title)
 async def process_title(message: types.Message, state: FSMContext):
     """Обработка названия домашнего задания"""
     user_id = message.from_user.id
@@ -157,11 +160,7 @@ async def process_title(message: types.Message, state: FSMContext):
             caption=f"✅ *Урок:* {lesson_display}\n"
                     f"📝 *Название:* {title}\n\n"
                     "📋 *Опишите условие задания или что вы сделали:*\n"
-                    "────────────────────\n"
-                    "💡 *Пример:* \n"
-                    "• Создал модели для блога\n"
-                    "• Реализовал CRUD операции\n"
-                    "• Добавил шаблоны и стили",
+                    ,
             reply_markup=get_cancel_keyboard(),
             parse_mode="Markdown"
         )
@@ -172,21 +171,17 @@ async def process_title(message: types.Message, state: FSMContext):
             caption=f"✅ *Урок:* {lesson_display}\n"
                     f"📝 *Название:* {title}\n\n"
                     "📋 *Опишите условие задания или что вы сделали:*\n"
-                    "────────────────────\n"
-                    "💡 *Пример:* \n"
-                    "• Создал модели для блога\n"
-                    "• Реализовал CRUD операции\n"
-                    "• Добавил шаблоны и стили",
+                    ,
             reply_markup=get_cancel_keyboard(),
             parse_mode="Markdown"
         )
         user_last_message[user_id] = new_message.message_id
 
-    await state.set_state(HomeworkStates.waiting_for_description)
+    await state.set_state(Homework2States.waiting_for_description)
     await message.delete()
 
 
-@month3_router.message(HomeworkStates.waiting_for_description)
+@month2_router.message(Homework2States.waiting_for_description)
 async def process_description(message: types.Message, state: FSMContext):
     """Обработка описания домашнего задания"""
     user_id = message.from_user.id
@@ -234,11 +229,11 @@ async def process_description(message: types.Message, state: FSMContext):
         )
         user_last_message[user_id] = new_message.message_id
 
-    await state.set_state(HomeworkStates.waiting_for_github_url)
+    await state.set_state(Homework2States.waiting_for_github_url)
     await message.delete()
 
 
-@month3_router.message(HomeworkStates.waiting_for_github_url)
+@month2_router.message(Homework2States.waiting_for_github_url)
 async def process_github_url(message: types.Message, state: FSMContext, bot: Bot):
     """Обработка GitHub ссылки и создание домашнего задания"""
     user_id = message.from_user.id
@@ -565,8 +560,7 @@ def get_duplicate_keyboard():
     """Клавиатура для случая дубликата задания"""
     return types.InlineKeyboardMarkup(
         inline_keyboard=[
-            [types.InlineKeyboardButton(text="📚 Мои задания", callback_data="view_my_homeworks")],
-            [types.InlineKeyboardButton(text="🔄 Выбрать другой урок", callback_data="month:3")],
+            [types.InlineKeyboardButton(text="🔄 Выбрать другой урок", callback_data="month:2")],
             [types.InlineKeyboardButton(text="🔙 Главное меню", callback_data="main_menu")]
         ]
     )
@@ -576,7 +570,7 @@ def get_retry_keyboard():
     """Клавиатура с кнопкой повторной попытки"""
     return types.InlineKeyboardMarkup(
         inline_keyboard=[
-            [types.InlineKeyboardButton(text="🔄 Попробовать снова", callback_data="month:3")],
+            [types.InlineKeyboardButton(text="🔄 Попробовать снова", callback_data="month:2")],
             [types.InlineKeyboardButton(text="❌ Отмена", callback_data="cancel")]
         ]
     )
@@ -609,7 +603,7 @@ def is_valid_github_url(url: str) -> bool:
 
 def get_lesson_display_name(lesson_value: str) -> str:
     """Получить отображаемое название урока по значению"""
-    for value, display in TASK_3_MONTH_LESSON_CHOICES:
+    for value, display in TASK_2_MONTH_LESSON_CHOICES:
         if value == lesson_value:
             return display
     return lesson_value
@@ -619,15 +613,15 @@ def generate_lessons_keyboard():
     """Генерация клавиатуры с уроками"""
     buttons = []
 
-    for i in range(0, len(TASK_3_MONTH_LESSON_CHOICES), 2):
+    for i in range(0, len(TASK_2_MONTH_LESSON_CHOICES), 2):
         row = []
         for j in range(2):
-            if i + j < len(TASK_3_MONTH_LESSON_CHOICES):
-                lesson_value, lesson_display = TASK_3_MONTH_LESSON_CHOICES[i + j]
+            if i + j < len(TASK_2_MONTH_LESSON_CHOICES):
+                lesson_value, lesson_display = TASK_2_MONTH_LESSON_CHOICES[i + j]
                 row.append(
                     types.InlineKeyboardButton(
                         text=lesson_display,
-                        callback_data=f"lesson_{i + j + 1}"
+                        callback_data=f"lesson2_{i + j + 1}"
                     )
                 )
         buttons.append(row)
@@ -641,8 +635,8 @@ def get_lesson_name_by_number(lesson_number: str):
     """Получить название урока по номеру"""
     try:
         index = int(lesson_number) - 1
-        if 0 <= index < len(TASK_3_MONTH_LESSON_CHOICES):
-            return TASK_3_MONTH_LESSON_CHOICES[index][0]
+        if 0 <= index < len(TASK_2_MONTH_LESSON_CHOICES):
+            return TASK_2_MONTH_LESSON_CHOICES[index][0]
     except (ValueError, IndexError):
         pass
     return "Неизвестный урок"
@@ -661,8 +655,7 @@ def get_homeworks_keyboard():
     """Клавиатура для раздела домашних заданий"""
     return types.InlineKeyboardMarkup(
         inline_keyboard=[
-            [types.InlineKeyboardButton(text="📊 Статистика", callback_data="homework_stats")],
-            [types.InlineKeyboardButton(text="➕ Новое задание", callback_data="month:3")],
+            [types.InlineKeyboardButton(text="➕ Новое задание", callback_data="month:2")],
             [types.InlineKeyboardButton(text="🔙 Главное меню", callback_data="main_menu")]
         ]
     )
@@ -672,7 +665,7 @@ def get_pending_tasks_keyboard():
     """Клавиатура для непроверенных заданий"""
     return types.InlineKeyboardMarkup(
         inline_keyboard=[
-            [types.InlineKeyboardButton(text="✅ Проверенные", callback_data="month:3:checked_tasks")],
+            [types.InlineKeyboardButton(text="✅ Проверенные", callback_data="month:2:checked_tasks")],
             [types.InlineKeyboardButton(text="🔙 Главное меню", callback_data="main_menu")]
         ]
     )
@@ -682,13 +675,13 @@ def get_checked_tasks_keyboard():
     """Клавиатура для проверенных заданий"""
     return types.InlineKeyboardMarkup(
         inline_keyboard=[
-            [types.InlineKeyboardButton(text="⏳ Непроверенные", callback_data="month:3:pending_tasks")],
+            [types.InlineKeyboardButton(text="⏳ Непроверенные", callback_data="month:2:pending_tasks")],
             [types.InlineKeyboardButton(text="🔙 Главное меню", callback_data="main_menu")]
         ]
     )
 
 
-@month3_router.callback_query(F.data == "month:3:pending_tasks")
+@month2_router.callback_query(F.data == "month:2:pending_tasks")
 async def show_pending_tasks(callback: types.CallbackQuery):
     """Показать непроверенные задания с группировкой по урокам"""
     user_id = callback.from_user.id
@@ -765,8 +758,8 @@ async def show_pending_tasks(callback: types.CallbackQuery):
 
     sorted_lessons = sorted(
         lessons_dict.items(),
-        key=lambda x: list(dict(TASK_3_MONTH_LESSON_CHOICES).keys()).index(x[0])
-        if x[0] in dict(TASK_3_MONTH_LESSON_CHOICES) else 999
+        key=lambda x: list(dict(TASK_2_MONTH_LESSON_CHOICES).keys()).index(x[0])
+        if x[0] in dict(TASK_2_MONTH_LESSON_CHOICES) else 999
     )
 
     for lesson_name, lesson_data in sorted_lessons:
@@ -779,7 +772,7 @@ async def show_pending_tasks(callback: types.CallbackQuery):
             keyboard_buttons.append([
                 types.InlineKeyboardButton(
                     text=f"📝 {lesson_display}",
-                    callback_data=f"hw_detail:{hw_id}"
+                    callback_data=f"hw2_detail:{hw_id}"
                 )
             ])
 
@@ -787,7 +780,7 @@ async def show_pending_tasks(callback: types.CallbackQuery):
 
     # Добавляем навигационные кнопки
     keyboard_buttons.extend([
-        [types.InlineKeyboardButton(text="✅ Проверенные задания", callback_data="month:3:checked_tasks")],
+        [types.InlineKeyboardButton(text="✅ Проверенные задания", callback_data="month:2:checked_tasks")],
         [types.InlineKeyboardButton(text="🔙 Главное меню", callback_data="main_menu")]
     ])
 
@@ -810,7 +803,7 @@ async def show_pending_tasks(callback: types.CallbackQuery):
         )
 
 
-@month3_router.callback_query(F.data == "month:3:checked_tasks")
+@month2_router.callback_query(F.data == "month:2:checked_tasks")
 async def show_checked_tasks(callback: types.CallbackQuery):
     """Показать проверенные задания с группировкой по урокам"""
     user_id = callback.from_user.id
@@ -889,8 +882,8 @@ async def show_checked_tasks(callback: types.CallbackQuery):
     # Сортируем уроки по порядку
     sorted_lessons = sorted(
         lessons_dict.items(),
-        key=lambda x: list(dict(TASK_3_MONTH_LESSON_CHOICES).keys()).index(x[0])
-        if x[0] in dict(TASK_3_MONTH_LESSON_CHOICES) else 999
+        key=lambda x: list(dict(TASK_2_MONTH_LESSON_CHOICES).keys()).index(x[0])
+        if x[0] in dict(TASK_2_MONTH_LESSON_CHOICES) else 999
     )
 
     for lesson_name, lesson_data in sorted_lessons:
@@ -917,7 +910,7 @@ async def show_checked_tasks(callback: types.CallbackQuery):
             keyboard_buttons.append([
                 types.InlineKeyboardButton(
                     text=button_text,
-                    callback_data=f"hw_detail:{hw_id}"
+                    callback_data=f"hw2_detail:{hw_id}"
                 )
             ])
 
@@ -950,7 +943,7 @@ async def show_checked_tasks(callback: types.CallbackQuery):
         )
 
 
-@month3_router.callback_query(F.data.startswith("hw_detail:"))
+@month2_router.callback_query(F.data.startswith("hw2_detail:"))
 async def show_homework_detail(callback: types.CallbackQuery):
     """Показать детальную информацию о домашнем задании"""
     homework_id = callback.data.split(":")[1]
@@ -1060,11 +1053,11 @@ async def show_homework_detail(callback: types.CallbackQuery):
     # Кнопки навигации
     if is_checked:
         keyboard_buttons.append([
-            types.InlineKeyboardButton(text="⬅️ К проверенным", callback_data="month:3:checked_tasks")
+            types.InlineKeyboardButton(text="⬅️ К проверенным", callback_data="month:2:checked_tasks")
         ])
     else:
         keyboard_buttons.append([
-            types.InlineKeyboardButton(text="⬅️ К непроверенным", callback_data="month:3:pending_tasks")
+            types.InlineKeyboardButton(text="⬅️ К непроверенным", callback_data="month:2:pending_tasks")
         ])
 
     keyboard_buttons.extend([
@@ -1133,7 +1126,7 @@ def get_back_to_homeworks_keyboard():
     return types.InlineKeyboardMarkup(
         inline_keyboard=[
             [
-                types.InlineKeyboardButton(text="⏳ Непроверенные", callback_data="month:3:pending_tasks"),
+                types.InlineKeyboardButton(text="⏳ Непроверенные", callback_data="month:2:pending_tasks"),
             ],
             [types.InlineKeyboardButton(text="🔙 Главное меню", callback_data="main_menu")]
         ]

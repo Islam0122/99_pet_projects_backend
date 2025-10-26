@@ -49,7 +49,6 @@ class Month2HomeworkSerializer(serializers.ModelSerializer):
             "originality_check",
             "is_checked",
             "github_url",
-            "file_presentation",
             "created_at",
         ]
 

@@ -245,7 +245,6 @@ class GroupsAPI(BaseAPI):
 
 
 class HWMonth3(BaseAPI):
-    """API для работы с домашками 3-го месяца"""
 
     BASE_URL = f"{config.api.api_url}/month3/"
 
@@ -327,6 +326,104 @@ class HWMonth3(BaseAPI):
     async def get_homework_by_id(self, homework_id: int, use_cache: bool = True) -> Optional[Dict]:
         """Получить конкретную домашку по ID"""
         cache_key = f"month3:id:{homework_id}"
+
+        if use_cache:
+            cached = await self._get_cached_data(cache_key)
+            if cached:
+                return cached
+
+        url = f"{self.base_url}{homework_id}/"
+        result = await self._make_request("GET", url)
+
+        if result and "error" not in result:
+            if use_cache:
+                await self._set_cached_data(cache_key, result)
+            return result
+        else:
+            return None
+
+
+class HWMonth2(BaseAPI):
+    BASE_URL = f"{config.api.api_url}/month2/"
+
+    def __init__(self):
+        super().__init__(self.BASE_URL)
+
+    async def create_homework(
+            self,
+            student_id: int,
+            lesson: str,
+            title: str,
+            task_condition: str,
+            github_url: str = None
+    ) -> Optional[Dict]:
+        """Создать домашку"""
+        payload = {
+            "student": student_id,
+            "lesson": lesson,
+            "title": title,
+            "task_condition": task_condition,
+            "github_url": github_url
+        }
+
+        result = await self._make_request("POST", self.base_url, json=payload)
+
+        # Проверяем результат
+        if result and "error" not in result:
+            # Инвалидируем кэш связанный со студентом
+            return result
+        else:
+            # Логируем ошибку и возвращаем None
+            error_msg = result.get("error", "Unknown error") if result else "No response"
+            logging.error(f"Failed to create homework: {error_msg}")
+            return None
+
+    async def get_homeworks(
+            self,
+            student_id: int = None,
+            lesson: str = None,
+            is_checked: bool = None,
+            use_cache: bool = True
+    ) -> List[Dict]:
+        """Получить домашки с фильтрацией"""
+        cache_key_parts = ["month2"]
+        if student_id:
+            cache_key_parts.append(f"student:{student_id}")
+        if lesson:
+            cache_key_parts.append(f"lesson:{lesson}")
+        if is_checked is not None:
+            cache_key_parts.append(f"checked:{is_checked}")
+
+        cache_key = ":".join(cache_key_parts)
+
+        if use_cache:
+            cached = await self._get_cached_data(cache_key)
+            if cached:
+                return cached
+
+        params = {}
+        if student_id:
+            params["student"] = student_id
+        if lesson:
+            params["lesson"] = lesson
+        if is_checked is not None:
+            params["is_checked"] = str(is_checked).lower()
+
+        result = await self._make_request("GET", self.base_url, params=params)
+
+        # Обрабатываем результат
+        if result and "error" not in result:
+            if use_cache:
+                await self._set_cached_data(cache_key, result)
+            return result
+        else:
+            logging.error(
+                f"Failed to get homeworks: {result.get('error', 'Unknown error') if result else 'No response'}")
+            return []
+
+    async def get_homework_by_id(self, homework_id: int, use_cache: bool = True) -> Optional[Dict]:
+        """Получить конкретную домашку по ID"""
+        cache_key = f"month2:id:{homework_id}"
 
         if use_cache:
             cached = await self._get_cached_data(cache_key)
