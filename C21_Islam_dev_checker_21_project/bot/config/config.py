@@ -14,7 +14,11 @@ class ApiConfig:
 
 @dataclass
 class RedisConfig:
-    url: Optional[str] = None
+    url: Optional[str] = None      # Для Railway REDIS_URL
+    host: Optional[str] = None     # Локальный Redis
+    port: Optional[int] = None
+    db: Optional[int] = None
+    password: Optional[str] = None
 
 @dataclass
 class Config:
@@ -41,8 +45,11 @@ def load_config(path: Optional[str] = None) -> Config:
 
     # Redis
     redis_config = RedisConfig(
-        url=env.str("REDIS_URL", None)  # Railway REDIS_URL
+        url=env.str("REDIS_URL", None),            # Railway
+        host=env.str("REDIS_HOST", "localhost"),   # Локально
+        port=env.int("REDIS_PORT", 6379),
+        db=env.int("REDIS_DB", 0),
+        password=env.str("REDIS_PASSWORD", None)
     )
 
     return Config(bot=bot, api=api, redis=redis_config)
-
