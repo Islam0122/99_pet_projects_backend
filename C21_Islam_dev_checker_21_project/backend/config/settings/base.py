@@ -80,7 +80,6 @@ DATABASES = {
         'PORT': env('DB_PORT', default='5432'),
     }
 }
-
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
