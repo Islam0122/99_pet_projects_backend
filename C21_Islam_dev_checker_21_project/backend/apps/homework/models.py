@@ -218,6 +218,12 @@ class Month3Homework(models.Model):
     def __str__(self):
         return f"{self.student.full_name} — {self.title}"
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.student:
+            self.student.update_progress()
+
+
     class Meta:
         verbose_name = "Домашняя работа (3 месяц)"
         verbose_name_plural = "Домашние работы (3 месяц)"

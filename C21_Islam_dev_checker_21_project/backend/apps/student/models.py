@@ -140,6 +140,44 @@ class Student(models.Model):
     def __str__(self):
         return f"{self.full_name} ({self.group.title})"
 
+
+    def update_progress(self):
+        homeworks = self.month3_homeworks.all()  # все домашки студента
+        self.total_homeworks = homeworks.count()
+        self.completed_homeworks = homeworks.filter(is_checked=True).count()
+        self.total_points = sum(hw.grade or 0 for hw in homeworks if hw.is_checked)
+
+        # Средний балл
+        if self.completed_homeworks > 0:
+            self.average_score = self.total_points / self.completed_homeworks
+        else:
+            self.average_score = 0.0
+
+        # Лучший балл
+        self.best_score = max((hw.grade or 0 for hw in homeworks if hw.is_checked), default=0)
+
+        # Обновляем уровень прогресса
+        if self.total_homeworks == 0:
+            level = "Новичок"
+        else:
+            completion_rate = (self.completed_homeworks / self.total_homeworks) * 100
+            if completion_rate < 20:
+                level = "Новичок"
+            elif completion_rate < 40:
+                level = "Начинающий"
+            elif completion_rate < 60:
+                level = "Средний"
+            elif completion_rate < 80:
+                level = "Продвинутый"
+            else:
+                level = "Лидер"
+
+        self.progress_level = level
+        self.save(update_fields=[
+            "total_homeworks", "completed_homeworks", "total_points",
+            "average_score", "best_score", "progress_level"
+        ])
+
     class Meta:
         verbose_name = "Студент"
         verbose_name_plural = "Студенты"
