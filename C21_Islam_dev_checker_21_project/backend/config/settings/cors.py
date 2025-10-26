@@ -22,11 +22,14 @@ CORS_ALLOW_HEADERS = [
 
 CORS_ALLOW_ALL_ORIGINS = True
 
-CORS_ALLOWED_ORIGIN_REGEXES = [                       # общий адрес GitHub Pages
-    r"^http://127\.0\.0\.1(:\d+)?$",
-    r"^http://localhost(:\d+)?$",
-    r"^https://islamdev.up.railway.app$",
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^http://127\.0\.0\.1(:\d+)?$",   # локально
+    r"^http://localhost(:\d+)?$",      # локально
+    r"^https://api\.telegram\.org$",
+    r"^https://islamdev\.up\.railway\.app$",
 ]
+
 CSRF_TRUSTED_ORIGINS = [
     "https://islamdev.up.railway.app",
+    "https://api.telegram.org",
 ]
