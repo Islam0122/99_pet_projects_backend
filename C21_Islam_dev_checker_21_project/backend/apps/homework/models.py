@@ -88,6 +88,12 @@ class Month1Homework(models.Model):
     def __str__(self):
         return f"{self.student.full_name} — {self.lesson}"
 
+    def save(self, *args, **kwargs):
+        """Переопределяем save, чтобы обновлять прогресс студента после сохранения"""
+        super().save(*args, **kwargs)
+        if self.student:
+            self.student.update_progress(month=1)
+
     class Meta:
         verbose_name = "Домашняя работа (1 месяц)"
         verbose_name_plural = "Домашние работы (1 месяц)"
@@ -130,11 +136,19 @@ class Month1HomeworkItem(models.Model):
         blank=True,
     )
     is_checked = models.BooleanField(default=False, verbose_name="Проверено")
+
     checked_at = models.DateTimeField(
         verbose_name="Время проверки",
         null=True,
         blank=True
     )
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        # Обновляем прогресс студента каждый раз, когда меняется grade или проверка
+        if self.homework.student:
+            self.homework.student.update_progress(month=1)
+
     def __str__(self):
         return f"Задание: {self.homework.lesson} — {self.homework.student.full_name}"
 

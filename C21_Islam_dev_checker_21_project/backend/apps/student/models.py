@@ -126,32 +126,38 @@ class Student(models.Model):
         self.progress_level = self.calculate_progress_level()
 
     # ---------- Методы обновления ----------
-    def update_progress(self, month: int):
-        """Обновляет статистику студента при изменении оценок"""
-        relation_name = f"month{month}_homeworks"
-        if not hasattr(self, relation_name):
-            raise AttributeError(f"У студента нет домашних заданий за {month}-й месяц")
+    def update_progress(self,month):
+        """Пересчитывает статистику студента сразу по всем месяцам (Duolingo-стиль)"""
 
-        homeworks = getattr(self, relation_name).all()
+        all_homeworks = []
 
-        # Все проверенные домашки
-        checked_homeworks = homeworks.filter(is_checked=True)
+        # Month1
+        for hw in getattr(self, "month1_homeworks").all():
+            all_homeworks += list(hw.items.filter(is_checked=True))
 
-        # Количество и суммы
-        self.total_homeworks = homeworks.count()
-        self.completed_homeworks = checked_homeworks.count()
-        self.total_points = sum(hw.grade or 0 for hw in checked_homeworks)
+        # Month2
+        all_homeworks += list(getattr(self, "month2_homeworks").filter(is_checked=True))
 
-        # Средний балл
-        if self.completed_homeworks > 0:
-            self.average_score = self.total_points / self.completed_homeworks
-        else:
-            self.average_score = 0.0
+        # Month3
+        all_homeworks += list(getattr(self, "month3_homeworks").filter(is_checked=True))
 
-        # Лучший балл (самый высокий из всех проверенных)
-        self.best_score = max((hw.grade or 0 for hw in checked_homeworks), default=0)
+        self.total_homeworks = (
+                self.month1_homeworks.count() +
+                self.month2_homeworks.count() +
+                self.month3_homeworks.count()
+        )
 
-        # Уровень прогресса (в зависимости от процента выполненных)
+        self.completed_homeworks = len(all_homeworks)
+        self.total_points = sum(getattr(hw, "grade", 0) or 0 for hw in all_homeworks)
+        self.average_score = (
+            self.total_points / self.completed_homeworks if self.completed_homeworks else 0.0
+        )
+        self.best_score = max(
+            ((getattr(hw, "grade", 0) or 0) for hw in all_homeworks),
+            default=0
+        )
+
+        # Прогресс как процент выполнения
         if self.total_homeworks == 0:
             self.progress_level = "Новичок"
         else:
@@ -167,7 +173,7 @@ class Student(models.Model):
             else:
                 self.progress_level = "Лидер"
 
-        self.save(update_fields=[
+        super(Student, self).save(update_fields=[
             "total_homeworks",
             "completed_homeworks",
             "total_points",
@@ -178,15 +184,26 @@ class Student(models.Model):
 
     # ---------- Переопределение save ----------
     def save(self, *args, **kwargs):
+        # Пересчитать уровень прогресса
         self.progress_level = self.calculate_progress_level()
 
+        # Средний балл
         if self.completed_homeworks > 0:
             self.average_score = self.total_points / self.completed_homeworks
         else:
             self.average_score = 0.0
 
-        if self.best_score < self.average_score:
-            self.best_score = self.average_score
+        # Обновить лучший балл (не на основе среднего!)
+        related_homeworks = []
+        for month in range(1, 13):
+            relation = f"month{month}_homeworks"
+            if hasattr(self, relation):
+                related_homeworks += list(getattr(self, relation).filter(is_checked=True))
+
+        if related_homeworks:
+            self.best_score = max(hw.grade or 0 for hw in related_homeworks)
+        else:
+            self.best_score = 0.0
 
         super().save(*args, **kwargs)
 
