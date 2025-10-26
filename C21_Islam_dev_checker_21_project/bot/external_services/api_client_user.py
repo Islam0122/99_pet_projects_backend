@@ -81,42 +81,51 @@ class BaseAPI:
                     method, url, headers=self.headers, timeout=timeout, **kwargs
             ) as response:
 
+                response_text = await response.text()
+
                 # Успешные статусы
-                if response.status in [200, 201]:
-                    # Для DELETE запросов может не быть тела
-                    if method.upper() == 'DELETE' and response.status == 204:
+                if response.status in [200, 201, 204]:
+                    if response.status == 204:  # No Content
                         return {"success": True}
 
-                    try:
-                        content_type = response.headers.get('Content-Type', '')
-                        if 'application/json' in content_type:
+                    if response_text:
+                        try:
                             return await response.json()
-                        else:
-                            text_response = await response.text()
-                            logging.info(f"Non-JSON response for {url}: {text_response}")
-                            return {"success": True, "text": text_response}
-                    except Exception as e:
-                        logging.warning(f"JSON parse error for {url}: {e}")
+                        except json.JSONDecodeError:
+                            logging.warning(f"Non-JSON response for {url}: {response_text}")
+                            return {"success": True, "text": response_text}
+                    else:
                         return {"success": True}
 
-                # Ошибки клиента
-                elif response.status in [400, 401, 403, 404]:
-                    error_text = await response.text()
-                    logging.warning(f"Client error {response.status} for {url}: {error_text}")
-                    if response.status == 404:
-                        logging.info(f"Resource not found: {url}")
-                        return None
-                    try:
-                        error_data = json.loads(error_text)
-                        return {"error": error_data}
-                    except:
-                        return {"error": error_text}
+                # Ошибки клиента (400-499)
+                elif 400 <= response.status < 500:
+                    logging.warning(f"Client error {response.status} for {url}: {response_text}")
 
-                # Серверные ошибки
+                    if response.status == 404:
+                        return None
+
+                    try:
+                        error_data = json.loads(response_text)
+                        return {
+                            "error": error_data,
+                            "status_code": response.status,
+                            "detail": error_data.get('detail', response_text)
+                        }
+                    except:
+                        return {
+                            "error": response_text,
+                            "status_code": response.status,
+                            "detail": response_text
+                        }
+
+                # Серверные ошибки (500-599)
                 else:
-                    error_text = await response.text()
-                    logging.error(f"HTTP error {response.status} for {url}: {error_text}")
-                    return {"error": f"Server error: {response.status}"}
+                    logging.error(f"Server error {response.status} for {url}: {response_text}")
+                    return {
+                        "error": f"Server error: {response.status}",
+                        "status_code": response.status,
+                        "detail": response_text
+                    }
 
         except aiohttp.ClientError as e:
             logging.error(f"Network error for {url}: {e}")
@@ -124,6 +133,7 @@ class BaseAPI:
         except Exception as e:
             logging.error(f"Unexpected error for {url}: {e}")
             return {"error": f"Unexpected error: {str(e)}"}
+
 
 class StudentAPI(BaseAPI):
     """API для работы со студентами"""
@@ -148,11 +158,41 @@ class StudentAPI(BaseAPI):
 
         return data
 
+    # async def create_student(self, student_data: dict):
+    #     """Создать нового студента"""
+    #     data = await self._make_request("POST", self.base_url, json=student_data)
+    #     if data and self.redis_connected:
+    #         await self.redis.delete("students:all")
+    #     return data
+
     async def create_student(self, student_data: dict):
         """Создать нового студента"""
+        # Validate required fields
+        required_fields = ['telegram_id', 'first_name', 'last_name']
+        for field in required_fields:
+            if field not in student_data:
+                return {
+                    "error": f"Missing required field: {field}",
+                    "detail": f"The field '{field}' is required"
+                }
+
         data = await self._make_request("POST", self.base_url, json=student_data)
-        if data and self.redis_connected:
+
+        # Handle specific error cases
+        if data and "error" in data:
+            # Check if it's a duplicate error
+            if "unique" in str(data.get('detail', '')).lower() or "already exists" in str(
+                    data.get('detail', '')).lower():
+                logging.warning(f"Student with telegram_id {student_data.get('telegram_id')} already exists")
+                return {
+                    "error": "Student already exists",
+                    "detail": data.get('detail'),
+                    "status_code": data.get('status_code', 400)
+                }
+
+        if data and "error" not in data and self.redis_connected:
             await self.redis.delete("students:all")
+
         return data
 
     async def update_student(self, telegram_id: str, update_data: dict):
