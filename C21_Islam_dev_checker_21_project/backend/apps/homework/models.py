@@ -213,12 +213,6 @@ class Month3Homework(models.Model):
     )
     is_checked = models.BooleanField(default=False, verbose_name="Проверено")
     github_url = models.URLField(blank=True, null=True, verbose_name="GitHub URL")
-    file_presentation = models.FileField(
-        upload_to="presentations/month3/",
-        blank=True,
-        null=True,
-        verbose_name="Файл презентации",
-    )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
 
     def __str__(self):

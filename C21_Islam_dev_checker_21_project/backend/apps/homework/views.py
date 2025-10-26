@@ -187,10 +187,17 @@ class Month3HomeworkViewSet(viewsets.ModelViewSet):
         queryset = super().get_queryset()
         student_id = self.request.query_params.get("student")
         lesson = self.request.query_params.get("lesson")
+        is_checked = self.request.query_params.get("is_checked")  # новый параметр
+
         if student_id:
-            queryset = queryset.filter(student=student_id)
+            queryset = queryset.filter(student_id=student_id)
         if lesson:
             queryset = queryset.filter(lesson=lesson)
+        if is_checked is not None:
+            # Конвертируем "true"/"false" в bool
+            is_checked_bool = is_checked.lower() == "true"
+            queryset = queryset.filter(is_checked=is_checked_bool)
+
         return queryset
 
     def create(self, request, *args, **kwargs):
@@ -198,8 +205,9 @@ class Month3HomeworkViewSet(viewsets.ModelViewSet):
         lesson = request.data.get("lesson")
         title = request.data.get("title")
         task_condition = request.data.get("task_condition")
+        github_url = request.data.get("github_url")
 
-        if not all([student_id, lesson, title, task_condition]):
+        if not all([student_id, lesson, title, task_condition, github_url]):
             return Response(
                 {"error": "Все поля обязательны: student, lesson, title, task_condition"},
                 status=status.HTTP_400_BAD_REQUEST
@@ -217,8 +225,10 @@ class Month3HomeworkViewSet(viewsets.ModelViewSet):
             student=student,
             lesson=lesson,
             title=title,
-            task_condition=task_condition
+            task_condition=task_condition,
+            github_url=github_url
         )
         serializer = Month3HomeworkSerializer(homework)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
 

@@ -3,8 +3,13 @@ from config.config import load_config
 import redis.asyncio as redis
 import json
 import logging
+import aiohttp
+from pathlib import Path
+from typing import Optional, Dict, Any, List
+import os
+import asyncio
+from typing import Optional
 
-# Загружаем конфиг один раз
 config = load_config()
 
 BASE_URL_STUDENTS = f"{config.api.api_url}/students/"
@@ -75,22 +80,50 @@ class BaseAPI:
             async with self.session.request(
                     method, url, headers=self.headers, timeout=timeout, **kwargs
             ) as response:
-                if response.status == 200:
-                    return await response.json()
-                elif response.status == 404:
-                    logging.info(f"Resource not found: {url}")
-                    return None
+
+                # Успешные статусы
+                if response.status in [200, 201]:
+                    # Для DELETE запросов может не быть тела
+                    if method.upper() == 'DELETE' and response.status == 204:
+                        return {"success": True}
+
+                    try:
+                        content_type = response.headers.get('Content-Type', '')
+                        if 'application/json' in content_type:
+                            return await response.json()
+                        else:
+                            text_response = await response.text()
+                            logging.info(f"Non-JSON response for {url}: {text_response}")
+                            return {"success": True, "text": text_response}
+                    except Exception as e:
+                        logging.warning(f"JSON parse error for {url}: {e}")
+                        return {"success": True}
+
+                # Ошибки клиента
+                elif response.status in [400, 401, 403, 404]:
+                    error_text = await response.text()
+                    logging.warning(f"Client error {response.status} for {url}: {error_text}")
+                    if response.status == 404:
+                        logging.info(f"Resource not found: {url}")
+                        return None
+                    try:
+                        error_data = json.loads(error_text)
+                        return {"error": error_data}
+                    except:
+                        return {"error": error_text}
+
+                # Серверные ошибки
                 else:
                     error_text = await response.text()
-                    logging.error(f"HTTP error {response.status}: {error_text}")
-                    return None
+                    logging.error(f"HTTP error {response.status} for {url}: {error_text}")
+                    return {"error": f"Server error: {response.status}"}
+
         except aiohttp.ClientError as e:
             logging.error(f"Network error for {url}: {e}")
-            return None
+            return {"error": f"Network error: {str(e)}"}
         except Exception as e:
             logging.error(f"Unexpected error for {url}: {e}")
-            return None
-
+            return {"error": f"Unexpected error: {str(e)}"}
 
 class StudentAPI(BaseAPI):
     """API для работы со студентами"""
@@ -145,8 +178,6 @@ class StudentAPI(BaseAPI):
         """Получить топ студентов"""
         url = f"{self.base_url}top/?limit={limit}"
         return await self._make_request("GET", url)
-
-
 
 
 class GroupsAPI(BaseAPI):
@@ -211,3 +242,103 @@ class GroupsAPI(BaseAPI):
         if data and self.redis_connected:
             await self.redis.delete("groups:all")
         return data
+
+
+class HWMonth3(BaseAPI):
+    """API для работы с домашками 3-го месяца"""
+
+    BASE_URL = f"{config.api.api_url}/month3/"
+
+    def __init__(self):
+        super().__init__(self.BASE_URL)
+
+    async def create_homework(
+            self,
+            student_id: int,
+            lesson: str,
+            title: str,
+            task_condition: str,
+            github_url: str = None
+    ) -> Optional[Dict]:
+        """Создать домашку"""
+        payload = {
+            "student": student_id,
+            "lesson": lesson,
+            "title": title,
+            "task_condition": task_condition,
+            "github_url": github_url
+        }
+
+        result = await self._make_request("POST", self.base_url, json=payload)
+
+        # Проверяем результат
+        if result and "error" not in result:
+            # Инвалидируем кэш связанный со студентом
+            return result
+        else:
+            # Логируем ошибку и возвращаем None
+            error_msg = result.get("error", "Unknown error") if result else "No response"
+            logging.error(f"Failed to create homework: {error_msg}")
+            return None
+
+    async def get_homeworks(
+            self,
+            student_id: int = None,
+            lesson: str = None,
+            is_checked: bool = None,
+            use_cache: bool = True
+    ) -> List[Dict]:
+        """Получить домашки с фильтрацией"""
+        cache_key_parts = ["month3"]
+        if student_id:
+            cache_key_parts.append(f"student:{student_id}")
+        if lesson:
+            cache_key_parts.append(f"lesson:{lesson}")
+        if is_checked is not None:
+            cache_key_parts.append(f"checked:{is_checked}")
+
+        cache_key = ":".join(cache_key_parts)
+
+        if use_cache:
+            cached = await self._get_cached_data(cache_key)
+            if cached:
+                return cached
+
+        params = {}
+        if student_id:
+            params["student"] = student_id
+        if lesson:
+            params["lesson"] = lesson
+        if is_checked is not None:
+            params["is_checked"] = str(is_checked).lower()
+
+        result = await self._make_request("GET", self.base_url, params=params)
+
+        # Обрабатываем результат
+        if result and "error" not in result:
+            if use_cache:
+                await self._set_cached_data(cache_key, result)
+            return result
+        else:
+            logging.error(
+                f"Failed to get homeworks: {result.get('error', 'Unknown error') if result else 'No response'}")
+            return []
+
+    async def get_homework_by_id(self, homework_id: int, use_cache: bool = True) -> Optional[Dict]:
+        """Получить конкретную домашку по ID"""
+        cache_key = f"month3:id:{homework_id}"
+
+        if use_cache:
+            cached = await self._get_cached_data(cache_key)
+            if cached:
+                return cached
+
+        url = f"{self.base_url}{homework_id}/"
+        result = await self._make_request("GET", url)
+
+        if result and "error" not in result:
+            if use_cache:
+                await self._set_cached_data(cache_key, result)
+            return result
+        else:
+            return None

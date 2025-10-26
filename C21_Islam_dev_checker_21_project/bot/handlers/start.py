@@ -1,7 +1,7 @@
 from aiogram import Router, types, Bot,F
 from aiogram.filters import Command
 from external_services.api_client_user import StudentAPI, GroupsAPI
-from keyboards.inline_keyboards import get_main_menu,get_teacher_account,return_menu
+from keyboards.inline_keyboards import get_main_menu,get_teacher_account,return_menu,month_menu,month_pending_tasks,month_checked_tasks
 import logging
 
 start_router = Router()
@@ -278,3 +278,27 @@ async def teacher(callback: types.CallbackQuery):
         )
 
 
+@start_router.callback_query(F.data == "menu:send_task")
+async def send_task_menu(callback: types.CallbackQuery):
+    await callback.message.edit_caption(
+        caption="📚 Выберите месяц, за который хотите отправить задание:",
+        reply_markup=month_menu()
+    )
+    await callback.answer()
+
+
+@start_router.callback_query(F.data == "menu:pending_tasks")
+async def month_pending_tasks_menu(callback: types.CallbackQuery):
+    await callback.message.edit_caption(
+        caption="📚 Выберите месяц:",
+        reply_markup=month_pending_tasks()
+    )
+    await callback.answer()
+
+@start_router.callback_query(F.data == "menu:checked_tasks")
+async def month_cheacked_tasks_menu(callback: types.CallbackQuery):
+    await callback.message.edit_caption(
+        caption="📚 Выберите месяц:",
+        reply_markup=month_checked_tasks()
+    )
+    await callback.answer()

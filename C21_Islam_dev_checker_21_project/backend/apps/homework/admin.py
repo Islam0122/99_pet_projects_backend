@@ -76,7 +76,7 @@ class Month3HomeworkAdmin(admin.ModelAdmin):
 
     fieldsets = (
         (None, {
-            "fields": ("student", "lesson", "title", "task_condition", "grade", "is_checked", "github_url", "file_presentation", "originality_check", "created_at")
+            "fields": ("student", "lesson", "title", "task_condition", "grade", "is_checked", "github_url",  "originality_check", "created_at")
         }),
     )
 

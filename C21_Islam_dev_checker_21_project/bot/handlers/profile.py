@@ -150,7 +150,7 @@ async def show_top_students(callback: types.CallbackQuery):
 
     except Exception as e:
         logging.error(f"Error showing top students: {e}")
-        await callback.message.answer(
-            "❌ Ошибка при загрузке топа студентов.",
+        await callback.message.edit_caption(
+            caption="❌ Ошибка при загрузке топа студентов.",
             reply_markup=return_menu()
         )

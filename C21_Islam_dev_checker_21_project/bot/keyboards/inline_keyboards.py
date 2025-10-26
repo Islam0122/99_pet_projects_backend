@@ -1,5 +1,6 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
+from fontTools.cffLib import kBlendDictOpName
 
 
 def get_main_menu():
@@ -26,6 +27,41 @@ def get_main_menu():
 
     return kb.as_markup()
 
+def month_pending_tasks():
+    kb = InlineKeyboardBuilder()
+    kb.button(text="📘 1-й месяц", callback_data="month:1:pending_tasks")
+    kb.button(text="📗 2-й месяц", callback_data="month:2:pending_tasks")
+    kb.button(text="📕 3-й месяц", callback_data="month:3:pending_tasks")
+    kb.button(
+        text="⬅️ Главное меню",
+        callback_data="main_menu"
+    )
+    kb.adjust(2,1,1)
+    return kb.as_markup()
+
+def month_checked_tasks():
+    kb = InlineKeyboardBuilder()
+    kb.button(text="📘 1-й месяц", callback_data="month:1:checked_tasks")
+    kb.button(text="📗 2-й месяц", callback_data="month:2:checked_tasks")
+    kb.button(text="📕 3-й месяц", callback_data="month:3:checked_tasks")
+    kb.button(
+        text="⬅️ Главное меню",
+        callback_data="main_menu"
+    )
+    kb.adjust(2,1,1)
+    return kb.as_markup()
+
+def month_menu():
+    kb = InlineKeyboardBuilder()
+    kb.button(text="📘 1-й месяц", callback_data="month:1")
+    kb.button(text="📗 2-й месяц", callback_data="month:2")
+    kb.button(text="📕 3-й месяц", callback_data="month:3")
+    kb.button(
+        text="⬅️ Главное меню",
+        callback_data="main_menu"
+    )
+    kb.adjust(2,1,1)
+    return kb.as_markup()
 
 def get_teacher_account():
     kb = InlineKeyboardBuilder()
