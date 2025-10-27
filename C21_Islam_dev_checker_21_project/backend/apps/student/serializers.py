@@ -36,7 +36,6 @@ class StudentSerializer(serializers.ModelSerializer):
             "last_homework_done",
         ]
         read_only_fields = (
-            "group",
             "average_score",
             "best_score",
             "total_points",

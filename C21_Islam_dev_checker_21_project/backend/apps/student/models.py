@@ -193,28 +193,35 @@ class Student(models.Model):
         else:
             self.average_score = 0.0
 
-        # Обновить лучший балл (не на основе среднего!)
-        related_homeworks = []
-        for month in range(1, 13):
-            relation = f"month{month}_homeworks"
-            if hasattr(self, relation):
-                related_homeworks += list(getattr(self, relation).filter(is_checked=True))
+        # Лучший балл - только если объект уже сохранен
+        if self.pk:  # ← ДОБАВЬТЕ ЭТУ ПРОВЕРКУ
+            related_homeworks = []
+            for month in range(1, 13):
+                relation = f"month{month}_homeworks"
+                if hasattr(self, relation):
+                    try:
+                        related_homeworks += list(getattr(self, relation).filter(is_checked=True))
+                    except ValueError:
+                        # Игнорируем ошибку если объект еще не сохранен
+                        continue
 
-        if related_homeworks:
-            self.best_score = max(hw.grade or 0 for hw in related_homeworks)
+            if related_homeworks:
+                self.best_score = max(hw.grade or 0 for hw in related_homeworks)
+            else:
+                self.best_score = 0.0
         else:
+            # Для новых объектов устанавливаем best_score в 0
             self.best_score = 0.0
 
         super().save(*args, **kwargs)
 
-        # Пересчёт рейтинга в группе
+        # Пересчёт рейтинга в группе (этот код остается, он работает после сохранения)
         students_in_group = Student.objects.filter(group=self.group).order_by(
             "-total_points", "full_name"
         )
         for idx, student in enumerate(students_in_group, start=1):
             if student.rank != idx:
                 Student.objects.filter(pk=student.pk).update(rank=idx)
-
     def __str__(self):
         return f"{self.full_name} ({self.group.title})"
 
