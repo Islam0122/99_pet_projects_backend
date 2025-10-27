@@ -31,9 +31,10 @@ class BaseAPI:
     async def __aenter__(self):
         self.session = aiohttp.ClientSession()
         try:
-            # Используем redis_url из конфига
-            self.redis = redis.Redis.from_url(
-                config.redis.url,
+            self.redis = redis.Redis(
+                host=config.redis.host,
+                port=config.redis.port,
+                db=config.redis.db,
                 decode_responses=True,
                 socket_connect_timeout=2,
                 socket_timeout=2
@@ -155,7 +156,6 @@ class StudentAPI(BaseAPI):
             await self.redis.delete("students:all")
         return data
 
-
     async def update_student(self, telegram_id: str, update_data: dict):
         """Обновить данные студента"""
         url = f"{self.base_url}{telegram_id}/"
@@ -246,7 +246,6 @@ class GroupsAPI(BaseAPI):
 
 
 class HWMonth3(BaseAPI):
-
     BASE_URL = f"{config.api.api_url}/month3/"
 
     def __init__(self):
@@ -680,3 +679,6 @@ class HWMonth1(BaseAPI):
             await self._set_cached_data(cache_key, stats)
 
         return stats
+
+
+

@@ -36,6 +36,7 @@ class StudentSerializer(serializers.ModelSerializer):
             "last_homework_done",
         ]
         read_only_fields = (
+            "group",
             "average_score",
             "best_score",
             "total_points",
@@ -48,6 +49,7 @@ class StudentSerializer(serializers.ModelSerializer):
         if obj.total_homeworks == 0:
             return 0
         return round((obj.completed_homeworks / obj.total_homeworks) * 100, 1)
+
 
 
 class GroupSerializer(serializers.ModelSerializer):
