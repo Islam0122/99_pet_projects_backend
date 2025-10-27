@@ -115,7 +115,7 @@ REST_FRAMEWORK = {
 from .cors import *
 
 JAZZMIN_SETTINGS = {
-    "site_title": "Islam DEV",
+    "site_title": "Islam Dev",
     "site_header": "Админка Islam DEV",
     "site_brand": "Islam DEV",
     "welcome_sign": "Добро пожаловать в админку Islam DEV!",
@@ -145,8 +145,8 @@ JAZZMIN_UI_TWEAKS = {
     "sidebar_nav_compact_style": False,
     "sidebar_nav_legacy_style": False,
     "sidebar_nav_flat_style": False,
-    "theme": "litera",
-    "dark_mode_theme": "cyborg",
+    "theme": "superhero",
+    "dark_mode_theme": "solar",
     "button_classes": {
         "primary": "btn-primary",
         "secondary": "btn-secondary",
