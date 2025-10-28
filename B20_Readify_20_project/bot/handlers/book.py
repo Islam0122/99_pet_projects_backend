@@ -9,7 +9,7 @@ photo = "AgACAgIAAxkBAAIBXmjyji-cVZO1zhue4OhyMYaTX9UtAAIL-DEbw-l5S3ATNiEmk1T9AQA
 
 text = "❗ Укажите название книги после команды /search\n📖 Пример: /search Pride and Prejudice \n⚠️ Если книга не найдена, проверьте правильность написания названия."
 
-@book_router.callback_query(F.data == "search_book")
+@book_router.callback_query(F.data == "search_books")
 async def search_book_handler(query: types.CallbackQuery):
     await query.message.edit_caption(caption=text, reply_markup=return_menu_kb())
 
