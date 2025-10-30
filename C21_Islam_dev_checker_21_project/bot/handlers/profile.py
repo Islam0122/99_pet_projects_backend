@@ -113,7 +113,7 @@ async def show_top_students(callback: types.CallbackQuery):
         await callback.answer()
 
         async with StudentAPI() as student_api:
-            top_students = await student_api.get_top_students(limit=10)  # можно изменить лимит
+            top_students = await student_api.get_top_students(limit=5)  # можно изменить лимит
 
             if not top_students:
                 await callback.message.answer(
