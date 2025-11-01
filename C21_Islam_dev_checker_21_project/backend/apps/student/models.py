@@ -97,20 +97,18 @@ class Student(models.Model):
 
     # ---------- Вспомогательные методы ----------
     def calculate_progress_level(self) -> str:
-        """Вычисляет уровень прогресса по проценту выполнения"""
-        if self.total_homeworks == 0:
-            return "Новичок"
+        points = self.total_points  # Используем реальные очки
 
-        completion_rate = (self.completed_homeworks / self.total_homeworks) * 100
-        if completion_rate < 20:
-            return "Новичок"
-        elif completion_rate < 40:
-            return "Начинающий"
-        elif completion_rate < 60:
-            return "Средний"
-        elif completion_rate < 80:
-            return "Продвинутый"
-        return "Лидер"
+        if points < 200:
+            self.progress_level = "👶 Новичок"
+        elif points < 300:
+            self.progress_level = "📘 Начинающий"
+        elif points < 500:
+            self.progress_level = "⚡ Средний"
+        elif points < 700:
+            self.progress_level = "🔥 Продвинутый"
+        else:
+            self.progress_level = "💫 Лидер"
 
     def calculate_scores(self, homeworks):
         """Обновляет статистику студента по списку домашних заданий"""
@@ -131,8 +129,10 @@ class Student(models.Model):
         all_homeworks = []
 
         # === Month 1 ===
+        # ✅ Правильно
         for hw in self.month1_homeworks.all():
-            all_homeworks += list(hw.items.filter(is_checked=True))  # ✅ есть в items
+            checked_items = hw.items.filter(is_checked=True)
+            all_homeworks += list(checked_items)
 
         # === Month 2 ===
         all_homeworks += list(self.month2_homeworks.filter(is_checked=True))  # ✅ есть поле
