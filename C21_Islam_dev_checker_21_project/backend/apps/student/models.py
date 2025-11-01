@@ -217,7 +217,7 @@ class Student(models.Model):
 
         # Пересчёт рейтинга в группе (этот код остается, он работает после сохранения)
         students_in_group = Student.objects.filter(group=self.group).order_by(
-            "-total_points", "full_name"
+            "-average_score", "full_name"
         )
         for idx, student in enumerate(students_in_group, start=1):
             if student.rank != idx:
