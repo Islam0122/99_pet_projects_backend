@@ -212,16 +212,16 @@ class Student(models.Model):
         else:
             # Для новых объектов устанавливаем best_score в 0
             self.best_score = 0.0
-
-        super().save(*args, **kwargs)
-
-        # Пересчёт рейтинга в группе (этот код остается, он работает после сохранения)
+            # Пересчёт рейтинга в группе (этот код остается, он работает после сохранения)
         students_in_group = Student.objects.filter(group=self.group).order_by(
-            "-total_points", "full_name"
-        )
+                "-total_points", "full_name"
+            )
         for idx, student in enumerate(students_in_group, start=1):
             if student.rank != idx:
-                Student.objects.filter(pk=student.pk).update(rank=idx)
+                    Student.objects.filter(pk=student.pk).update(rank=idx)
+        super().save(*args, **kwargs)
+
+
     def __str__(self):
         return f"{self.full_name} ({self.group.title})"
 
