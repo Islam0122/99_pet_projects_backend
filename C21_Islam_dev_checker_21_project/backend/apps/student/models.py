@@ -126,20 +126,19 @@ class Student(models.Model):
         self.progress_level = self.calculate_progress_level()
 
     # ---------- Методы обновления ----------
-    def update_progress(self,month):
+    def update_progress(self, month):
         """Пересчитывает статистику студента сразу по всем месяцам (Duolingo-стиль)"""
-
         all_homeworks = []
 
-        # Month1
-        for hw in getattr(self, "month1_homeworks").all():
-            all_homeworks += list(hw.items.filter(is_checked=True))
+        # === Month 1 ===
+        for hw in self.month1_homeworks.all():
+            all_homeworks += list(hw.items.filter(is_checked=True))  # ✅ есть в items
 
-        # Month2
-        all_homeworks += list(getattr(self, "month2_homeworks").filter(is_checked=True))
+        # === Month 2 ===
+        all_homeworks += list(self.month2_homeworks.filter(is_checked=True))  # ✅ есть поле
 
-        # Month3
-        all_homeworks += list(getattr(self, "month3_homeworks").filter(is_checked=True))
+        # === Month 3 ===
+        all_homeworks += list(self.month3_homeworks.filter(is_checked=True))  # ✅ есть поле
 
         self.total_homeworks = (
                 self.month1_homeworks.count() +

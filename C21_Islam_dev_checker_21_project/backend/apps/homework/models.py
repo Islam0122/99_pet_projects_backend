@@ -135,7 +135,8 @@ class Month1HomeworkItem(models.Model):
         null=True,
         blank=True,
     )
-    is_checked = models.BooleanField(default=False, verbose_name="Проверено")
+    is_checked = models.BooleanField(default=False, verbose_name="Проверено",null=True,
+        blank=True)
 
     checked_at = models.DateTimeField(
         verbose_name="Время проверки",
