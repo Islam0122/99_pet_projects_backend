@@ -155,6 +155,12 @@ class Student(models.Model):
             ((getattr(hw, "grade", 0) or 0) for hw in all_homeworks),
             default=0
         )
+        students_in_group = list(
+            Student.objects.filter(group=self.group).order_by("-total_points", "full_name")
+        )
+        for idx, student in enumerate(students_in_group, start=1):
+            if student.rank != idx:
+                Student.objects.filter(pk=student.pk).update(rank=idx)
 
         # Прогресс как процент выполнения
         if self.total_homeworks == 0:
