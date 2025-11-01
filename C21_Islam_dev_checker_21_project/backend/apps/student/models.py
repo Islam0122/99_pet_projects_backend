@@ -160,17 +160,18 @@ class Student(models.Model):
         if self.total_homeworks == 0:
             self.progress_level = "Новичок"
         else:
-            completion_rate = (self.completed_homeworks / self.total_homeworks) * 100
-            if completion_rate < 20:
-                self.progress_level = "Новичок"
-            elif completion_rate < 40:
-                self.progress_level = "Начинающий"
-            elif completion_rate < 60:
-                self.progress_level = "Средний"
-            elif completion_rate < 80:
-                self.progress_level = "Продвинутый"
+            points = self.total_points  # Используем реальные очки
+
+            if points < 200:
+                self.progress_level = "👶 Новичок"
+            elif points < 300:
+                self.progress_level = "📘 Начинающий"
+            elif points < 500:
+                self.progress_level = "⚡ Средний"
+            elif points < 700:
+                self.progress_level = "🔥 Продвинутый"
             else:
-                self.progress_level = "Лидер"
+                self.progress_level = "💫 Лидер"
 
         super(Student, self).save(update_fields=[
             "total_homeworks",
