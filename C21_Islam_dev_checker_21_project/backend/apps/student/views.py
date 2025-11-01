@@ -76,7 +76,7 @@ class StudentViewSet(viewsets.ModelViewSet):
         Пример: /api/students/top/
         """
         limit = int(request.query_params.get("limit", 5))  # можно задать ?limit=10
-        top_students = Student.objects.order_by("-average_score")[:limit]
+        top_students = Student.objects.order_by("-total_points")[:limit]
         serializer = self.get_serializer(top_students, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
