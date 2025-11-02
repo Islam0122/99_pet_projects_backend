@@ -491,9 +491,8 @@ async def handle_homework_detail(callback: types.CallbackQuery):
                 )
             except:
                 await callback.message.delete()
-                await callback.message.answer_photo(
-                    photo=photo,
-                    caption=message_text,
+                await callback.message.answer(
+                    text=message_text,
                     reply_markup=types.InlineKeyboardMarkup(inline_keyboard=keyboard)
                 )
 
