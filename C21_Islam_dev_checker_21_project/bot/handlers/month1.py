@@ -29,6 +29,7 @@ from keyboards.inline_keyboards import get_main_menu, get_teacher_account, retur
 import logging
 
 month1_router = Router()
+photo = types.FSInputFile("img.png")
 
 
 class Month1HomeworkForm(StatesGroup):
@@ -483,11 +484,18 @@ async def handle_homework_detail(callback: types.CallbackQuery):
                 [types.InlineKeyboardButton(text="🔙 К списку работ", callback_data="month1:checked")],
                 [types.InlineKeyboardButton(text="📊 Главное меню", callback_data="month:1")]
             ]
-
-            await callback.message.edit_caption(
-                caption=message_text,
-                reply_markup=types.InlineKeyboardMarkup(inline_keyboard=keyboard)
-            )
+            try :
+                await callback.message.edit_caption(
+                    caption=message_text,
+                    reply_markup=types.InlineKeyboardMarkup(inline_keyboard=keyboard)
+                )
+            except:
+                await callback.message.delete()
+                await callback.message.answer_photo(
+                    photo=photo,
+                    caption=message_text,
+                    reply_markup=types.InlineKeyboardMarkup(inline_keyboard=keyboard)
+                )
 
     except Exception as e:
         logging.error(f"Error getting homework detail: {e}")
