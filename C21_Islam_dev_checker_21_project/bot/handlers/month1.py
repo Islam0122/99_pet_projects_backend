@@ -481,7 +481,7 @@ async def handle_homework_detail(callback: types.CallbackQuery):
 
             # Создаем клавиатуру
             keyboard = [
-                [types.InlineKeyboardButton(text="🔙 К списку работ", callback_data="month1:checked")],
+                [types.InlineKeyboardButton(text="🔙 К списку работ", callback_data="month:1")],
                 [types.InlineKeyboardButton(text="📊 Главное меню", callback_data="month:1")]
             ]
             try :
