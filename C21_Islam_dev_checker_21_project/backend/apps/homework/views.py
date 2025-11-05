@@ -7,7 +7,7 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from .serializers import Month1HomeworkSerializer, Month1HomeworkItemSerializer
-from .models import Month1Homework, Month1HomeworkItem, TASK_1_MONTH_LESSON_CHOICES
+from .models import Month1Homework, Month1HomeworkItem, MONTH_1_LESSONS as TASK_1_MONTH_LESSON_CHOICES
 from ..student.models import Student
 from .services.homework_checker import sent_prompt_and_get_response, extract_grade_from_feedback
 import re

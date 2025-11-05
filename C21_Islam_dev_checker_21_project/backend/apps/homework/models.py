@@ -83,7 +83,7 @@ class Month1Homework(models.Model):
     )
     lesson = models.CharField(
         max_length=100,
-        choices=TASK_1_MONTH_LESSON_CHOICES,
+        choices=MONTH_1_LESSONS,
         verbose_name="Урок",
         help_text="Выберите урок, к которому относится задание",
     )
@@ -173,7 +173,7 @@ class Month2Homework(models.Model):
     )
     lesson = models.CharField(
         max_length=100,
-        choices=TASK_2_MONTH_LESSON_CHOICES,
+        choices=MONTH_2_LESSONS,
         verbose_name="Урок",
         help_text="Выберите урок, к которому относится задание",
     )
@@ -220,7 +220,7 @@ class Month3Homework(models.Model):
     title = models.CharField(max_length=255, verbose_name="Название задания")
     lesson = models.CharField(
         max_length=100,
-        choices=TASK_3_MONTH_LESSON_CHOICES,
+        choices=MONTH_3_LESSONS,
         verbose_name="Урок",
         help_text="Выберите урок, к которому относится задание",
     )
