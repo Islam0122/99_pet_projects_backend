@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Islam Dev - Attendance System</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(17, 94, 89, 0.05) 0%, transparent 70%);
+    border-radius: 50%;
+    top: -300px;
+    right: -200px;
+    animation: float 8s ease-in-out infinite;
+  }
+
+  body::after {
+    content: '';
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(17, 94, 89, 0.03) 0%, transparent 70%);
+    border-radius: 50%;
+    bottom: -200px;
+    left: -150px;
+    animation: float 10s ease-in-out infinite reverse;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-30px) scale(1.05); }
+  }
+
+  .container {
+    background: #ffffff;
+    border-radius: 40px;
+    padding: 50px 45px;
+    box-shadow:
+      0 20px 60px rgba(0, 0, 0, 0.08),
+      0 0 0 1px rgba(0, 0, 0, 0.02);
+    max-width: 480px;
+    width: 90%;
+    position: relative;
+    z-index: 1;
+    animation: slideUp 0.6s ease-out;
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .logo-section {
+    text-align: center;
+    margin-bottom: 35px;
+    padding-bottom: 30px;
+    border-bottom: 2px solid #f0f0f0;
+  }
+
+  .logo {
+    background: linear-gradient(135deg, #115e59 0%, #14b8a6 100%);
+    width: 120px;
+    height: 120px;
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    box-shadow: 0 10px 30px rgba(17, 94, 89, 0.2);
+    position: relative;
+    overflow: hidden;
+    object-fit: cover;
+  }
+
+  .logo::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+    transform: translateX(-100%);
+    animation: shine 3s infinite;
+  }
+
+  @keyframes shine {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(200%); }
+  }
+
+  .logo-text {
+    color: #ffffff;
+    font-size: 1.6em;
+    font-weight: 900;
+    letter-spacing: 1px;
+  }
+
+  .company-name {
+    font-size: 2em;
+    font-weight: 800;
+    background: linear-gradient(135deg, #115e59 0%, #14b8a6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+  }
+
+  .subtitle {
+    color: #64748b;
+    font-size: 0.95em;
+    font-weight: 500;
+  }
+
+  .input-group {
+    margin-bottom: 30px;
+  }
+
+  .input-label {
+    display: block;
+    color: #334155;
+    font-size: 0.9em;
+    margin-bottom: 10px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+
+  input {
+    width: 100%;
+    padding: 18px 22px;
+    font-size: 1.05em;
+    border: 2px solid #e2e8f0;
+    border-radius: 20px;
+    background: #f8fafc;
+    color: #1e293b;
+    outline: none;
+    transition: all 0.3s ease;
+    font-family: inherit;
+  }
+
+  input:focus {
+    border-color: #14b8a6;
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.1);
+  }
+
+  input::placeholder {
+    color: #94a3b8;
+  }
+
+  .button-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 25px;
+  }
+
+  button {
+    padding: 18px 20px;
+    font-size: 1.05em;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    letter-spacing: 0.3px;
+    font-family: inherit;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  }
+
+  button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.5s, height 0.5s;
+  }
+
+  button:hover::before {
+    width: 300px;
+    height: 300px;
+  }
+
+  button span {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .in {
+    background: linear-gradient(135deg, #115e59 0%, #14b8a6 100%);
+    color: #ffffff;
+  }
+
+  .in:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(17, 94, 89, 0.3);
+  }
+
+  .in:active {
+    transform: translateY(-1px);
+  }
+
+  .out {
+    background: #1e293b;
+    color: #ffffff;
+  }
+
+  .out:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(30, 41, 59, 0.3);
+  }
+
+  .out:active {
+    transform: translateY(-1px);
+  }
+
+  #message {
+    min-height: 60px;
+    padding: 16px 20px;
+    border-radius: 18px;
+    background: #f1f5f9;
+    color: #334155;
+    font-size: 0.95em;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: all 0.3s ease;
+    text-align: center;
+    border: 2px solid transparent;
+  }
+
+  #message.show {
+    opacity: 1;
+    animation: messageSlide 0.4s ease-out;
+  }
+
+  @keyframes messageSlide {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  #message.success {
+    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+    color: #115e59;
+    border-color: #14b8a6;
+  }
+
+  #message.error {
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    color: #7f1d1d;
+    border-color: #ef4444;
+  }
+
+  .icon {
+    font-size: 1.3em;
+  }
+
+  .footer {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 2px solid #f0f0f0;
+    text-align: center;
+    color: #94a3b8;
+    font-size: 0.85em;
+    font-weight: 500;
+  }
+
+  @media (max-width: 600px) {
+    .container {
+      padding: 40px 30px;
+      border-radius: 35px;
+    }
+
+    .company-name {
+      font-size: 1.7em;
+    }
+
+    .button-group {
+      grid-template-columns: 1fr;
+    }
+
+    button {
+      font-size: 1em;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="logo-section">
+    <div class="logo">
+      <span class="logo-text">ID</span>
+    </div>
+    <h1 class="company-name">Islam Dev</h1>
+    <p class="subtitle">Система учёта рабочего времени</p>
+  </div>
+
+  <div class="input-group">
+    <label class="input-label">Имя сотрудника</label>
+    <input type="text" id="name" placeholder="Введите ваше имя" />
+  </div>
+
+  <div class="button-group">
+    <button class="in" onclick="mark('in')">
+      <span><span class="icon">✓</span>Пришёл</span>
+    </button>
+    <button class="out" onclick="mark('out')">
+      <span><span class="icon">→</span>Ушёл</span>
+    </button>
+  </div>
+
+  <div id="message"></div>
+
+  <div class="footer">
+    © 2025 Islam Dev. All rights reserved
+  </div>
+</div>
+
+<script>
+function mark(action) {
+    const name = document.getElementById("name").value.trim();
+    const messageDiv = document.getElementById("message");
+
+    if(!name) {
+        showMessage("⚠ Пожалуйста, введите ваше имя", "error");
+        return;
+    }
+
+    const actionText = action === 'in' ? 'Приход' : 'Уход';
+    showMessage("⏳ Отправка данных...", "");
+
+    navigator.geolocation.getCurrentPosition(function(pos){
+        fetch(`/mark`, {
+            method: "POST",
+            headers: {"Content-Type":"application/json"},
+            body: JSON.stringify({
+                name: name,
+                type: action,
+                lat: pos.coords.latitude,
+                lon: pos.coords.longitude
+            })
+        })
+        .then(res => res.text())
+        .then(msg => showMessage("✓ " + msg, "success"))
+        .catch(err => {
+            console.error(err);
+            showMessage("✗ Ошибка отправки данных", "error");
+        });
+    }, function(err) {
+        fetch(`/mark`, {
+            method: "POST",
+            headers: {"Content-Type":"application/json"},
+            body: JSON.stringify({
+                name: name,
+                type: action
+            })
+        })
+        .then(res => res.text())
+        .then(msg => showMessage("✓ " + msg, "success"))
+        .catch(err => {
+            console.error(err);
+            showMessage("✗ Ошибка отправки данных", "error");
+        });
+    });
+}
+
+function showMessage(text, type) {
+    const messageDiv = document.getElementById("message");
+    messageDiv.textContent = text;
+    messageDiv.className = '';
+
+    setTimeout(() => {
+        messageDiv.classList.add('show');
+        if(type) messageDiv.classList.add(type);
+    }, 10);
+}
+
+document.getElementById('name').addEventListener('keypress', function(e) {
+    if(e.key === 'Enter') {
+        document.querySelector('.in').click();
+    }
+});
+</script>
+</body>
+</html>
