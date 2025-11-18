@@ -16,7 +16,7 @@ INSTALLED_APPS = [
     "apps.blog",
     "apps.users",
     "ninja",
-    "django_ninja_jwt",
+    'ninja_jwt',
 ]
 
 MIDDLEWARE = [
