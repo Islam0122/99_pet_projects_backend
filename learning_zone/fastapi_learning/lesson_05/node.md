@@ -1,4 +1,3 @@
-# 📘 **node.md — AUTH в FastAPI (JWT + AuthX)**
 
 ````md
 # Auth — Аутентификация и Авторизация в FastAPI
