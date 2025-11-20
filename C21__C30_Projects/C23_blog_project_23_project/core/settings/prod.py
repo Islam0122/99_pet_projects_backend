@@ -17,11 +17,66 @@ DATABASES = {
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
+            "style": "{",
+        },
+        "json": {
+            "()": "pythonjsonlogger.jsonlogger.JsonFormatter",
+            "format": "%(asctime)s %(name)s %(levelname)s %(message)s",
+        },
+    },
     "handlers": {
-        "file": {"level": "INFO", "class": "logging.FileHandler", "filename": "/var/log/django.log"},
+        "file_error": {
+            "level": "ERROR",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": "/var/log/django/error.log",
+            "maxBytes": 1024 * 1024 * 10,  # 10 MB
+            "backupCount": 5,
+            "formatter": "verbose",
+        },
+        "file_warning": {
+            "level": "WARNING",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": "/var/log/django/warning.log",
+            "maxBytes": 1024 * 1024 * 10,  # 10 MB
+            "backupCount": 5,
+            "formatter": "verbose",
+        },
+        "file_info": {
+            "level": "INFO",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": "/var/log/django/info.log",
+            "maxBytes": 1024 * 1024 * 10,  # 10 MB
+            "backupCount": 5,
+            "formatter": "verbose",
+        },
+        "console": {
+            "level": "INFO",
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        },
     },
     "loggers": {
-        "django": {"handlers": ["file"], "level": "INFO", "propagate": True},
-        "blog": {"handlers": ["file"], "level": "INFO", "propagate": True},
+        "django": {
+            "handlers": ["console", "file_error"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "apps.blog": {
+            "handlers": ["file_info", "file_warning", "file_error"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "apps.users": {
+            "handlers": ["file_info", "file_warning", "file_error"],
+            "level": "INFO",
+            "propagate": False,
+        },
+    },
+    "root": {
+        "handlers": ["console", "file_error"],
+        "level": "WARNING",
     },
 }
