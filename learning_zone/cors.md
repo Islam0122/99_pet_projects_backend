@@ -131,11 +131,3 @@ curl -i -X OPTIONS \
   -H "Access-Control-Request-Headers: X-Custom-Header" \
   https://api.example.com/resource
 
-
----
-
-# Заключение
-# Этот файл теперь оформлен в виде кода и примеров. Если хочешь — могу:
-# - добавить конкретный пример для твоего бэкенда (Django/FastAPI/Express),
-# - сделать краткую версию на английском,
-# - или оформить как README.md для репозитория.
