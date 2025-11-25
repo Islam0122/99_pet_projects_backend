@@ -23,3 +23,12 @@ if settings.DEBUG:
     urlpatterns = [
         path("__debug__/", include(debug_toolbar.urls)),
     ] + urlpatterns
+
+
+    def trigger_500(request):
+        raise Exception("🔥 Тестовая ошибка 500 для проверки Telegram уведомлений")
+
+
+    urlpatterns += [
+        path("test-500/", trigger_500),
+    ]

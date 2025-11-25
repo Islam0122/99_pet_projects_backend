@@ -31,12 +31,28 @@ class TelegramErrorMiddleware:
             self.send_telegram(f"💡 <b>Совет от GigaChat:</b>\n{advice}")
         return response
 
+    @staticmethod
+    def send_telegram_static(text: str):
+        token = getattr(settings, "TELEGRAM_BOT_TOKEN", None)
+        chat_id = getattr(settings, "TELEGRAM_CHAT_ID", None)
+        if not token or not chat_id:
+            print("Telegram токен или чат не настроен")
+            return
+        try:
+            requests.post(
+                f"https://api.telegram.org/bot{token}/sendMessage",
+                json={"chat_id": chat_id, "text": text, "parse_mode": "Markdown"},
+                timeout=5
+            )
+        except Exception as e:
+            print("Ошибка при отправке в Telegram:", e)
+
     def process_exception(self, request, exception):
         if not getattr(settings, "TELEGRAM_NOTIFY_ENABLED", False):
             return None
 
         text = (
-            "🔥 <b>Django Exception Alert</b>\n"
+            "🔥 Django Exception Alert\n"
             f"👤 Пользователь: {getattr(request, 'user', 'Anonymous')}\n"
             f"🌐 URL: {request.path}\n"
             f"📌 Метод: {request.method}\n"
@@ -48,21 +64,22 @@ class TelegramErrorMiddleware:
         self.send_telegram(text)
 
         prompt = f"""
-        ты Django разработчик. 
-        Я,Islam Dev получил следующую ошибку в проекте:
+       Ты Django разработчик. 
+Я, Islam Dev, получил следующую ошибку в проекте:
 
-        {text}
+{text}
 
-        ❓ Проанализируй её и дай:
-        1. Короткое объяснение причины ошибки.
-        2. Конкретный пошаговый совет, как исправить.
-        3. Пример кода, если это нужно.
+❓ Проанализируй её и дай:
+1. Короткое объяснение причины ошибки.
+2. Конкретный совет, как исправить.
+⚡ Ответ должен быть кратким, понятным и структурированным, чтобы можно было сразу применить.
 
-        ⚡ Ответ должен быть кратким, понятным и структурированным, чтобы можно было сразу применить.
-        """
+❌ Не присылай код, Docker, файлы или структуру проекта. Только объяснение и совет.
+ """
+
         advice = sent_prompt_and_get_response(prompt)
         if advice:
-            self.send_telegram(f"💡 <b>Совет от GigaChat:</b>\n{advice}")
+            self.send_telegram(f"💡 <b>Совет :</b>\n{advice}")
 
         return None
 
@@ -75,7 +92,7 @@ class TelegramErrorMiddleware:
         try:
             requests.post(
                 f"https://api.telegram.org/bot{token}/sendMessage",
-                json={"chat_id": chat_id, "text": text, "parse_mode": "HTML"},
+                json={"chat_id": chat_id, "text": text, "parse_mode": "Markdown"},
                 timeout=5
             )
         except Exception as e:
