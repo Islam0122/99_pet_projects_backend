@@ -1,0 +1,284 @@
+[
+  {
+    "model": "users.role",
+    "pk": 1,
+    "fields": {
+      "name": "admin",
+      "description": "Полный доступ ко всем ресурсам системы"
+    }
+  },
+  {
+    "model": "users.role",
+    "pk": 2,
+    "fields": {
+      "name": "manager",
+      "description": "Управление товарами, заказами, просмотр пользователей"
+    }
+  },
+  {
+    "model": "users.role",
+    "pk": 3,
+    "fields": {
+      "name": "user",
+      "description": "Обычный пользователь - доступ к своим данным"
+    }
+  },
+  {
+    "model": "users.role",
+    "pk": 4,
+    "fields": {
+      "name": "guest",
+      "description": "Гость - только чтение публичных данных"
+    }
+  },
+  {
+    "model": "access.businesselement",
+    "pk": 1,
+    "fields": {
+      "name": "users",
+      "description": "Управление пользователями системы"
+    }
+  },
+  {
+    "model": "access.businesselement",
+    "pk": 2,
+    "fields": {
+      "name": "products",
+      "description": "Управление товарами"
+    }
+  },
+  {
+    "model": "access.businesselement",
+    "pk": 3,
+    "fields": {
+      "name": "orders",
+      "description": "Управление заказами"
+    }
+  },
+  {
+    "model": "access.businesselement",
+    "pk": 4,
+    "fields": {
+      "name": "stores",
+      "description": "Управление магазинами"
+    }
+  },
+  {
+    "model": "access.businesselement",
+    "pk": 5,
+    "fields": {
+      "name": "access_rules",
+      "description": "Управление правилами доступа"
+    }
+  },
+  {
+    "model": "access.accessrolesrules",
+    "pk": 1,
+    "fields": {
+      "role": 1,
+      "element": 1,
+      "read_permission": true,
+      "read_all_permission": true,
+      "create_permission": true,
+      "update_permission": true,
+      "update_all_permission": true,
+      "delete_permission": true,
+      "delete_all_permission": true
+    }
+  },
+  {
+    "model": "access.accessrolesrules",
+    "pk": 2,
+    "fields": {
+      "role": 1,
+      "element": 2,
+      "read_permission": true,
+      "read_all_permission": true,
+      "create_permission": true,
+      "update_permission": true,
+      "update_all_permission": true,
+      "delete_permission": true,
+      "delete_all_permission": true
+    }
+  },
+  {
+    "model": "access.accessrolesrules",
+    "pk": 3,
+    "fields": {
+      "role": 1,
+      "element": 3,
+      "read_permission": true,
+      "read_all_permission": true,
+      "create_permission": true,
+      "update_permission": true,
+      "update_all_permission": true,
+      "delete_permission": true,
+      "delete_all_permission": true
+    }
+  },
+  {
+    "model": "access.accessrolesrules",
+    "pk": 4,
+    "fields": {
+      "role": 1,
+      "element": 4,
+      "read_permission": true,
+      "read_all_permission": true,
+      "create_permission": true,
+      "update_permission": true,
+      "update_all_permission": true,
+      "delete_permission": true,
+      "delete_all_permission": true
+    }
+  },
+  {
+    "model": "access.accessrolesrules",
+    "pk": 5,
+    "fields": {
+      "role": 1,
+      "element": 5,
+      "read_permission": true,
+      "read_all_permission": true,
+      "create_permission": true,
+      "update_permission": true,
+      "update_all_permission": true,
+      "delete_permission": true,
+      "delete_all_permission": true
+    }
+  },
+  {
+    "model": "access.accessrolesrules",
+    "pk": 6,
+    "fields": {
+      "role": 2,
+      "element": 1,
+      "read_permission": true,
+      "read_all_permission": true,
+      "create_permission": false,
+      "update_permission": false,
+      "update_all_permission": false,
+      "delete_permission": false,
+      "delete_all_permission": false
+    }
+  },
+  {
+    "model": "access.accessrolesrules",
+    "pk": 7,
+    "fields": {
+      "role": 2,
+      "element": 2,
+      "read_permission": true,
+      "read_all_permission": true,
+      "create_permission": true,
+      "update_permission": true,
+      "update_all_permission": true,
+      "delete_permission": true,
+      "delete_all_permission": false
+    }
+  },
+  {
+    "model": "access.accessrolesrules",
+    "pk": 8,
+    "fields": {
+      "role": 2,
+      "element": 3,
+      "read_permission": true,
+      "read_all_permission": true,
+      "create_permission": false,
+      "update_permission": true,
+      "update_all_permission": true,
+      "delete_permission": false,
+      "delete_all_permission": false
+    }
+  },
+  {
+    "model": "access.accessrolesrules",
+    "pk": 9,
+    "fields": {
+      "role": 2,
+      "element": 4,
+      "read_permission": true,
+      "read_all_permission": true,
+      "create_permission": true,
+      "update_permission": true,
+      "update_all_permission": true,
+      "delete_permission": false,
+      "delete_all_permission": false
+    }
+  },
+  {
+    "model": "access.accessrolesrules",
+    "pk": 10,
+    "fields": {
+      "role": 3,
+      "element": 2,
+      "read_permission": true,
+      "read_all_permission": true,
+      "create_permission": false,
+      "update_permission": false,
+      "update_all_permission": false,
+      "delete_permission": false,
+      "delete_all_permission": false
+    }
+  },
+  {
+    "model": "access.accessrolesrules",
+    "pk": 11,
+    "fields": {
+      "role": 3,
+      "element": 3,
+      "read_permission": true,
+      "read_all_permission": false,
+      "create_permission": true,
+      "update_permission": true,
+      "update_all_permission": false,
+      "delete_permission": true,
+      "delete_all_permission": false
+    }
+  },
+  {
+    "model": "access.accessrolesrules",
+    "pk": 12,
+    "fields": {
+      "role": 3,
+      "element": 4,
+      "read_permission": true,
+      "read_all_permission": true,
+      "create_permission": false,
+      "update_permission": false,
+      "update_all_permission": false,
+      "delete_permission": false,
+      "delete_all_permission": false
+    }
+  },
+  {
+    "model": "access.accessrolesrules",
+    "pk": 13,
+    "fields": {
+      "role": 4,
+      "element": 2,
+      "read_permission": true,
+      "read_all_permission": true,
+      "create_permission": false,
+      "update_permission": false,
+      "update_all_permission": false,
+      "delete_permission": false,
+      "delete_all_permission": false
+    }
+  },
+  {
+    "model": "access.accessrolesrules",
+    "pk": 14,
+    "fields": {
+      "role": 4,
+      "element": 4,
+      "read_permission": true,
+      "read_all_permission": true,
+      "create_permission": false,
+      "update_permission": false,
+      "update_all_permission": false,
+      "delete_permission": false,
+      "delete_all_permission": false
+    }
+  }
+]
