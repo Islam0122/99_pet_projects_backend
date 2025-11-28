@@ -4,7 +4,7 @@ from django.db import models
 class BusinessElement(models.Model):
     name = models.CharField(max_length=100, unique=True, verbose_name="Название элемента")
     description = models.TextField(blank=True, null=True, verbose_name="Описание")
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания",null=True)
 
     class Meta:
         verbose_name = "Бизнес-элемент"
@@ -35,8 +35,8 @@ class AccessRolesRules(models.Model):
     update_all_permission = models.BooleanField(default=False, verbose_name="Обновление всех объектов")
     delete_permission = models.BooleanField(default=False, verbose_name="Удаление своих объектов")
     delete_all_permission = models.BooleanField(default=False, verbose_name="Удаление всех объектов")
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
-    updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата обновления")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания",null=True)
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата обновления",null=True)
 
     class Meta:
         verbose_name = "Правило доступа"

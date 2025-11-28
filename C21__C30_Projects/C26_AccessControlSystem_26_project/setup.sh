@@ -26,6 +26,7 @@ echo "🗄️  Выполнение миграций..."
 python manage.py makemigrations
 python manage.py migrate
 
+
 echo "📊 Загрузка тестовых данных..."
 python manage.py loaddata fixtures/initial_data.json
 
