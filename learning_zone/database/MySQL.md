@@ -226,5 +226,3 @@ EXIT;
 ```
 
 
-* GitHub
-* Obsidian / Notion
