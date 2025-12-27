@@ -1,4 +1,4 @@
-Tailwind CSS — краткий, но полный конспект
+Tailwind CSS 
 
 1. Что такое Tailwind CSS
 
