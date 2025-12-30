@@ -40,7 +40,7 @@ Authorization: Bearer token
   "password": "123456"
 }
 
-
+```
 ---
 
 📥 HTTP-ответ (Response)
